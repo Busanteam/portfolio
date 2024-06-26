@@ -1811,7 +1811,7 @@
 	body {
 		background:white;
 		font:normal normal 13px/1.4 Segoe,"Segoe UI",Calibri,Helmet,FreeSans,Sans-Serif;
-		padding:50px;
+		/* padding:50px; */
 	  }
 	  
 	  
@@ -2481,6 +2481,7 @@
 		list-style: disc;
 		margin: 0 0 2rem 0;
 		padding-left: 1rem;
+		
 	}
 
 		ul li {
