@@ -1871,25 +1871,27 @@
 	  }
 
 	  /* list styles */
-	ul {
+	/* ul {
 		list-style-type: decimal-leading-zero;
-	}
+	} */
 
 	ol {
+		/* list-style-type: decimal-leading-zero; */
 		list-style: none;
 		color: #ccc;
 	}
 	
 	ol li {
+		list-style-type: decimal-leading-zero;
 		font: bold 24pt helvetica, arial, sans-serif;
 		position: relative;
-		margin-bottom: 20px;
+		margin-bottom: 8px;
 	}
 	
 	li p {
 		font: 12pt helvetica, arial, sans-serif;
 		color: #555;
-		padding-left: 60px;
+		padding-left: 16px;
 	}
 	
 	/* span {
