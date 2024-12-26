@@ -1674,6 +1674,10 @@
 		color: dimgray;
 	}
 
+	p.body.bottom1 {
+		padding-bottom: 1rem;
+	}
+
 	p.sub {
 		margin: 3rem 0 0.5rem 0;
 		font-size: medium;
@@ -1790,6 +1794,10 @@
 
 	.align-center {
 		text-align: center;
+	}
+
+	.align-center.bottom1 {
+		padding-bottom: 1rem;
 	}
 
 	.align-right {
@@ -3206,6 +3214,10 @@
 
 			.wrapper.style2 table.alt tbody tr td {
 				border-color: rgba(0, 0, 0, 0.15);
+			}
+
+			.wrapper.style2.subtop{
+				padding: 6rem 0 1rem 0 ;
 			}
 
 		.wrapper.style3 {
