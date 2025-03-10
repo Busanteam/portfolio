@@ -41,38 +41,101 @@ body {
 	line-height: 1.6;
 }  
 
+/* 텍스트 영역 */
+.hero-text {
+	flex: 1;             /* 좌측 영역이 이미지와 균등하게 분할 */
+	margin-right: 20px;  /* 이미지와 간격 확보 */
+}
+
+.hero-text h1 {
+	font-size: 2rem;
+	margin-bottom: 16px;
+}
+
+.hero-text p {
+	font-size: 1.1rem;
+	line-height: 1.4;
+	margin-bottom: 24px;
+}
+
+/* 버튼 스타일 */
+
+/* 이미지 영역 */
+.hero-image {
+	flex: 1; /* 우측 영역 */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 2rem;
+}
+
+.hero-image img {
+	max-width: 40%;
+	height: auto;
+	border-radius: 1rem; /* 둥근 모서리 예시 */
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+  
 /* hero */
 .hero {
-	text-align: center;
-	padding: calc(var(--grid-unit) * 24) calc(var(--grid-unit) * 4) calc(var(--grid-unit) * 12);
-	background: linear-gradient(135deg, #cfe3ff 0%, #ffffff 100%);
-  }
-  
-  .hero h1 {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-direction: row; /* 가로 정렬 */
+	text-align: left;
+	padding: calc(var(--grid-unit) * 24) calc(var(--grid-unit) * 24);
+	min-height: 20vh;
+	max-height: 100vh;
+	background: linear-gradient(135deg, #ccd6ca 0%, #ffffff 100%);
+}
+
+/* 980px 이하에서는 세로 정렬 */
+@media (max-width: 980px) {
+	.hero {
+		flex-direction: column; /* 세로 정렬 */
+		text-align: center;
+	}
+	
+	.hero-image {
+		width: 60%;
+	}
+
+	.hero-image img {
+		max-width: 60%;		/* 너무 크게 나오지 않도록 조정 */
+	}
+}
+
+.hero-text {
+	margin-right: 0;        /* 좌우 여백 제거 */
+	margin-bottom: 2rem;    /* 텍스트와 이미지 간 간격 */
+	text-align: center;     /* 중앙 정렬 */
+}
+
+.hero h1 {
 	font-weight: 700;
-	font-size: calc(var(--grid-unit) * 6);
+	font-size: calc(var(--grid-unit) * 8);
 	margin-bottom: calc(var(--grid-unit) * 4);
-  }
+}
   
-  .hero p {
+.hero p {
 	font-weight: 500;
-	font-size: calc(var(--grid-unit) * 3);
+	font-size: calc(var(--grid-unit) * 4);
 	margin-bottom: calc(var(--grid-unit) * 6);
-  }
+}
 
 /* 480px 이하 (모바일) */
 @media (max-width: 480px) {
 	.hero {
-	  padding: calc(var(--grid-unit) * 16) calc(var(--grid-unit) * 4);
+		padding: calc(var(--grid-unit) * 16) calc(var(--grid-unit) * 4);
 	}
 	.hero h1 {
-	  font-size: calc(var(--grid-unit) * 5);
+		font-size: calc(var(--grid-unit) * 5);
 	}
 	.hero p {
-	  font-size: calc(var(--grid-unit) * 2.5);
+		font-size: calc(var(--grid-unit) * 2.5);
 	}
 	.btn-primary {
-	  padding: calc(var(--grid-unit) * 2) calc(var(--grid-unit) * 4);
+		padding: calc(var(--grid-unit) * 2) calc(var(--grid-unit) * 4);
 	}
 }
 
@@ -4252,7 +4315,8 @@ body {
 		.banner.half {
 			padding: 0;
 			min-height: 24vh;
-			height: 40vh !important;
+			height: 100vh !important;
+			background-color: #000;
 		}
 
 		.banner:after {
