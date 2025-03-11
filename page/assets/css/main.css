@@ -105,6 +105,18 @@ body {
 	}
 }
 
+@media (min-width: 1980px) {
+
+	.hero-text {
+		margin-left: 6rem;
+	}
+	
+	.hero-image {
+		margin-right: 8rem;
+	}
+	
+}
+
 .hero-text {
 	margin-right: 0;        /* 좌우 여백 제거 */
 	margin-bottom: 2rem;    /* 텍스트와 이미지 간 간격 */
