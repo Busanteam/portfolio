@@ -103,7 +103,7 @@ body {
 	width: 32rem;
     height: 4rem;
 	perspective: 500px; /* 3D 효과를 위한 원근 */
-	overflow: hidden;
+	/* overflow: hidden; */
 	margin: 0 auto; /* 중앙정렬 */
 }
 
