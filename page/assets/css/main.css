@@ -86,7 +86,15 @@ body {
 	padding: calc(var(--grid-unit) * 24) calc(var(--grid-unit) * 24);
 	min-height: 20vh;
 	max-height: 100vh;
-	background: linear-gradient(135deg, #ccd6ca 0%, #ffffff 100%);
+	width: 100%;
+	/* background color gradient */
+	background: linear-gradient(135deg, #ccd6ca 0%, #ffffff 100%), url("../../images/hero_background_image_wave.png");;
+	/* backgraund img */
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover; /* 이미지가 요소를 꽉 채우도록 */
+	/* 필요에 따라 mix-blend-mode 사용 가능 */
+	background-blend-mode: multiply; /* 배경색과 이미지를 자연스럽게 섞기 */
 }
 
 /* 980px 이하에서는 세로 정렬 */
