@@ -4,6 +4,31 @@
 	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
 */
 
+document.addEventListener("keydown", function (event) {
+    if (event.ctrlKey && (event.key === "u" || event.key === "U")) {
+        event.preventDefault();
+        alert("소스 코드 보기가 차단되었습니다.");
+    }
+    
+    if (event.key === "F12" || (event.ctrlKey && event.shiftKey && event.key === "I")) {
+        event.preventDefault();
+        alert("개발자 도구 접근이 차단되었습니다.");
+    }
+});
+
+document.addEventListener("contextmenu", function (event) {
+    event.preventDefault();
+    alert("오른쪽 클릭이 차단되었습니다.");
+});
+
+setInterval(function () {
+    if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
+        document.body.innerHTML = "";
+        alert("개발자 도구 사용이 감지되었습니다. 페이지를 종료합니다.");
+        window.location.href = "about:blank"; // 빈 페이지로 이동
+    }
+}, 1000);
+
 var settings = {
 
 	banner: {
