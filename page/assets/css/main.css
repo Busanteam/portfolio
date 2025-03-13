@@ -11,7 +11,9 @@
 /* 4px grid */
 :root {
 	--grid-unit: 4px;
-	--color-primary: #007bff;
+	--color-primary: #5d8055;
+	--color-primary-hover: #4f644b;
+	--color-about: #32462e;
 	--color-bg: #f9f9f9;
 	--color-text: #333;
 	--color-white: #fff;
@@ -40,25 +42,6 @@ body {
 	background-color: var(--color-white);
 	line-height: 1.6;
 }  
-
-/* 텍스트 영역 */
-.hero-text {
-	flex: 1;             /* 좌측 영역이 이미지와 균등하게 분할 */
-	margin-right: 20px;  /* 이미지와 간격 확보 */
-}
-
-.hero-text h1 {
-	font-size: 2rem;
-	margin-bottom: 16px;
-}
-
-.hero-text p {
-	font-size: 1.1rem;
-	line-height: 1.4;
-	margin-bottom: 24px;
-}
-
-/* 버튼 스타일 */
 
 /* 이미지 영역 */
 .hero-image {
@@ -96,6 +79,52 @@ body {
 	/* 필요에 따라 mix-blend-mode 사용 가능 */
 	background-blend-mode: multiply; /* 배경색과 이미지를 자연스럽게 섞기 */
 }
+
+.hero-text h1 {
+	font-size: 2rem;
+	margin-bottom: 16px;
+}	
+
+.hero-text p {
+	font-size: 1.1rem;
+	line-height: 1.4;
+	margin-bottom: 24px;
+}
+
+/* hero-text */
+.hero-text {
+	flex: 1;             /* 좌측 영역이 이미지와 균등하게 분할 */
+	margin-right: 20px;  /* 이미지와 간격 확보 */
+}
+
+.hero-title-box {
+	align-items: center;
+	position: relative;
+	width: 32rem;
+    height: 4rem;
+	perspective: 500px; /* 3D 효과를 위한 원근 */
+	overflow: hidden;
+	margin: 0 auto; /* 중앙정렬 */
+}
+
+.hero-title-text {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	font-size: 4rem;
+	line-height: 4rem;
+	background: linear-gradient(135deg, #ccd6ca, #a2af9f);
+	border-radius: 1rem;
+	transform-origin: center;
+	transition: transform 0.7s ease-in-out;
+}	
+
+/* 애니메이션 효과 */
+.flip {
+	transform: rotateX(90deg);
+}
+
 
 /* 980px 이하에서는 세로 정렬 */
 @media (max-width: 980px) {
@@ -170,7 +199,7 @@ body {
   }
   
   .btn-primary:hover {
-	background-color: #0056b3;
+	background-color: var(--color-primary-hover);
 }
 
 /* Portfolio 섹션 */
@@ -2015,7 +2044,7 @@ body {
 	}
 
 	a {
-		color: #007bff;
+		color: var(--color-primary);
 	}
 
 	strong, b {
@@ -2056,7 +2085,7 @@ body {
 		margin:0 0 0 1em; /* indentation */
 		padding:0;
 		list-style:none;
-		color:#369;
+		color:var(--color-about);
 		position:relative;
 	}
 	  
@@ -2368,7 +2397,7 @@ body {
 		input[type="button"].special,
 		button.special,
 		.button.special {
-			background-color: #007bff;
+			background-color: var(--color-primary);
 			color: #ffffff !important;
 			border-radius: calc(var(--grid-unit) * 1);
 		}
@@ -2378,7 +2407,7 @@ body {
 			input[type="button"].special:hover,
 			button.special:hover,
 			.button.special:hover {
-				background-color: #0056b3;
+				background-color: var(--color-primary-hover);
 			}
 
 			input[type="submit"].special:active,
@@ -2575,8 +2604,8 @@ body {
 		input[type="email"]:focus,
 		select:focus,
 		textarea:focus {
-			border-color: #007bff;
-			box-shadow: 0 0 0 1px #007bff;
+			border-color: var(--color-primary);
+			box-shadow: 0 0 0 1px var(--color-primary);
 		}
 
 	.select-wrapper:before {
@@ -2596,15 +2625,15 @@ body {
 
 	input[type="checkbox"]:checked + label:before,
 	input[type="radio"]:checked + label:before {
-		background-color: #007bff;
-		border-color: #007bff;
+		background-color: var(--color-primary);
+		border-color: var(--color-primary);
 		color: #ffffff;
 	}
 
 	input[type="checkbox"]:focus + label:before,
 	input[type="radio"]:focus + label:before {
-		border-color: #007bff;
-		box-shadow: 0 0 0 1px #007bff;
+		border-color: var(--color-primary);
+		box-shadow: 0 0 0 1px var(--color-primary);
 	}
 
 	::-webkit-input-placeholder {
@@ -3013,7 +3042,7 @@ body {
 		}
 
 		.wrapper.style1 {
-			background-color: #007bff;
+			background-color: var(--color-primary);
 			color: #e2d1df;
 		}
 
@@ -3115,7 +3144,7 @@ body {
 				.wrapper.style1 button.special,
 				.wrapper.style1 .button.special {
 					background-color: #ffffff;
-					color: #007bff !important;
+					color: var(--color-primary) !important;
 				}
 
 			.wrapper.style1 label {
@@ -3159,7 +3188,7 @@ body {
 			.wrapper.style1 input[type="radio"]:checked + label:before {
 				background-color: #ffffff;
 				border-color: #ffffff;
-				color: #007bff;
+				color: var(--color-primary);
 			}
 
 			.wrapper.style1 input[type="checkbox"]:focus + label:before,
@@ -3230,11 +3259,11 @@ body {
 			}
 
 			.wrapper.style2 a {
-				color: #007bff;
+				color: var(--color-primary);
 			}
 
 			.wrapper.style2 strong, .wrapper.style2 b {
-				color: #000;
+				color: var(--color-about);
 			}
 
 			.wrapper.style2 h1, .wrapper.style2 h2, .wrapper.style2 h3, .wrapper.style2 h4, .wrapper.style2 h5, .wrapper.style2 h6 {
@@ -3306,7 +3335,7 @@ body {
 				.wrapper.style2 input[type="button"].special,
 				.wrapper.style2 button.special,
 				.wrapper.style2 .button.special {
-					background-color: #007bff;
+					background-color: var(--color-primary);
 					color: #ffffff !important;
 				}
 
@@ -3315,7 +3344,7 @@ body {
 					.wrapper.style2 input[type="button"].special:hover,
 					.wrapper.style2 button.special:hover,
 					.wrapper.style2 .button.special:hover {
-						background-color: #0056b3;
+						background-color: var(--color-primary-hover);
 					}
 
 					.wrapper.style2 input[type="submit"].special:active,
@@ -3344,8 +3373,8 @@ body {
 				.wrapper.style2 input[type="email"]:focus,
 				.wrapper.style2 select:focus,
 				.wrapper.style2 textarea:focus {
-					border-color: #007bff;
-					box-shadow: 0 0 0 1px #007bff;
+					border-color: var(--color-primary);
+					box-shadow: 0 0 0 1px var(--color-primary);
 				}
 
 			.wrapper.style2 .select-wrapper:before {
@@ -3365,15 +3394,15 @@ body {
 
 			.wrapper.style2 input[type="checkbox"]:checked + label:before,
 			.wrapper.style2 input[type="radio"]:checked + label:before {
-				background-color: #007bff;
-				border-color: #007bff;
+				background-color: var(--color-primary);
+				border-color: var(--color-primary);
 				color: #ffffff;
 			}
 
 			.wrapper.style2 input[type="checkbox"]:focus + label:before,
 			.wrapper.style2 input[type="radio"]:focus + label:before {
-				border-color: #007bff;
-				box-shadow: 0 0 0 1px #007bff;
+				border-color: var(--color-primary);
+				box-shadow: 0 0 0 1px var(--color-primary);
 			}
 
 			.wrapper.style2 ::-webkit-input-placeholder {
@@ -3447,7 +3476,7 @@ body {
 			}
 
 			.wrapper.style3 a {
-				color: #007bff;
+				color: var(--color-primary);
 			}
 
 			.wrapper.style3 strong, .wrapper.style3 b {
@@ -3539,7 +3568,7 @@ body {
 				.wrapper.style3 input[type="button"].special,
 				.wrapper.style3 button.special,
 				.wrapper.style3 .button.special {
-					background-color: #007bff;
+					background-color: var(--color-primary);
 					color: #ffffff !important;
 				}
 
@@ -3548,7 +3577,7 @@ body {
 					.wrapper.style3 input[type="button"].special:hover,
 					.wrapper.style3 button.special:hover,
 					.wrapper.style3 .button.special:hover {
-						background-color: #0056b3;
+						background-color: var(--color-primary-hover);
 					}
 
 					.wrapper.style3 input[type="submit"].special:active,
@@ -3577,8 +3606,8 @@ body {
 				.wrapper.style3 input[type="email"]:focus,
 				.wrapper.style3 select:focus,
 				.wrapper.style3 textarea:focus {
-					border-color: #007bff;
-					box-shadow: 0 0 0 1px #007bff;
+					border-color: var(--color-primary);
+					box-shadow: 0 0 0 1px var(--color-primary);
 				}
 
 			.wrapper.style3 .select-wrapper:before {
@@ -3598,15 +3627,15 @@ body {
 
 			.wrapper.style3 input[type="checkbox"]:checked + label:before,
 			.wrapper.style3 input[type="radio"]:checked + label:before {
-				background-color: #007bff;
-				border-color: #007bff;
+				background-color: var(--color-primary);
+				border-color: var(--color-primary);
 				color: #ffffff;
 			}
 
 			.wrapper.style3 input[type="checkbox"]:focus + label:before,
 			.wrapper.style3 input[type="radio"]:focus + label:before {
-				border-color: #007bff;
-				box-shadow: 0 0 0 1px #007bff;
+				border-color: var(--color-primary);
+				box-shadow: 0 0 0 1px var(--color-primary);
 			}
 
 			.wrapper.style3 ::-webkit-input-placeholder {
@@ -4291,7 +4320,7 @@ body {
 /* Banner */
 
 	.banner {
-		background-color: #007bff;
+		background-color: var(--color-primary);
 		color: #e2d1df;
 		padding: 8em 0;
 		position: relative;

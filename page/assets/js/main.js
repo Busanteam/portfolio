@@ -7,27 +7,47 @@
 document.addEventListener("keydown", function (event) {
     if (event.ctrlKey && (event.key === "u" || event.key === "U")) {
         event.preventDefault();
-        alert("소스 코드 보기가 차단되었습니다.");
+        alert("Source code view blocked.");
     }
     
     if (event.key === "F12" || (event.ctrlKey && event.shiftKey && event.key === "I")) {
         event.preventDefault();
-        alert("개발자 도구 접근이 차단되었습니다.");
+        alert("Access to developer tools has been blocked.");
     }
 });
 
 document.addEventListener("contextmenu", function (event) {
     event.preventDefault();
-    alert("오른쪽 클릭이 차단되었습니다.");
+    alert("Right click blocked.");
 });
 
 setInterval(function () {
     if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
         document.body.innerHTML = "";
-        alert("개발자 도구 사용이 감지되었습니다. 페이지를 종료합니다.");
+        alert("Developer tool usage detected. Exit the page.");
         window.location.href = "about:blank"; // 빈 페이지로 이동
     }
 }, 1000);
+
+
+// hero-title-
+
+const textElement = document.getElementById("hero-title-text");
+const words = ["Hi, I'm a UX/UI Designer", "I enjoy new challenges", "I can write my own code"]; // 변경될 단어 목록
+let index = 0;
+
+function rollText() {
+	textElement.classList.add("flip"); // 애니메이션 적용
+	
+	setTimeout(() => {
+		index = (index + 1) % words.length;
+		textElement.innerText = words[index]; // 텍스트 변경
+		textElement.classList.remove("flip"); // 애니메이션 초기화
+	}, 350); // 350ms 후 텍스트 변경 (애니메이션 중간 타이밍)
+}
+
+setInterval(rollText, 2900); // 2.9초마다 실행
+
 
 var settings = {
 
