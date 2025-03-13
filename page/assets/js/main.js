@@ -4,30 +4,30 @@
 	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
 */
 
-// document.addEventListener("keydown", function (event) {
-//     if (event.ctrlKey && (event.key === "u" || event.key === "U")) {
-//         event.preventDefault();
-//         alert("Source code view blocked.");
-//     }
+document.addEventListener("keydown", function (event) {
+    if (event.ctrlKey && (event.key === "u" || event.key === "U")) {
+        event.preventDefault();
+        alert("Source code view blocked.");
+    }
     
-//     if (event.key === "F12" || (event.ctrlKey && event.shiftKey && event.key === "I")) {
-//         event.preventDefault();
-//         alert("Access to developer tools has been blocked.");
-//     }
-// });
+    if (event.key === "F12" || (event.ctrlKey && event.shiftKey && event.key === "I")) {
+        event.preventDefault();
+        alert("Access to developer tools has been blocked.");
+    }
+});
 
-// document.addEventListener("contextmenu", function (event) {
-//     event.preventDefault();
-//     alert("Right click blocked.");
-// });
+document.addEventListener("contextmenu", function (event) {
+    event.preventDefault();
+    alert("Right click blocked.");
+});
 
-// setInterval(function () {
-//     if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
-//         document.body.innerHTML = "";
-//         alert("Developer tool usage detected. Exit the page.");
-//         window.location.href = "about:blank"; // 빈 페이지로 이동
-//     }
-// }, 1000);
+setInterval(function () {
+    if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
+        document.body.innerHTML = "";
+        alert("Developer tool usage detected. Exit the page.");
+        window.location.href = "about:blank"; // 빈 페이지로 이동
+    }
+}, 1000);
 
 
 // hero-title-
