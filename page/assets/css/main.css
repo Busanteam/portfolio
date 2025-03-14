@@ -94,20 +94,60 @@ body {
 /* hero-text */
 .hero-text {
 	flex: 1;             /* 좌측 영역이 이미지와 균등하게 분할 */
-	margin-right: 20px;  /* 이미지와 간격 확보 */
+	margin: 0 0 2rem;
+	text-align: center;
 }
 
 .hero-title-box {
-	align-items: center;
 	position: relative;
 	width: 32rem;
     height: 4rem;
-	perspective: 500px; /* 3D 효과를 위한 원근 */
-	/* overflow: hidden; */
-	margin: 0 auto; /* 중앙정렬 */
+	overflow: hidden;
+	/* 중앙정렬 */
+	margin: 0 auto;
 }
 
 .hero-title-text {
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	font-size: 4rem;
+	line-height: 4rem;
+	/* 초기 상태는 아래쪽에 위치하고 투명함 */
+	animation: moveUp 3.5s ease-in-out forwards;
+	opacity: 0;
+}	
+
+/* 텍스트 위로 슬라이드하는 애니메이션 */
+@keyframes moveUp {
+	0% {
+	  transform: translateY(100%);
+	  opacity: 0;
+	}
+	10% {
+	  opacity: 1;
+	}
+	50% {
+	  transform: translateY(0);
+	  opacity: 1;
+	}
+	90% {
+	  opacity: 1;
+	}
+	100% {
+	  transform: translateY(-100%);
+	  opacity: 0;
+	}
+}
+
+/* 기존 hero-description, 버튼, 이미지 등은 그대로 유지 */
+.hero-description {
+	font-size: 1.1rem;
+	line-height: 1.4;
+	margin-bottom: 2rem;
+  }
+
+/* .hero-title-text {
 	position: absolute;
 	width: 100%;
 	height: 100%;
@@ -118,12 +158,12 @@ body {
 	border-radius: 1rem;
 	transform-origin: center;
 	transition: transform 0.7s ease-in-out;
-}	
+}	 */
 
 /* 애니메이션 효과 */
-.flip {
+/* .flip {
 	transform: rotateX(90deg);
-}
+} */
 
 
 /* 980px 이하에서는 세로 정렬 */
@@ -203,7 +243,7 @@ body {
 }
 
 /* Portfolio 섹션 */
-.portfolio {
+/* .portfolio {
 	padding: calc(var(--grid-unit) * 16) calc(var(--grid-unit) * 8);
 	background-color: var(--color-white);
   }
@@ -240,7 +280,7 @@ body {
 	width: 100%;
 	border-radius: calc(var(--grid-unit) * 1);
 	margin-bottom: calc(var(--grid-unit) * 4);
-  }
+  } */
 
 .image.fit.half img {
 	width: 100%;

@@ -4,49 +4,77 @@
 	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
 */
 
-document.addEventListener("keydown", function (event) {
-    if (event.ctrlKey && (event.key === "u" || event.key === "U")) {
-        event.preventDefault();
-        alert("Source code view blocked.");
-    }
+// document.addEventListener("keydown", function (event) {
+//     if (event.ctrlKey && (event.key === "u" || event.key === "U")) {
+//         event.preventDefault();
+//         alert("Source code view blocked.");
+//     }
     
-    if (event.key === "F12" || (event.ctrlKey && event.shiftKey && event.key === "I")) {
-        event.preventDefault();
-        alert("Access to developer tools has been blocked.");
-    }
+//     if (event.key === "F12" || (event.ctrlKey && event.shiftKey && event.key === "I")) {
+//         event.preventDefault();
+//         alert("Access to developer tools has been blocked.");
+//     }
+// });
+
+// document.addEventListener("contextmenu", function (event) {
+//     event.preventDefault();
+//     alert("Right click blocked.");
+// });
+
+// setInterval(function () {
+//     if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
+//         document.body.innerHTML = "";
+//         alert("Developer tool usage detected. Exit the page.");
+//         window.location.href = "about:blank"; // 빈 페이지로 이동
+//     }
+// }, 1000);
+
+
+document.addEventListener("DOMContentLoaded", function() {
+	const textElement = document.getElementById("hero-title-text");
+	const texts = [
+	  "Hi, I'm a UX/UI Designer",
+	  "I enjoy new challenges",
+	  "I can write my own code"
+	];
+	let index = 0;
+  
+	function animateText() {
+	  // 현재 텍스트 변경
+	  textElement.innerText = texts[index];
+	  // 애니메이션 초기화: 기존 애니메이션 제거 후 강제 reflow
+	  textElement.style.animation = 'none';
+	  void textElement.offsetWidth;
+	  // 애니메이션 재적용
+	  textElement.style.animation = 'moveUp 3.5s ease-in-out forwards';
+	  // 다음 텍스트 인덱스 설정
+	  index = (index + 1) % texts.length;
+	}
+  
+	// 애니메이션 종료 시 자동으로 다음 텍스트로 전환
+	textElement.addEventListener("animationend", animateText);
+  
+	// 초기 애니메이션 시작
+	animateText();
 });
-
-document.addEventListener("contextmenu", function (event) {
-    event.preventDefault();
-    alert("Right click blocked.");
-});
-
-setInterval(function () {
-    if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
-        document.body.innerHTML = "";
-        alert("Developer tool usage detected. Exit the page.");
-        window.location.href = "about:blank"; // 빈 페이지로 이동
-    }
-}, 1000);
-
 
 // hero-title-
 
-const textElement = document.getElementById("hero-title-text");
-const words = ["Hi, I'm a UX/UI Designer", "I enjoy new challenges", "I can write my own code"]; // 변경될 단어 목록
-let index = 0;
+// const textElement = document.getElementById("hero-title-text");
+// const words = ["Hi, I'm a UX/UI Designer", "I enjoy new challenges", "I can write my own code"]; // 변경될 단어 목록
+// let index = 0;
 
-function rollText() {
-	textElement.classList.add("flip"); // 애니메이션 적용
+// function rollText() {
+// 	textElement.classList.add("flip"); // 애니메이션 적용
 	
-	setTimeout(() => {
-		index = (index + 1) % words.length;
-		textElement.innerText = words[index]; // 텍스트 변경
-		textElement.classList.remove("flip"); // 애니메이션 초기화
-	}, 350); // 350ms 후 텍스트 변경 (애니메이션 중간 타이밍)
-}
+// 	setTimeout(() => {
+// 		index = (index + 1) % words.length;
+// 		textElement.innerText = words[index]; // 텍스트 변경
+// 		textElement.classList.remove("flip"); // 애니메이션 초기화
+// 	}, 350); // 350ms 후 텍스트 변경 (애니메이션 중간 타이밍)
+// }
 
-setInterval(rollText, 2900); // 2.9초마다 실행
+// setInterval(rollText, 2900); // 2.9초마다 실행
 
 
 var settings = {
