@@ -36,6 +36,23 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 	vertical-align: baseline;
 }
 
+
+  
+  /* 반응형 (모바일) */
+  @media (max-width: 480px) {
+	.roulette-container {
+	  width: 90%;
+	}
+	.roulette-wheel {
+	  width: 90%;
+	  height: auto;
+	}
+	#spinButton {
+	  width: 100%;
+	}
+  }
+  
+
 body {
 	font-family: var(--font-family);
 	color: var(--color-text);

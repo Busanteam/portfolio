@@ -4,6 +4,8 @@
 	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
 */
 
+
+
 document.addEventListener("keydown", function (event) {
     if (event.ctrlKey && (event.key === "u" || event.key === "U")) {
         event.preventDefault();
