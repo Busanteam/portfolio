@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko" class="dark"> <head>
+<html lang="ko" class="dark">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YH - UX/UI & Full-Stack Portfolio</title>
@@ -36,7 +37,7 @@
             --text-secondary: #a0a0a0;
             --card-bg: #1e1e1e;
             --shadow-color: 0deg 0% 0%;
-            --shadow-opacity: 0.4; /* 다크모드에선 그림자를 더 짙게 처리하여 입체감 확보 */
+            --shadow-opacity: 0.4;
             --accent-color: #66a1ee;
         }
 
@@ -72,8 +73,8 @@
             color: var(--text-secondary);
         }
 
-       .container {
-            max-width: 960px; /* 8의 배수 그리드 준수 */
+      .container {
+            max-width: 960px;
             margin: 0 auto;
             padding: var(--grid-8) var(--grid-4);
         }
@@ -112,8 +113,8 @@
             transform: scale(0.98);
         }
 
-        /* 다층적(Layered) 그림자 아키텍처 */
-       .card {
+        /* 다층적 그림자 아키텍처 */
+      .card {
             background-color: var(--card-bg);
             border-radius: var(--grid-3);
             padding: var(--grid-5);
@@ -127,7 +128,7 @@
         }
 
         /* 심플하고 모던한 연락처 버튼 */
-       .btn {
+      .btn {
             display: inline-block;
             padding: var(--grid-2) var(--grid-4);
             background-color: var(--accent-color);
@@ -139,28 +140,28 @@
             transition: opacity 0.2s ease, transform 0.2s ease;
         }
 
-       .btn:hover {
+      .btn:hover {
             opacity: 0.9;
             transform: translateY(-4px);
         }
 
-        /* 타임라인 레이아웃 (커리어 표기용) */
-       .timeline {
+        /* 타임라인 레이아웃 */
+      .timeline {
             border-left: 2px solid rgba(128, 128, 128, 0.15);
             padding-left: var(--grid-3);
             margin-left: var(--grid-1);
         }
         
-       .timeline-item {
+      .timeline-item {
             position: relative;
             margin-bottom: var(--grid-5);
         }
         
-       .timeline-item:last-child {
+      .timeline-item:last-child {
             margin-bottom: 0;
         }
         
-       .timeline-item::before {
+      .timeline-item::before {
             content: '';
             position: absolute;
             left: calc(var(--grid-3) * -1 - 7px);
@@ -171,7 +172,7 @@
             background-color: var(--accent-color);
         }
         
-       .timeline-date {
+      .timeline-date {
             font-size: 0.875rem;
             font-weight: 600;
             color: var(--accent-color);
@@ -179,14 +180,14 @@
         }
 
         /* 스킬 태그 */
-       .tags {
+      .tags {
             display: flex;
             flex-wrap: wrap;
             gap: var(--grid-1);
             margin-top: var(--grid-2);
         }
         
-       .tag {
+      .tag {
             padding: 6px 16px;
             background-color: rgba(128, 128, 128, 0.1);
             border-radius: var(--grid-2);
@@ -202,15 +203,14 @@
             margin-top: var(--grid-4);
         }
         
-       .line {
+      .line {
             fill: none;
             stroke: url(#line-gradient);
             stroke-width: 3px;
             stroke-linecap: round;
         }
 
-        /* 미니멀리즘 축 스타일링 */
-       .domain,.tick line {
+      .domain,.tick line {
             stroke: rgba(128, 128, 128, 0.15);
         }
     </style>
@@ -225,7 +225,7 @@
 
         <section class="hero" style="margin-bottom: var(--grid-8);">
             <h2>A Brief History of YH</h2>
-            <p>디자인과 개발의 경계를 허무는 융합형(Convergence) 인재입니다. 시각디자인 전공으로 다져진 심미성에 삼성 SSAFY와 Alpaco에서 습득한 풀스택/데이터 분석 역량을 결합하여, 논리적이면서도 아름다운 프로덕트를 만듭니다. 저의 가장 큰 강점은 <strong>'경청을 바탕으로 한 커뮤니케이션'</strong>이며, 기획과 개발 사이의 간극을 줄여 팀을 더 나은 방향으로 이끕니다.</p>
+            <p>디자인과 개발의 경계를 허무는 융합형(Convergence) 인재입니다. 시각디자인 전공으로 다져진 심미성에 삼성 SSAFY와 Alpaco에서 습득한 풀스택 및 데이터 분석 역량을 결합하여, 논리적이면서도 아름다운 프로덕트를 만듭니다. 저의 가장 큰 강점은 <strong>'경청을 바탕으로 한 커뮤니케이션'</strong>이며, 기획과 개발 사이의 간극을 줄여 팀을 더 나은 방향으로 이끕니다.</p>
             
             <div style="margin-bottom: var(--grid-4); margin-top: var(--grid-3);">
                 <p style="margin-bottom: var(--grid-1);"><strong style="color: var(--text-primary);">Desired Employment:</strong> Full-time, Contractual, Freelance, Intern, Half-time</p>
@@ -240,33 +240,33 @@
             <div class="card">
                 <div class="timeline">
                     <div class="timeline-item">
+                        <div class="timeline-date">Professional Experience</div>
+                        <h3>Web & App UI/UX Projects</h3>
+                        <p>실제 서비스되는 프로덕트의 디자인 시스템을 구축하고 프론트엔드 환경을 구현했습니다.</p>
+                        <ul style="margin-bottom: 0;">
+                            <li><strong>Web (Figma, HTML, CSS):</strong> '모햇(Everyone's Sunshine)', '김태양H', 'H-ENERGY(일본)', '모두의 RE100' 리뉴얼 및 전체 디자인 적용</li>
+                            <li><strong>App (Figma, Sass):</strong> '김태양' 앱 전체 디자인 및 안전 관리자용 PC 대시보드 구축</li>
+                        </ul>
+                    </div>
+
+                    <div class="timeline-item">
                         <div class="timeline-date">Since 2017</div>
                         <h3>200+ Freelance & Contract Activities</h3>
                         <p>총 8회의 디자인 관련 수상 경력을 바탕으로 200회 이상의 프리랜서 및 외주 프로젝트를 성공적으로 완수했습니다. 유연한 사고로 다양한 고객의 니즈를 프로젝트에 담아냅니다.</p>
                         <ul style="margin-bottom: 0;">
                             <li><strong>Apple KR:</strong> 2024년 9월 신제품 스크린 작업</li>
                             <li><strong>기업 파트너십:</strong> 영국 투자 회사, 국내 화장품 B2C 기업(일본 본사), 비즈니스 영상 제작사 등</li>
-                            <li><strong>디자인 스펙트럼:</strong> CI/BI, 웹/앱 UI, 3D 제품 디자인 및 영상 기획·편집</li>
+                            <li><strong>디자인 스펙트럼:</strong> CI/BI, 웹/앱 UI, 3D 제품 디자인, 7-세그먼트 디스플레이 도면 및 영상 기획·편집</li>
                         </ul>
                     </div>
 
                     <div class="timeline-item">
-                        <div class="timeline-date">Developer Education</div>
-                        <h3>Front-end & UX/UI Projects</h3>
-                        <p>웹과 앱 환경 모두에서 디자인 시스템을 구축하고 실제 동작하는 프론트엔드 환경을 구현했습니다.</p>
-                        <ul style="margin-bottom: 0;">
-                            <li><strong>Web (Figma, HTML, CSS):</strong> '모햇', '김태양H', 'H-ENERGY(일본)', '모두의 RE100', '딱정이', 'JJOBPLANET' 리뉴얼 및 전체 디자인 적용</li>
-                            <li><strong>App (Figma, Sass):</strong> '김태양' 앱 전체 디자인, 안전 관리자용 PC 대시보드, 챗봇 '공감이' UI 디자인</li>
-                        </ul>
-                    </div>
-
-                    <div class="timeline-item">
-                        <div class="timeline-date">Since 2019</div>
+                        <div class="timeline-date">Academy Projects</div>
                         <h3>SSAFY & Alpaco</h3>
-                        <p>디자인을 넘어 백엔드 로직 설계, 인공지능, 그리고 데이터 분석과 자동화로 기술적 스펙트럼을 확장했습니다.</p>
+                        <p>개발자로 전향하며 삼성 청년 SW 아카데미(SSAFY)와 Alpaco에서 풀스택 개발 및 데이터 분석 역량을 강화하기 위해 수행한 프로젝트입니다.</p>
                         <ul style="margin-bottom: 0;">
-                            <li><strong>SSAFY (삼성 청년 SW 아카데미):</strong> Python 활용 AI 챗봇 '공감이' 딥러닝 구현, 삼성 SW 역량 테스트 A형(Advanced) 패스</li>
-                            <li><strong>Alpaco (Since 2022):</strong> UiPath 기반 사무 자동화(RPA) 시스템 코딩, Python을 활용한 비즈니스 운영 통계 및 그래프 시각화</li>
+                            <li><strong>SSAFY (Since 2019):</strong> '딱정이', 'JJOBPLANET' 웹 디자인 적용 / 인공지능 챗봇 '공감이' UI 디자인 및 Python 딥러닝 구현 / 삼성 SW 역량 테스트 A형(Advanced) 패스</li>
+                            <li><strong>Alpaco (Since 2022):</strong> UiPath 기반 사무 자동화(RPA) 시스템 코딩 / Python을 활용한 비즈니스 운영 통계 및 그래프 시각화</li>
                         </ul>
                     </div>
 
@@ -275,8 +275,8 @@
                         <h3>Visual Design & Engineering Tools</h3>
                         <p>시각디자인 전공 지식을 바탕으로 학생회 기획부장 및 졸업 전시 위원장을 역임하며 리더십을 검증받았습니다.</p>
                         <ul>
-                            <li>융합 디자이너 양성 과정 수료</li>
-                            <li>GTQ(그래픽스운용기능사) 1급 취득</li>
+                            <li>융합 디자이너 양성 과정 수료 및 GTQ(그래픽스운용기능사) 1급 취득</li>
+                            <li><strong>3D Design:</strong> AutoCAD, Autodesk Inventor, Ultimaker Cura를 활용한 건축물(카페) 3D 프린팅 및 Canula 도면 설계</li>
                         </ul>
                         <div class="tags">
                             <span class="tag">Figma</span>
@@ -306,7 +306,7 @@
     </div>
 
     <script>
-        // 1. 방사형(Circular) 다크/라이트 모드 트랜지션 (View Transitions API) 구문 오류 수정
+        // 1. 방사형(Circular) 다크/라이트 모드 트랜지션 (View Transitions API)
         const themeToggle = document.getElementById('theme-toggle');
         
         themeToggle.addEventListener('click', (e) => {
@@ -314,7 +314,6 @@
             const x = e.clientX;
             const y = e.clientY;
 
-            // 브라우저가 View Transitions API를 지원하지 않는 경우 즉시 전환
             if (!document.startViewTransition) {
                 document.documentElement.classList.toggle('dark');
                 return;
@@ -324,7 +323,6 @@
                 document.documentElement.classList.toggle('dark');
             });
 
-            // 원형 클립 패스(Circular Clip-path) 애니메이션 적용
             transition.ready.then(() => {
                 const maxRadius = Math.hypot(
                     Math.max(x, window.innerWidth - x),
@@ -333,12 +331,11 @@
 
                 document.documentElement.animate(
                     {
-                        // 배열 형태로 시작과 끝의 clip-path 값을 지정하여 에러 해결
-                        clipPath:
+                        clipPath:,
                     },
                     {
                         duration: 600,
-                        easing: 'cubic-bezier(0.4, 0, 0.2, 1)', // 조금 더 부드럽고 텐션 있는 이징으로 변경
+                        easing: 'cubic-bezier(0.4, 0, 0.2, 1)', 
                         pseudoElement: isDark? '::view-transition-old(root)' : '::view-transition-new(root)'
                     }
                 );
@@ -367,71 +364,65 @@
             const margin = {top: 24, right: 24, bottom: 32, left: 56};
 
             const svg = container.append("svg")
-              .attr("width", width)
-              .attr("height", height);
+             .attr("width", width)
+             .attr("height", height);
 
-            // 선형 그라디언트 정의 (시각적 전문성을 위해 테마 색상으로 수정)
             const defs = svg.append("defs");
             const gradient = defs.append("linearGradient")
-              .attr("id", "line-gradient")
-              .attr("x1", "0%")
-              .attr("y1", "0%")
-              .attr("x2", "100%")
-              .attr("y2", "0%");
+             .attr("id", "line-gradient")
+             .attr("x1", "0%")
+             .attr("y1", "0%")
+             .attr("x2", "100%")
+             .attr("y2", "0%");
 
             gradient.append("stop").attr("offset", "0%").attr("stop-color", "#3080e8");
             gradient.append("stop").attr("offset", "100%").attr("stop-color", "#66a1ee");
 
             const x = d3.scaleTime()
-              .domain(d3.extent(data, d => d.date))
-              .range([margin.left, width - margin.right]);
+             .domain(d3.extent(data, d => d.date))
+             .range([margin.left, width - margin.right]);
 
             const y = d3.scaleLinear()
-              .domain([0, d3.max(data, d => d.value) * 1.1])
-              .range([height - margin.bottom, margin.top]);
-
-            // 미니멀리즘 축 렌더링
-            svg.append("g")
-              .attr("transform", `translate(0,${height - margin.bottom})`)
-              .call(d3.axisBottom(x).ticks(5).tickSizeOuter(0))
-              .attr("font-family", "Pretendard")
-              .attr("font-size", "12px")
-              .style("color", "var(--text-secondary)");
+             .domain([0, d3.max(data, d => d.value) * 1.1])
+             .range([height - margin.bottom, margin.top]);
 
             svg.append("g")
-              .attr("transform", `translate(${margin.left},0)`)
-              .call(d3.axisLeft(y).ticks(5).tickFormat(d => "$" + d / 1000 + "k").tickSizeOuter(0))
-              .attr("font-family", "Pretendard")
-              .attr("font-size", "12px")
-              .style("color", "var(--text-secondary)");
+             .attr("transform", `translate(0,${height - margin.bottom})`)
+             .call(d3.axisBottom(x).ticks(5).tickSizeOuter(0))
+             .attr("font-family", "Pretendard")
+             .attr("font-size", "12px")
+             .style("color", "var(--text-secondary)");
 
-            // 부드러운 곡선 제너레이터
+            svg.append("g")
+             .attr("transform", `translate(${margin.left},0)`)
+             .call(d3.axisLeft(y).ticks(5).tickFormat(d => "$" + d / 1000 + "k").tickSizeOuter(0))
+             .attr("font-family", "Pretendard")
+             .attr("font-size", "12px")
+             .style("color", "var(--text-secondary)");
+
             const line = d3.line()
-              .x(d => x(d.date))
-              .y(d => y(d.value))
-              .curve(d3.curveMonotoneX);
+             .x(d => x(d.date))
+             .y(d => y(d.value))
+             .curve(d3.curveMonotoneX);
 
             const path = svg.append("path")
-              .datum(data)
-              .attr("class", "line")
-              .attr("d", line);
+             .datum(data)
+             .attr("class", "line")
+             .attr("d", line);
 
-            // Stroke-dashoffset 드로잉 애니메이션
             const totalLength = path.node().getTotalLength();
             
             path
-              .attr("stroke-dasharray", totalLength + " " + totalLength)
-              .attr("stroke-dashoffset", totalLength)
-              .transition()
-              .duration(2000)
-              .ease(d3.easeCubicOut)
-              .attr("stroke-dashoffset", 0);
+             .attr("stroke-dasharray", totalLength + " " + totalLength)
+             .attr("stroke-dashoffset", totalLength)
+             .transition()
+             .duration(2000)
+             .ease(d3.easeCubicOut)
+             .attr("stroke-dashoffset", 0);
         };
 
-        // 초기 차트 렌더링
         drawChart();
         
-        // 반응형 리사이즈 대응 (디바운싱 처리로 성능 향상)
         let resizeTimer;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimer);
