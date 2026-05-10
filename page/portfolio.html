@@ -73,7 +73,7 @@
             color: var(--text-secondary);
         }
 
-      .container {
+     .container {
             max-width: 960px;
             margin: 0 auto;
             padding: var(--grid-8) var(--grid-4);
@@ -114,7 +114,7 @@
         }
 
         /* 다층적 그림자 아키텍처 */
-      .card {
+     .card {
             background-color: var(--card-bg);
             border-radius: var(--grid-3);
             padding: var(--grid-5);
@@ -128,7 +128,7 @@
         }
 
         /* 심플하고 모던한 연락처 버튼 */
-      .btn {
+     .btn {
             display: inline-block;
             padding: var(--grid-2) var(--grid-4);
             background-color: var(--accent-color);
@@ -140,28 +140,28 @@
             transition: opacity 0.2s ease, transform 0.2s ease;
         }
 
-      .btn:hover {
+     .btn:hover {
             opacity: 0.9;
             transform: translateY(-4px);
         }
 
         /* 타임라인 레이아웃 */
-      .timeline {
+     .timeline {
             border-left: 2px solid rgba(128, 128, 128, 0.15);
             padding-left: var(--grid-3);
             margin-left: var(--grid-1);
         }
         
-      .timeline-item {
+     .timeline-item {
             position: relative;
             margin-bottom: var(--grid-5);
         }
         
-      .timeline-item:last-child {
+     .timeline-item:last-child {
             margin-bottom: 0;
         }
         
-      .timeline-item::before {
+     .timeline-item::before {
             content: '';
             position: absolute;
             left: calc(var(--grid-3) * -1 - 7px);
@@ -172,7 +172,7 @@
             background-color: var(--accent-color);
         }
         
-      .timeline-date {
+     .timeline-date {
             font-size: 0.875rem;
             font-weight: 600;
             color: var(--accent-color);
@@ -180,14 +180,14 @@
         }
 
         /* 스킬 태그 */
-      .tags {
+     .tags {
             display: flex;
             flex-wrap: wrap;
             gap: var(--grid-1);
             margin-top: var(--grid-2);
         }
         
-      .tag {
+     .tag {
             padding: 6px 16px;
             background-color: rgba(128, 128, 128, 0.1);
             border-radius: var(--grid-2);
@@ -203,14 +203,14 @@
             margin-top: var(--grid-4);
         }
         
-      .line {
+     .line {
             fill: none;
             stroke: url(#line-gradient);
             stroke-width: 3px;
             stroke-linecap: round;
         }
 
-      .domain,.tick line {
+     .domain,.tick line {
             stroke: rgba(128, 128, 128, 0.15);
         }
     </style>
@@ -295,7 +295,7 @@
             <h2>Recent Highlights</h2>
             <div class="card" style="margin-bottom: 0;">
                 <h3>비즈앤씨 의료창고 매출 성장 (Medical Warehouse)</h3>
-                <p>풀스택 데이터 파이프라인 구축 및 실무 CSV 데이터를 바탕으로 재고 회전율 최적화가 이끌어낸 성장 지표를 시각화합니다. (상세 내용 업데이트 예정)</p>
+                <p>2025년 6월부터 2026년 4월까지의 실제 물류 및 판매 데이터를 바탕으로, 재고 관리 시스템 최적화와 풀스택 데이터 파이프라인 구축을 통해 이끌어낸 순매출(Net Sales)의 극적인 상승 지표를 시각화했습니다.</p>
                 <div id="chart-container"></div>
             </div>
         </section>
@@ -331,7 +331,7 @@
 
                 document.documentElement.animate(
                     {
-                        clipPath:,
+                        clipPath:
                     },
                     {
                         duration: 600,
@@ -344,15 +344,21 @@
 
         // 2. D3.js 기반 매출 상승 곡선 파싱 및 드로잉 애니메이션
         const drawChart = () => {
+            // 의료 창고 실무 CSV 데이터 (순매출 기준, 시간 역순 정렬)
             const csvData = `Date,Revenue
-            2023-01-01,150000
-            2023-06-01,180000
-            2024-01-01,230000
-            2024-06-01,210000
-            2025-01-01,310000
-            2025-06-01,450000
-            2026-01-01,620000`;
+            2025-06-01,819487
+            2025-07-01,2239478
+            2025-08-01,4748444
+            2025-09-01,12393460
+            2025-10-01,9266434
+            2025-11-01,18736127
+            2025-12-01,30910873
+            2026-01-01,26235564
+            2026-02-01,32014976
+            2026-03-01,66870773
+            2026-04-01,504828580`;
 
+            // 데이터 파싱
             const data = d3.csvParse(csvData, d => ({
                 date: new Date(d.Date.trim()),
                 value: +d.Revenue.trim()
@@ -364,61 +370,68 @@
             const margin = {top: 24, right: 24, bottom: 32, left: 56};
 
             const svg = container.append("svg")
-             .attr("width", width)
-             .attr("height", height);
+            .attr("width", width)
+            .attr("height", height);
 
             const defs = svg.append("defs");
             const gradient = defs.append("linearGradient")
-             .attr("id", "line-gradient")
-             .attr("x1", "0%")
-             .attr("y1", "0%")
-             .attr("x2", "100%")
-             .attr("y2", "0%");
+            .attr("id", "line-gradient")
+            .attr("x1", "0%")
+            .attr("y1", "0%")
+            .attr("x2", "100%")
+            .attr("y2", "0%");
 
             gradient.append("stop").attr("offset", "0%").attr("stop-color", "#3080e8");
             gradient.append("stop").attr("offset", "100%").attr("stop-color", "#66a1ee");
 
             const x = d3.scaleTime()
-             .domain(d3.extent(data, d => d.date))
-             .range([margin.left, width - margin.right]);
+            .domain(d3.extent(data, d => d.date))
+            .range([margin.left, width - margin.right]);
 
             const y = d3.scaleLinear()
-             .domain([0, d3.max(data, d => d.value) * 1.1])
-             .range([height - margin.bottom, margin.top]);
+            .domain([0, d3.max(data, d => d.value) * 1.1]) // 상단 여백을 위해 10% 추가 스케일링
+            .range([height - margin.bottom, margin.top]);
 
+            // X축: 년월 형식 적용
             svg.append("g")
-             .attr("transform", `translate(0,${height - margin.bottom})`)
-             .call(d3.axisBottom(x).ticks(5).tickSizeOuter(0))
-             .attr("font-family", "Pretendard")
-             .attr("font-size", "12px")
-             .style("color", "var(--text-secondary)");
+            .attr("transform", `translate(0,${height - margin.bottom})`)
+            .call(d3.axisBottom(x).ticks(5).tickFormat(d3.timeFormat("%y.%m")).tickSizeOuter(0))
+            .attr("font-family", "Pretendard")
+            .attr("font-size", "12px")
+            .style("color", "var(--text-secondary)");
 
+            // Y축: 화폐 단위 적용 (만 단위, 억 단위 동적 변환)
             svg.append("g")
-             .attr("transform", `translate(${margin.left},0)`)
-             .call(d3.axisLeft(y).ticks(5).tickFormat(d => "$" + d / 1000 + "k").tickSizeOuter(0))
-             .attr("font-family", "Pretendard")
-             .attr("font-size", "12px")
-             .style("color", "var(--text-secondary)");
+            .attr("transform", `translate(${margin.left},0)`)
+            .call(d3.axisLeft(y).ticks(5).tickFormat(d => {
+                  if (d === 0) return "0";
+                  if (d >= 100000000) return (d / 100000000).toFixed(1).replace('.0', '') + "억";
+                  return (d / 10000).toFixed(0) + "만";
+              }).tickSizeOuter(0))
+            .attr("font-family", "Pretendard")
+            .attr("font-size", "12px")
+            .style("color", "var(--text-secondary)");
 
             const line = d3.line()
-             .x(d => x(d.date))
-             .y(d => y(d.value))
-             .curve(d3.curveMonotoneX);
+            .x(d => x(d.date))
+            .y(d => y(d.value))
+            .curve(d3.curveMonotoneX);
 
             const path = svg.append("path")
-             .datum(data)
-             .attr("class", "line")
-             .attr("d", line);
+            .datum(data)
+            .attr("class", "line")
+            .attr("d", line);
 
+            // 선이 유려하게 그려지는 애니메이션
             const totalLength = path.node().getTotalLength();
             
             path
-             .attr("stroke-dasharray", totalLength + " " + totalLength)
-             .attr("stroke-dashoffset", totalLength)
-             .transition()
-             .duration(2000)
-             .ease(d3.easeCubicOut)
-             .attr("stroke-dashoffset", 0);
+            .attr("stroke-dasharray", totalLength + " " + totalLength)
+            .attr("stroke-dashoffset", totalLength)
+            .transition()
+            .duration(2500)
+            .ease(d3.easeCubicOut)
+            .attr("stroke-dashoffset", 0);
         };
 
         drawChart();
