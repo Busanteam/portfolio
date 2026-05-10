@@ -319,19 +319,28 @@
             });
         });
 
-        // 2. GSAP Magnetic Button Effect
-        const magnets = document.querySelectorAll('.magnetic-btn');
-        magnets.forEach(btn => {
-            btn.addEventListener('mousemove', (e) => {
-                const rect = btn.getBoundingClientRect();
-                const x = (e.clientX - rect.left - rect.width / 2) * 0.3;
-                const y = (e.clientY - rect.top - rect.height / 2) * 0.3;
-                
-                gsap.to(btn, { x: x, y: y, scale: 1.05, duration: 0.3, ease: "power2.out" });
+        // 2. Refined GSAP Button Effect (정제된 엘리베이션 모션)
+        const buttons = document.querySelectorAll('.magnetic-btn');
+
+        buttons.forEach(btn => {
+            // 마우스 호버 시: 부드럽게 약간 커지며 위로 살짝 떠오름
+            btn.addEventListener('mouseenter', () => {
+                gsap.to(btn, { scale: 1.03, y: -3, duration: 0.4, ease: "power3.out" });
             });
             
+            // 마우스 호버 해제 시: 원래 상태로 부드럽게 복구
             btn.addEventListener('mouseleave', () => {
-                gsap.to(btn, { x: 0, y: 0, scale: 1, duration: 0.6, ease: "elastic.out(1, 0.3)" });
+                gsap.to(btn, { scale: 1, y: 0, duration: 0.5, ease: "power2.out" });
+            });
+            
+            // 마우스 클릭 (누를 때): 물리적 버튼처럼 살짝 작아지며 눌리는 효과
+            btn.addEventListener('mousedown', () => {
+                gsap.to(btn, { scale: 0.97, y: 0, duration: 0.1, ease: "power1.inOut" });
+            });
+            
+            // 마우스 클릭 (뗄 때): 원래 호버 상태로 탄력 있게 튕기며 복구
+            btn.addEventListener('mouseup', () => {
+                gsap.to(btn, { scale: 1.03, y: -3, duration: 0.4, ease: "back.out(1.5)" });
             });
         });
 
@@ -343,7 +352,7 @@
 
             // [수정 포인트] TSV의 빈칸/탭 인식 에러를 막기 위해 안전한 JSON 객체 형태로 데이터 변경
             const rawData = [
-                { date: "Apr-26", value: 504828580 },
+                { date: "Apr-26", value: 124828580 },
                 { date: "Mar-26", value: 66870773 },
                 { date: "Feb-26", value: 32014976 },
                 { date: "Jan-26", value: 26235564 },
