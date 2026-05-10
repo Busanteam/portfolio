@@ -9,11 +9,26 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
     
     <style>
-        /* Typography: Playfair Display (Serif) + Roboto (Sans-serif) */
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Roboto:wght@300;400;500;700&display=swap');
+        /* 1. Typography: Pretendard + Roboto */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css');
 
-        /* Refined Apple-like Color Palette */
+        /* 3. 기본 모드를 다크 모드로 설정 */
         :root {
+            --bg-primary: #000000;
+            --bg-secondary: #1c1c1e;
+            --text-primary: #f5f5f7;
+            --text-secondary: #a1a1a6;
+            --card-bg: #1e1e1e;
+            --accent: #2997ff;
+            --shadow-color: 0deg 0% 100%;
+            --shadow-opacity: 0.02;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --nav-bg: rgba(0, 0, 0, 0.7);
+        }
+
+        /* 3. 밝은 모드 (라이트 모드) 변수 */
+        html.light {
             --bg-primary: #fbfbfd;
             --bg-secondary: #ffffff;
             --text-primary: #1d1d1f;
@@ -21,21 +36,8 @@
             --card-bg: #ffffff;
             --shadow-color: 0deg 0% 0%;
             --shadow-opacity: 0.06;
-            --accent: #2997ff;
             --border-color: rgba(0, 0, 0, 0.05);
             --nav-bg: rgba(251, 251, 253, 0.7);
-        }
-
-        html.dark {
-            --bg-primary: #000000;
-            --bg-secondary: #1c1c1e;
-            --text-primary: #f5f5f7;
-            --text-secondary: #a1a1a6;
-            --card-bg: #1e1e1e;
-            --shadow-color: 0deg 0% 100%;
-            --shadow-opacity: 0.02;
-            --border-color: rgba(255, 255, 255, 0.1);
-            --nav-bg: rgba(0, 0, 0, 0.7);
         }
 
         html { scroll-behavior: smooth; }
@@ -43,26 +45,27 @@
             margin: 0;
             background-color: var(--bg-primary);
             color: var(--text-primary);
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Roboto', 'Pretendard Variable', Pretendard, sans-serif;
             overflow-x: hidden;
             transition: background-color 0.4s ease, color 0.4s ease;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
 
-        h1, h2, h3,.logo {
-            font-family: 'Playfair Display', serif;
+        /* 1. Playfair Display 폰트를 Pretendard로 수정 */
+        h1, h2, h3, .logo {
+            font-family: 'Pretendard Variable', Pretendard, sans-serif;
             font-weight: 800;
             letter-spacing: -0.02em;
         }
 
         p, span, a, li, input, textarea {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Roboto', 'Pretendard Variable', Pretendard, sans-serif;
             line-height: 1.7;
             letter-spacing: 0.01em;
         }
 
-       .container {
+        .container {
             max-width: 1040px;
             margin: 0 auto;
             padding: 0 2rem;
@@ -80,7 +83,7 @@
             padding: 1.2rem 0;
             transition: background-color 0.4s ease;
         }
-       .nav-inner {
+        .nav-inner {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -88,7 +91,7 @@
             margin: 0 auto;
             padding: 0 2rem;
         }
-       .logo { font-size: 1.4rem; letter-spacing: -1px; }
+        .logo { font-size: 1.4rem; letter-spacing: -1px; }
 
         ::view-transition-old(root),
         ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
@@ -110,10 +113,10 @@
 
         /* Smooth Sections */
         section { padding: 10rem 0; }
-       .section-title { font-size: 3.2rem; margin-bottom: 3.5rem; }
+        .section-title { font-size: 3.2rem; margin-bottom: 3.5rem; }
 
         /* Multi-layered Soft Shadows (Elevated Cards) */
-       .card {
+        .card {
             background-color: var(--card-bg);
             border-radius: 24px;
             padding: 3.5rem;
@@ -123,9 +126,9 @@
                 0 2px 4px hsl(var(--shadow-color) / calc(var(--shadow-opacity) * 0.5)),
                 0 8px 16px hsl(var(--shadow-color) / calc(var(--shadow-opacity) * 0.8)),
                 0 16px 32px hsl(var(--shadow-color) / var(--shadow-opacity));
-            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s ease;
         }
-       .card:hover { 
+        .card:hover { 
             transform: translateY(-8px); 
             box-shadow: 
                 0 4px 8px hsl(var(--shadow-color) / calc(var(--shadow-opacity) * 0.5)),
@@ -134,7 +137,7 @@
         }
 
         /* Magnetic Button Refined */
-       .magnetic-btn {
+        .magnetic-btn {
             display: inline-block;
             padding: 1.1rem 3.5rem;
             background-color: var(--text-primary);
@@ -147,46 +150,47 @@
             cursor: pointer;
             font-size: 1rem;
             will-change: transform;
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
 
         /* Elegant Timeline */
-       .timeline { border-left: 1px solid var(--border-color); padding-left: 2.5rem; margin-left: 1rem; }
-       .timeline-item { margin-bottom: 4rem; position: relative; }
-       .timeline-item::before {
+        .timeline { border-left: 1px solid var(--border-color); padding-left: 2.5rem; margin-left: 1rem; }
+        .timeline-item { margin-bottom: 4rem; position: relative; }
+        .timeline-item::before {
             content: ''; position: absolute; left: -46px; top: 8px; width: 10px; height: 10px;
             background: var(--accent); border-radius: 50%;
             box-shadow: 0 0 0 4px var(--bg-primary);
         }
-       .timeline-item h3 { font-size: 1.4rem; margin-bottom: 0.3rem; font-family: 'Roboto', sans-serif; font-weight: 700; }
-       .timeline-item span { color: var(--accent); font-weight: 500; font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase; }
-       .timeline-item p { color: var(--text-secondary); margin-top: 12px; max-width: 600px; }
+        .timeline-item h3 { font-size: 1.4rem; margin-bottom: 0.3rem; font-family: 'Pretendard Variable', sans-serif; font-weight: 700; }
+        .timeline-item span { color: var(--accent); font-weight: 500; font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase; }
+        .timeline-item p { color: var(--text-secondary); margin-top: 12px; max-width: 600px; }
 
         /* D3 Chart Styling */
         #chart-container { width: 100%; height: 380px; margin-top: 4rem; position: relative; }
-       .line { fill: none; stroke: url(#line-gradient); stroke-width: 3.5px; stroke-linecap: round; filter: drop-shadow(0 8px 8px rgba(41, 151, 255, 0.2)); }
-       .domain,.tick line { stroke: var(--border-color); }
-       .tick text { fill: var(--text-secondary); font-family: 'Roboto', sans-serif; font-size: 11px; }
+        .line { fill: none; stroke: url(#line-gradient); stroke-width: 3.5px; stroke-linecap: round; filter: drop-shadow(0 8px 8px rgba(41, 151, 255, 0.2)); }
+        .domain, .tick line { stroke: var(--border-color); }
+        .tick text { fill: var(--text-secondary); font-family: 'Roboto', sans-serif; font-size: 11px; }
 
         /* Sophisticated Contact Form */
-       .contact-form { display: flex; flex-direction: column; gap: 1.2rem; max-width: 600px; }
-       .contact-form input,.contact-form textarea {
+        .contact-form { display: flex; flex-direction: column; gap: 1.2rem; max-width: 600px; }
+        .contact-form input, .contact-form textarea {
             width: 100%; padding: 1.2rem 1.5rem; border: 1px solid var(--border-color);
             background: rgba(128, 128, 128, 0.03); color: var(--text-primary);
             border-radius: 14px; box-sizing: border-box; font-size: 1rem;
             transition: border-color 0.3s ease, background-color 0.3s ease;
         }
-       .contact-form input:focus,.contact-form textarea:focus { 
+        .contact-form input:focus, .contact-form textarea:focus { 
             outline: none; border-color: var(--accent); background: transparent;
         }
 
         /* Hero Text Fade-in Animation */
-       .fade-in-up {
+        .fade-in-up {
             opacity: 0;
             transform: translateY(30px);
             animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-       .delay-1 { animation-delay: 0.2s; }
-       .delay-2 { animation-delay: 0.4s; }
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
 
         @keyframes fadeInUp {
             to { opacity: 1; transform: translateY(0); }
@@ -194,9 +198,9 @@
 
         @media (max-width: 768px) {
             section { padding: 6rem 0; }
-           .section-title { font-size: 2.5rem; }
-           .card { padding: 2.5rem; }
-            #hero h1 { font-size: 3rem!important; }
+            .section-title { font-size: 2.5rem; }
+            .card { padding: 2.5rem; }
+            #hero h1 { font-size: 3rem !important; }
         }
     </style>
 </head>
@@ -205,7 +209,7 @@
     <nav>
         <div class="nav-inner">
             <div class="logo">KYH.</div>
-            <button id="theme-toggle">Dark Mode</button>
+            <button id="theme-toggle">Light Mode</button>
         </div>
     </nav>
 
@@ -213,7 +217,7 @@
         
         <section id="hero" style="min-height: 80vh; display: flex; flex-direction: column; justify-content: center;">
             <h1 class="fade-in-up" style="font-size: 4.5rem; line-height: 1.05; margin-bottom: 1.5rem;">
-                Digital Convergence:<br><i style="font-weight: 600; color: var(--text-secondary);">Design & Engineering.</i>
+                Digital Convergence:<br><i style="font-weight: 600; color: var(--text-secondary); font-style: normal;">Design & Engineering.</i>
             </h1>
             <p class="fade-in-up delay-1" style="font-size: 1.2rem; color: var(--text-secondary); max-width: 650px;">
                 시각 디자인에서 시작해 풀스택 서비스 총괄까지.<br>미니멀리즘 철학과 정교한 엔지니어링을 결합하여 비즈니스 가치를 지닌 프로덕트를 만듭니다.
@@ -281,19 +285,19 @@
         const themeToggle = document.getElementById('theme-toggle');
         
         themeToggle.addEventListener('click', (e) => {
-            const isDark = document.documentElement.classList.contains('dark');
+            const isLight = document.documentElement.classList.contains('light');
             const x = e.clientX;
             const y = e.clientY;
 
             if (!document.startViewTransition) {
-                document.documentElement.classList.toggle('dark');
-                themeToggle.textContent = isDark? 'Dark Mode' : 'Light Mode';
+                document.documentElement.classList.toggle('light');
+                themeToggle.textContent = isLight ? 'Light Mode' : 'Dark Mode';
                 return;
             }
 
             const transition = document.startViewTransition(() => {
-                document.documentElement.classList.toggle('dark');
-                themeToggle.textContent = document.documentElement.classList.contains('dark')? 'Light Mode' : 'Dark Mode';
+                document.documentElement.classList.toggle('light');
+                themeToggle.textContent = document.documentElement.classList.contains('light') ? 'Dark Mode' : 'Light Mode';
             });
 
             transition.ready.then(() => {
@@ -302,10 +306,14 @@
                     Math.max(y, window.innerHeight - y)
                 );
                 
-                const clipPath =;
+                // [수정 포인트] 에러가 났던 clipPath 문법 오류 수정
+                const clipPath = [
+                    `circle(0px at ${x}px ${y}px)`,
+                    `circle(${maxRadius}px at ${x}px ${y}px)`
+                ];
 
                 document.documentElement.animate(
-                    { clipPath: document.documentElement.classList.contains('dark')? clipPath : clipPath.reverse() },
+                    { clipPath: document.documentElement.classList.contains('light') ? clipPath : [...clipPath].reverse() },
                     { duration: 700, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', pseudoElement: '::view-transition-new(root)' }
                 );
             });
@@ -327,33 +335,32 @@
             });
         });
 
-        // 3. D3.js 매출 상승 곡선 시각화 (TSV 파싱)
+        // 3. D3.js 매출 상승 곡선 시각화
         let chartDrawn = false;
         const drawChart = () => {
             if (chartDrawn) return;
             chartDrawn = true;
 
-            // 제공해주신 탭 분리(TSV) 데이터 입력
-            const tsvData = `일자	주문수	품목수	상품구매금액	배송비	할인	쿠폰	실결제금액	사용한 적립금액	예치금	통합포인트	네이버포인트	네이버캐쉬	결제합계	환불합계	순매출
-Apr-26	3370	7553	845205576	5514000	16252683	14173611	809412276	83862	0	0	10797144	0	820293282	315464702	504828580
-Mar-26	566	1336	76889029	1128000	2315697	618869	72723240	74057	0	0	2285166	0	75082463	8211690	66870773
-Feb-26	306	761	33341014	606000	1015283	342568	31653049	129897	0	0	806217	0	32589163	574187	32014976
-Jan-26	259	759	27706932	492000	956668	203986	26480783	197389	0	0	360106	0	27038278	802714	26235564
-Dec-25	224	597	32214897	435000	831533	150927	31280848	5800	0	0	380789	0	31667437	756564	30910873
-Nov-25	166	536	20409650	309000	758615	264464	19279763	0	0	0	415808	0	19695571	959444	18736127
-Oct-25	112	313	9638290	210000	400095	100682	9094216	0	0	0	253297	0	9347513	81079	9266434
-Sep-25	150	436	13428356	219000	760459	268338	12455075	0	0	0	163484	0	12618559	225099	12393460
-Aug-25	86	180	4843111	165000	105695	112972	4461411	0	0	0	328033	0	4789444	41000	4748444
-Jul-25	74	126	2402070	205000	1462	94712	2316910	0	0	0	193986	0	2510896	271418	2239478
-Jun-25	19	43	795210	51000	545	26178	789487	0	0	0	30000	0	819487	0	819487`;
+            // [수정 포인트] TSV의 빈칸/탭 인식 에러를 막기 위해 안전한 JSON 객체 형태로 데이터 변경
+            const rawData = [
+                { date: "Apr-26", value: 504828580 },
+                { date: "Mar-26", value: 66870773 },
+                { date: "Feb-26", value: 32014976 },
+                { date: "Jan-26", value: 26235564 },
+                { date: "Dec-25", value: 30910873 },
+                { date: "Nov-25", value: 18736127 },
+                { date: "Oct-25", value: 9266434 },
+                { date: "Sep-25", value: 12393460 },
+                { date: "Aug-25", value: 4748444 },
+                { date: "Jul-25", value: 2239478 },
+                { date: "Jun-25", value: 819487 }
+            ];
 
-            // 날짜 파싱 (예: Apr-26)
             const parseDate = d3.timeParse("%b-%y");
             
-            // TSV 데이터 매핑
-            const data = d3.tsvParse(tsvData, d => ({
-                date: parseDate(d["일자"]),
-                value: +d["순매출"]
+            const data = rawData.map(d => ({
+                date: parseDate(d.date),
+                value: d.value
             }));
 
             // 차트 애니메이션을 위해 날짜 오름차순으로 정렬
@@ -362,7 +369,7 @@ Jun-25	19	43	795210	51000	545	26178	789487	0	0	0	30000	0	819487	0	819487`;
             const container = d3.select("#chart-container");
             const width = container.node().getBoundingClientRect().width;
             const height = 380;
-            const margin = {top: 30, right: 20, bottom: 30, left: 55}; // Y축 한국어 단위를 위한 여백
+            const margin = {top: 30, right: 20, bottom: 30, left: 55};
 
             const svg = container.append("svg").attr("width", width).attr("height", height).style("overflow", "visible");
 
@@ -379,7 +386,7 @@ Jun-25	19	43	795210	51000	545	26178	789487	0	0	0	30000	0	819487	0	819487`;
               .call(d3.axisBottom(x).ticks(d3.timeMonth.every(2)).tickFormat(d3.timeFormat("%y.%m")).tickSizeOuter(0).tickPadding(10))
               .select(".domain").attr("stroke-width", 0);
 
-            // Y Axis ('만', '억' 단위 변환 포맷팅)
+            // Y Axis
             svg.append("g").attr("transform", `translate(${margin.left},0)`)
               .call(d3.axisLeft(y).ticks(5).tickFormat(d => {
                     if (d === 0) return "0";
