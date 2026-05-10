@@ -1,283 +1,312 @@
 <!DOCTYPE html>
-<html lang="ko">
-<head>
+<html lang="ko" class="dark"> <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kim Young Hoon | UX/UI & Full-Stack Architect</title>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <title>YH - UX/UI & Full-Stack Portfolio</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    
     <style>
-        /* Typography: Playfair Display (Serif) + Roboto (Sans-serif) */
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Roboto:wght@300;400;500;700&display=swap');
+        /* 깔끔한 Pretendard 웹폰트 적용 */
+        @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
 
-        /* Refined Apple-like Color Palette */
+        /* CSS 변수: 다크/라이트 모드 시스템 및 8px 그리드 시스템 */
         :root {
-            --bg-primary: #fbfbfd;
-            --bg-secondary: #ffffff;
-            --text-primary: #1d1d1f;
-            --text-secondary: #86868b;
+            /* 테마 변수 (라이트 모드) */
+            --bg-primary: #f8f9fa;
+            --text-primary: #1e1e1e;
+            --text-secondary: #555555;
             --card-bg: #ffffff;
             --shadow-color: 0deg 0% 0%;
-            --shadow-opacity: 0.06;
-            --accent: #2997ff;
-            --border-color: rgba(0, 0, 0, 0.05);
-            --nav-bg: rgba(251, 251, 253, 0.7);
+            --shadow-opacity: 0.08;
+            --accent-color: #3080e8;
+            
+            /* 8px 그리드 변수 */
+            --grid-1: 8px;
+            --grid-2: 16px;
+            --grid-3: 24px;
+            --grid-4: 32px;
+            --grid-5: 40px;
+            --grid-6: 48px;
+            --grid-8: 64px;
         }
 
         html.dark {
-            --bg-primary: #000000;
-            --bg-secondary: #1c1c1e;
-            --text-primary: #f5f5f7;
-            --text-secondary: #a1a1a6;
+            /* 테마 변수 (다크 모드) */
+            --bg-primary: #121212;
+            --text-primary: #f1f1f1;
+            --text-secondary: #a0a0a0;
             --card-bg: #1e1e1e;
-            --shadow-color: 0deg 0% 100%;
-            --shadow-opacity: 0.02;
-            --border-color: rgba(255, 255, 255, 0.1);
-            --nav-bg: rgba(0, 0, 0, 0.7);
+            --shadow-color: 0deg 0% 0%;
+            --shadow-opacity: 0.4; /* 다크모드에선 그림자를 더 짙게 처리하여 입체감 확보 */
+            --accent-color: #66a1ee;
         }
 
-        html { scroll-behavior: smooth; }
         body {
             margin: 0;
             background-color: var(--bg-primary);
             color: var(--text-primary);
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
             overflow-x: hidden;
-            transition: background-color 0.4s ease, color 0.4s ease;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        h1, h2, h3, .logo {
-            font-family: 'Playfair Display', serif;
-            font-weight: 800;
+        h1, h2, h3, h4 {
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: var(--grid-2);
             letter-spacing: -0.02em;
         }
 
-        p, span, a, li, input, textarea {
-            font-family: 'Roboto', sans-serif;
-            line-height: 1.7;
-            letter-spacing: 0.01em;
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.25rem; margin-bottom: var(--grid-1); }
+
+        p, li {
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-top: 0;
+            margin-bottom: var(--grid-2);
         }
 
-        .container {
-            max-width: 1040px;
+        ul {
+            padding-left: var(--grid-3);
+            margin-bottom: var(--grid-3);
+            color: var(--text-secondary);
+        }
+
+       .container {
+            max-width: 960px; /* 8의 배수 그리드 준수 */
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: var(--grid-8) var(--grid-4);
         }
 
-        /* Glassmorphism Navigation */
-        nav {
-            position: sticky;
-            top: 0;
-            background-color: var(--nav-bg);
-            backdrop-filter: saturate(180%) blur(15px);
-            -webkit-backdrop-filter: saturate(180%) blur(15px);
-            z-index: 1000;
-            border-bottom: 1px solid var(--border-color);
-            padding: 1.2rem 0;
-            transition: background-color 0.4s ease;
-        }
-        .nav-inner {
+        header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1040px;
-            margin: 0 auto;
-            padding: 0 2rem;
+            padding-bottom: var(--grid-4);
+            border-bottom: 1px solid rgba(128, 128, 128, 0.15);
+            margin-bottom: var(--grid-8);
         }
-        .logo { font-size: 1.4rem; letter-spacing: -1px; }
 
+        /* View Transitions API 기본 페이드 방지 (방사형 클립 패스를 위해) */
         ::view-transition-old(root),
-        ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+        ::view-transition-new(root) {
+            animation: none;
+            mix-blend-mode: normal;
+        }
 
-        /* Minimal Theme Toggle */
+        /* 심플한 테마 토글 버튼 */
         #theme-toggle {
-            padding: 0.6rem 1.4rem;
+            padding: var(--grid-1) var(--grid-3);
             cursor: pointer;
-            background: transparent;
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            border-radius: 30px;
-            font-family: 'Roboto', sans-serif;
-            font-weight: 500;
-            font-size: 0.85rem;
-            transition: all 0.3s ease;
-        }
-        #theme-toggle:hover { background: var(--text-primary); color: var(--bg-primary); }
-
-        /* Smooth Sections */
-        section { padding: 10rem 0; }
-        .section-title { font-size: 3.2rem; margin-bottom: 3.5rem; }
-
-        /* Multi-layered Soft Shadows (Elevated Cards) */
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 24px;
-            padding: 3.5rem;
-            margin-bottom: 3.5rem;
-            border: 1px solid var(--border-color);
-            box-shadow: 
-                0 2px 4px hsl(var(--shadow-color) / calc(var(--shadow-opacity) * 0.5)),
-                0 8px 16px hsl(var(--shadow-color) / calc(var(--shadow-opacity) * 0.8)),
-                0 16px 32px hsl(var(--shadow-color) / var(--shadow-opacity));
-            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .card:hover { 
-            transform: translateY(-8px); 
-            box-shadow: 
-                0 4px 8px hsl(var(--shadow-color) / calc(var(--shadow-opacity) * 0.5)),
-                0 16px 32px hsl(var(--shadow-color) / calc(var(--shadow-opacity) * 0.8)),
-                0 32px 64px hsl(var(--shadow-color) / var(--shadow-opacity));
-        }
-
-        /* Magnetic Button Refined */
-        .magnetic-btn {
-            display: inline-block;
-            padding: 1.1rem 3.5rem;
-            background-color: var(--text-primary);
+            background: var(--text-primary);
             color: var(--bg-primary);
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 500;
-            margin-top: 2rem;
             border: none;
-            cursor: pointer;
-            font-size: 1rem;
-            will-change: transform;
+            border-radius: var(--grid-4);
+            font-family: inherit;
+            font-weight: 600;
+            transition: opacity 0.2s ease, transform 0.2s ease;
         }
 
-        /* Elegant Timeline */
-        .timeline { border-left: 1px solid var(--border-color); padding-left: 2.5rem; margin-left: 1rem; }
-        .timeline-item { margin-bottom: 4rem; position: relative; }
-        .timeline-item::before {
-            content: ''; position: absolute; left: -46px; top: 8px; width: 10px; height: 10px;
-            background: var(--accent); border-radius: 50%;
-            box-shadow: 0 0 0 4px var(--bg-primary);
-        }
-        .timeline-item h3 { font-size: 1.4rem; margin-bottom: 0.3rem; font-family: 'Roboto', sans-serif; font-weight: 700; }
-        .timeline-item span { color: var(--accent); font-weight: 500; font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase; }
-        .timeline-item p { color: var(--text-secondary); margin-top: 12px; max-width: 600px; }
-
-        /* D3 Chart Styling */
-        #chart-container { width: 100%; height: 380px; margin-top: 4rem; position: relative; }
-        .line { fill: none; stroke: url(#line-gradient); stroke-width: 3.5px; stroke-linecap: round; filter: drop-shadow(0 8px 8px rgba(41, 151, 255, 0.2)); }
-        .domain, .tick line { stroke: var(--border-color); }
-        .tick text { fill: var(--text-secondary); font-family: 'Roboto', sans-serif; font-size: 11px; }
-
-        /* Sophisticated Contact Form */
-        .contact-form { display: flex; flex-direction: column; gap: 1.2rem; max-width: 600px; }
-        .contact-form input, .contact-form textarea {
-            width: 100%; padding: 1.2rem 1.5rem; border: 1px solid var(--border-color);
-            background: rgba(128, 128, 128, 0.03); color: var(--text-primary);
-            border-radius: 14px; box-sizing: border-box; font-size: 1rem;
-            transition: border-color 0.3s ease, background-color 0.3s ease;
-        }
-        .contact-form input:focus, .contact-form textarea:focus { 
-            outline: none; border-color: var(--accent); background: transparent;
+        #theme-toggle:hover {
+            opacity: 0.8;
+            transform: scale(0.98);
         }
 
-        /* Hero Text Fade-in Animation */
-        .fade-in-up {
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        /* 다층적(Layered) 그림자 아키텍처 */
+       .card {
+            background-color: var(--card-bg);
+            border-radius: var(--grid-3);
+            padding: var(--grid-5);
+            margin-bottom: var(--grid-6);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 
+                0 1px 2px hsl(var(--shadow-color) / var(--shadow-opacity)),
+                0 2px 4px hsl(var(--shadow-color) / var(--shadow-opacity)),
+                0 4px 8px hsl(var(--shadow-color) / var(--shadow-opacity)),
+                0 8px 16px hsl(var(--shadow-color) / var(--shadow-opacity));
         }
-        .delay-1 { animation-delay: 0.2s; }
-        .delay-2 { animation-delay: 0.4s; }
 
-        @keyframes fadeInUp {
-            to { opacity: 1; transform: translateY(0); }
+        /* 심플하고 모던한 연락처 버튼 */
+       .btn {
+            display: inline-block;
+            padding: var(--grid-2) var(--grid-4);
+            background-color: var(--accent-color);
+            color: #ffffff;
+            border-radius: var(--grid-6);
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: var(--grid-2);
+            transition: opacity 0.2s ease, transform 0.2s ease;
         }
 
-        @media (max-width: 768px) {
-            section { padding: 6rem 0; }
-            .section-title { font-size: 2.5rem; }
-            .card { padding: 2.5rem; }
-            #hero h1 { font-size: 3rem !important; }
+       .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-4px);
+        }
+
+        /* 타임라인 레이아웃 (커리어 표기용) */
+       .timeline {
+            border-left: 2px solid rgba(128, 128, 128, 0.15);
+            padding-left: var(--grid-3);
+            margin-left: var(--grid-1);
+        }
+        
+       .timeline-item {
+            position: relative;
+            margin-bottom: var(--grid-5);
+        }
+        
+       .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+        
+       .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: calc(var(--grid-3) * -1 - 7px);
+            top: 6px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+        }
+        
+       .timeline-date {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: var(--grid-1);
+        }
+
+        /* 스킬 태그 */
+       .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--grid-1);
+            margin-top: var(--grid-2);
+        }
+        
+       .tag {
+            padding: 6px 16px;
+            background-color: rgba(128, 128, 128, 0.1);
+            border-radius: var(--grid-2);
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* D3.js 차트 컨테이너 */
+        #chart-container {
+            width: 100%;
+            height: 352px;
+            margin-top: var(--grid-4);
+        }
+        
+       .line {
+            fill: none;
+            stroke: url(#line-gradient);
+            stroke-width: 3px;
+            stroke-linecap: round;
+        }
+
+        /* 미니멀리즘 축 스타일링 */
+       .domain,.tick line {
+            stroke: rgba(128, 128, 128, 0.15);
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="nav-inner">
-            <div class="logo">KYH.</div>
-            <button id="theme-toggle">Dark Mode</button>
-        </div>
-    </nav>
-
     <div class="container">
-        
-        <section id="hero" style="min-height: 80vh; display: flex; flex-direction: column; justify-content: center;">
-            <h1 class="fade-in-up" style="font-size: 4.5rem; line-height: 1.05; margin-bottom: 1.5rem;">
-                Digital Convergence:<br><i style="font-weight: 600; color: var(--text-secondary);">Design & Engineering.</i>
-            </h1>
-            <p class="fade-in-up delay-1" style="font-size: 1.2rem; color: var(--text-secondary); max-width: 650px;">
-                시각 디자인에서 시작해 풀스택 서비스 총괄까지.<br>미니멀리즘 철학과 정교한 엔지니어링을 결합하여 비즈니스 가치를 지닌 프로덕트를 만듭니다.
-            </p>
-            <div class="fade-in-up delay-2">
-                <a href="#contact" class="magnetic-btn">Let's Connect</a>
-            </div>
-        </section>
+        <header>
+            <h1 style="margin-bottom: 0;">YH's Portfolio</h1>
+            <button id="theme-toggle">Toggle Mode</button>
+        </header>
 
-        <section id="experience">
-            <h2 class="section-title">The Evolution</h2>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <h3>Service Architect & Full-stack Developer</h3>
-                    <span>2022 - Present</span>
-                    <p>알파코 RPA 자동화 프로젝트 구축, 삼성 SSAFY 수료, Python 기반 AI 챗봇 '공감이' 기획 및 개발 총괄. 기획-디자인-개발 간의 병목 현상을 해결하는 링커(Linker) 역할 수행.</p>
-                </div>
-                <div class="timeline-item">
-                    <h3>UX/UI & Front-end Designer</h3>
-                    <span>2019 - 2022</span>
-                    <p>에너지 플랫폼 '모햇', 'H-ENERGY', '김태양' 실무 디자인 및 웹 퍼블리싱. 심미성을 넘어선 데이터 기반의 사용자 경험(UX) 설계.</p>
-                </div>
-                <div class="timeline-item">
-                    <h3>Visual Designer</h3>
-                    <span>2015 - 2019</span>
-                    <p>시각디자인 전공 베이스. 200회 이상의 프리랜서 상용 프로젝트 리드 및 8회 수상 이력을 통해 다져진 픽셀 퍼펙트(Pixel-perfect) 역량.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="projects">
-            <h2 class="section-title">Selected Works</h2>
+        <section class="hero" style="margin-bottom: var(--grid-8);">
+            <h2>A Brief History of YH</h2>
+            <p>디자인과 개발의 경계를 허무는 융합형(Convergence) 인재입니다. 시각디자인 전공으로 다져진 심미성에 삼성 SSAFY와 Alpaco에서 습득한 풀스택/데이터 분석 역량을 결합하여, 논리적이면서도 아름다운 프로덕트를 만듭니다. 저의 가장 큰 강점은 <strong>'경청을 바탕으로 한 커뮤니케이션'</strong>이며, 기획과 개발 사이의 간극을 줄여 팀을 더 나은 방향으로 이끕니다.</p>
             
-            <div class="card">
-                <h3 style="font-size: 2.2rem; margin-bottom: 0.5rem;">Apple KR (2024)</h3>
-                <p style="color: var(--accent); margin-bottom: 1.5rem; font-weight: 500; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;">New Release Visual Contract</p>
-                <p style="color: var(--text-secondary);">시각적 여백과 정제된 타이포그래피를 통해 본질적인 브랜드 가치에 집중했습니다. 애플 특유의 미니멀리즘과 글로벌 스탠다드를 유지하기 위해 과도한 장식을 배제하고 디테일한 시각적 완성도를 극대화한 프로젝트입니다.</p>
+            <div style="margin-bottom: var(--grid-4); margin-top: var(--grid-3);">
+                <p style="margin-bottom: var(--grid-1);"><strong style="color: var(--text-primary);">Desired Employment:</strong> Full-time, Contractual, Freelance, Intern, Half-time</p>
+                <p style="margin-bottom: var(--grid-1);"><strong style="color: var(--text-primary);">Location:</strong> Seoul, Work from home</p>
             </div>
+            
+            <a href="#" class="btn">Contact Me</a>
+        </section>
 
-            <div class="card" id="biznc-card">
-                <h3 style="font-size: 2.2rem; margin-bottom: 0.5rem;">의료창고 (Biz & C)</h3>
-                <p style="color: var(--accent); margin-bottom: 1.5rem; font-weight: 500; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;">Service PM & Full-stack Pipeline</p>
-                <p style="color: var(--text-secondary);">단순한 UI 리뉴얼을 넘어, 풀스택 데이터 파이프라인 구축 및 백엔드 데이터를 바탕으로 재고 회전율을 최적화했습니다. 서비스 총괄로서 기여한 <strong>우상향 매출 성장 지표</strong>를 데이터 시각화로 증명합니다.</p>
-                
+        <section class="career">
+            <h2>Career & Education</h2>
+            <div class="card">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">Since 2017</div>
+                        <h3>200+ Freelance & Contract Activities</h3>
+                        <p>총 8회의 디자인 관련 수상 경력을 바탕으로 200회 이상의 프리랜서 및 외주 프로젝트를 성공적으로 완수했습니다. 유연한 사고로 다양한 고객의 니즈를 프로젝트에 담아냅니다.</p>
+                        <ul style="margin-bottom: 0;">
+                            <li><strong>Apple KR:</strong> 2024년 9월 신제품 스크린 작업</li>
+                            <li><strong>기업 파트너십:</strong> 영국 투자 회사, 국내 화장품 B2C 기업(일본 본사), 비즈니스 영상 제작사 등</li>
+                            <li><strong>디자인 스펙트럼:</strong> CI/BI, 웹/앱 UI, 3D 제품 디자인 및 영상 기획·편집</li>
+                        </ul>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">Developer Education</div>
+                        <h3>Front-end & UX/UI Projects</h3>
+                        <p>웹과 앱 환경 모두에서 디자인 시스템을 구축하고 실제 동작하는 프론트엔드 환경을 구현했습니다.</p>
+                        <ul style="margin-bottom: 0;">
+                            <li><strong>Web (Figma, HTML, CSS):</strong> '모햇', '김태양H', 'H-ENERGY(일본)', '모두의 RE100', '딱정이', 'JJOBPLANET' 리뉴얼 및 전체 디자인 적용</li>
+                            <li><strong>App (Figma, Sass):</strong> '김태양' 앱 전체 디자인, 안전 관리자용 PC 대시보드, 챗봇 '공감이' UI 디자인</li>
+                        </ul>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">Since 2019</div>
+                        <h3>SSAFY & Alpaco</h3>
+                        <p>디자인을 넘어 백엔드 로직 설계, 인공지능, 그리고 데이터 분석과 자동화로 기술적 스펙트럼을 확장했습니다.</p>
+                        <ul style="margin-bottom: 0;">
+                            <li><strong>SSAFY (삼성 청년 SW 아카데미):</strong> Python 활용 AI 챗봇 '공감이' 딥러닝 구현, 삼성 SW 역량 테스트 A형(Advanced) 패스</li>
+                            <li><strong>Alpaco (Since 2022):</strong> UiPath 기반 사무 자동화(RPA) 시스템 코딩, Python을 활용한 비즈니스 운영 통계 및 그래프 시각화</li>
+                        </ul>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">Background</div>
+                        <h3>Visual Design & Engineering Tools</h3>
+                        <p>시각디자인 전공 지식을 바탕으로 학생회 기획부장 및 졸업 전시 위원장을 역임하며 리더십을 검증받았습니다.</p>
+                        <ul>
+                            <li>융합 디자이너 양성 과정 수료</li>
+                            <li>GTQ(그래픽스운용기능사) 1급 취득</li>
+                        </ul>
+                        <div class="tags">
+                            <span class="tag">Figma</span>
+                            <span class="tag">HTML/CSS/JS</span>
+                            <span class="tag">Python</span>
+                            <span class="tag">UiPath</span>
+                            <span class="tag">AutoCAD / Inventor</span>
+                            <span class="tag">Adobe CC</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="projects">
+            <h2>Recent Highlights</h2>
+            <div class="card" style="margin-bottom: 0;">
+                <h3>비즈앤씨 의료창고 매출 성장 (Medical Warehouse)</h3>
+                <p>풀스택 데이터 파이프라인 구축 및 실무 CSV 데이터를 바탕으로 재고 회전율 최적화가 이끌어낸 성장 지표를 시각화합니다. (상세 내용 업데이트 예정)</p>
                 <div id="chart-container"></div>
             </div>
         </section>
 
-        <section id="contact" style="padding-bottom: 12rem;">
-            <h2 class="section-title">Get in Touch</h2>
-            <p style="color: var(--text-secondary); margin-bottom: 3.5rem; font-size: 1.1rem;">함께 가치 있는 프로덕트를 만들어갈 기회를 기다립니다.</p>
-            
-            <form class="contact-form" action="https://formspree.io/f/YOUR_ENDPOINT" method="POST">
-                <input type="text" name="name" placeholder="Name or Company" required>
-                <input type="email" name="email" placeholder="Email Address" required>
-                <textarea name="message" rows="5" placeholder="Tell me about your project..." required></textarea>
-                <button type="submit" class="magnetic-btn" style="width: 100%; margin-top: 1rem;">Send Message</button>
-            </form>
-        </section>
-
+        <footer style="text-align: center; padding-top: var(--grid-6); color: var(--text-secondary); font-size: 0.875rem;">
+            <p>- Thank you very much for reading all the way down here! -</p>
+        </footer>
     </div>
 
     <script>
-        // 1. View Transitions API (Dark Mode)
+        // 1. 방사형(Circular) 다크/라이트 모드 트랜지션 (View Transitions API) 구문 오류 수정
         const themeToggle = document.getElementById('theme-toggle');
         
         themeToggle.addEventListener('click', (e) => {
@@ -285,131 +314,131 @@
             const x = e.clientX;
             const y = e.clientY;
 
+            // 브라우저가 View Transitions API를 지원하지 않는 경우 즉시 전환
             if (!document.startViewTransition) {
                 document.documentElement.classList.toggle('dark');
-                themeToggle.textContent = isDark ? 'Dark Mode' : 'Light Mode';
                 return;
             }
 
             const transition = document.startViewTransition(() => {
                 document.documentElement.classList.toggle('dark');
-                themeToggle.textContent = document.documentElement.classList.contains('dark') ? 'Light Mode' : 'Dark Mode';
             });
 
+            // 원형 클립 패스(Circular Clip-path) 애니메이션 적용
             transition.ready.then(() => {
                 const maxRadius = Math.hypot(
                     Math.max(x, window.innerWidth - x),
                     Math.max(y, window.innerHeight - y)
                 );
-                
-                const clipPath = [
-                    `circle(0px at ${x}px ${y}px)`,
-                    `circle(${maxRadius}px at ${x}px ${y}px)`
-                ];
 
                 document.documentElement.animate(
-                    { clipPath: document.documentElement.classList.contains('dark') ? clipPath : clipPath.reverse() },
-                    { duration: 700, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', pseudoElement: '::view-transition-new(root)' }
+                    {
+                        // 배열 형태로 시작과 끝의 clip-path 값을 지정하여 에러 해결
+                        clipPath:
+                    },
+                    {
+                        duration: 600,
+                        easing: 'cubic-bezier(0.4, 0, 0.2, 1)', // 조금 더 부드럽고 텐션 있는 이징으로 변경
+                        pseudoElement: isDark? '::view-transition-old(root)' : '::view-transition-new(root)'
+                    }
                 );
             });
         });
 
-        // 2. Refined GSAP Magnetic Physics
-        const magnets = document.querySelectorAll('.magnetic-btn');
-        magnets.forEach(btn => {
-            btn.addEventListener('mousemove', (e) => {
-                const rect = btn.getBoundingClientRect();
-                const x = (e.clientX - rect.left - rect.width / 2) * 0.3; // 텐션 조절
-                const y = (e.clientY - rect.top - rect.height / 2) * 0.3;
-                
-                gsap.to(btn, { x: x, y: y, scale: 1.05, duration: 0.3, ease: "power2.out" });
-            });
-            
-            btn.addEventListener('mouseleave', () => {
-                gsap.to(btn, { x: 0, y: 0, scale: 1, duration: 0.6, ease: "elastic.out(1, 0.3)" }); // 탄성 조절
-            });
-        });
-
-        // 3. D3.js Chart Drawing Logic
-        let chartDrawn = false;
+        // 2. D3.js 기반 매출 상승 곡선 파싱 및 드로잉 애니메이션
         const drawChart = () => {
-            if (chartDrawn) return;
-            chartDrawn = true;
-
             const csvData = `Date,Revenue
-            2025-06-01,120000
-            2025-07-01,145000
-            2025-08-01,180000
-            2025-09-01,210000
-            2025-10-01,260000
-            2025-11-01,310000
-            2025-12-01,380000
-            2026-01-01,420000
-            2026-02-01,490000
-            2026-03-01,560000`;
+            2023-01-01,150000
+            2023-06-01,180000
+            2024-01-01,230000
+            2024-06-01,210000
+            2025-01-01,310000
+            2025-06-01,450000
+            2026-01-01,620000`;
 
-            const data = d3.csvParse(csvData, d => ({ date: new Date(d.Date), value: +d.Revenue }));
+            const data = d3.csvParse(csvData, d => ({
+                date: new Date(d.Date.trim()),
+                value: +d.Revenue.trim()
+            }));
+
             const container = d3.select("#chart-container");
             const width = container.node().getBoundingClientRect().width;
-            const height = 380;
-            const margin = {top: 30, right: 20, bottom: 30, left: 40};
+            const height = 352;
+            const margin = {top: 24, right: 24, bottom: 32, left: 56};
 
-            const svg = container.append("svg").attr("width", width).attr("height", height).style("overflow", "visible");
+            const svg = container.append("svg")
+              .attr("width", width)
+              .attr("height", height);
 
+            // 선형 그라디언트 정의 (시각적 전문성을 위해 테마 색상으로 수정)
             const defs = svg.append("defs");
-            const gradient = defs.append("linearGradient").attr("id", "line-gradient").attr("x1", "0%").attr("y1", "0%").attr("x2", "100%").attr("y2", "0%");
-            gradient.append("stop").attr("offset", "0%").attr("stop-color", "#2997ff"); // Apple Blue
-            gradient.append("stop").attr("offset", "100%").attr("stop-color", "#ff295c"); // Warm Accent
+            const gradient = defs.append("linearGradient")
+              .attr("id", "line-gradient")
+              .attr("x1", "0%")
+              .attr("y1", "0%")
+              .attr("x2", "100%")
+              .attr("y2", "0%");
 
-            const x = d3.scaleTime().domain(d3.extent(data, d => d.date)).range([margin.left, width - margin.right]);
-            const y = d3.scaleLinear().domain([0, d3.max(data, d => d.value) * 1.1]).range([height - margin.bottom, margin.top]);
+            gradient.append("stop").attr("offset", "0%").attr("stop-color", "#3080e8");
+            gradient.append("stop").attr("offset", "100%").attr("stop-color", "#66a1ee");
 
-            // X Axis
-            svg.append("g").attr("transform", `translate(0,${height - margin.bottom})`)
-               .call(d3.axisBottom(x).ticks(6).tickFormat(d3.timeFormat("%y.%m")).tickSizeOuter(0).tickPadding(10))
-               .select(".domain").attr("stroke-width", 0); // Hide main line for minimalism
+            const x = d3.scaleTime()
+              .domain(d3.extent(data, d => d.date))
+              .range([margin.left, width - margin.right]);
 
-            // Y Axis
-            svg.append("g").attr("transform", `translate(${margin.left},0)`)
-               .call(d3.axisLeft(y).ticks(5).tickFormat(d => (d / 1000) + "k").tickSizeOuter(0).tickPadding(10))
-               .select(".domain").attr("stroke-width", 0);
+            const y = d3.scaleLinear()
+              .domain([0, d3.max(data, d => d.value) * 1.1])
+              .range([height - margin.bottom, margin.top]);
 
-            // Grid Lines (Subtle horizontal)
-            svg.append("g").attr("class", "grid")
-               .call(d3.axisLeft(y).tickSize(-width + margin.left + margin.right).tickFormat("").ticks(5))
-               .attr("transform", `translate(${margin.left},0)`)
-               .selectAll("line").attr("stroke", "var(--border-color)").attr("stroke-dasharray", "3,3");
-            svg.select(".grid .domain").remove();
+            // 미니멀리즘 축 렌더링
+            svg.append("g")
+              .attr("transform", `translate(0,${height - margin.bottom})`)
+              .call(d3.axisBottom(x).ticks(5).tickSizeOuter(0))
+              .attr("font-family", "Pretendard")
+              .attr("font-size", "12px")
+              .style("color", "var(--text-secondary)");
 
-            const line = d3.line().x(d => x(d.date)).y(d => y(d.value)).curve(d3.curveMonotoneX);
+            svg.append("g")
+              .attr("transform", `translate(${margin.left},0)`)
+              .call(d3.axisLeft(y).ticks(5).tickFormat(d => "$" + d / 1000 + "k").tickSizeOuter(0))
+              .attr("font-family", "Pretendard")
+              .attr("font-size", "12px")
+              .style("color", "var(--text-secondary)");
 
-            const path = svg.append("path").datum(data).attr("class", "line").attr("d", line);
+            // 부드러운 곡선 제너레이터
+            const line = d3.line()
+              .x(d => x(d.date))
+              .y(d => y(d.value))
+              .curve(d3.curveMonotoneX);
 
+            const path = svg.append("path")
+              .datum(data)
+              .attr("class", "line")
+              .attr("d", line);
+
+            // Stroke-dashoffset 드로잉 애니메이션
             const totalLength = path.node().getTotalLength();
-            path.attr("stroke-dasharray", totalLength + " " + totalLength)
-                .attr("stroke-dashoffset", totalLength)
-                .transition().duration(2500).ease(d3.easeCubicOut)
-                .attr("stroke-dashoffset", 0);
+            
+            path
+              .attr("stroke-dasharray", totalLength + " " + totalLength)
+              .attr("stroke-dashoffset", totalLength)
+              .transition()
+              .duration(2000)
+              .ease(d3.easeCubicOut)
+              .attr("stroke-dashoffset", 0);
         };
 
-        // 4. Intersection Observer for Chart Trigger on Scroll
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    drawChart();
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.3 }); // 30% 정도 보였을 때 실행
-
-        observer.observe(document.getElementById('biznc-card'));
-
+        // 초기 차트 렌더링
+        drawChart();
+        
+        // 반응형 리사이즈 대응 (디바운싱 처리로 성능 향상)
+        let resizeTimer;
         window.addEventListener('resize', () => {
-            if (chartDrawn) {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
                 d3.select("#chart-container").selectAll("*").remove();
-                chartDrawn = false;
                 drawChart();
-            }
+            }, 250);
         });
     </script>
 </body>
