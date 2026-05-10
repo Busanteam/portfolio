@@ -308,7 +308,7 @@
     <script>
         // 1. 방사형(Circular) 다크/라이트 모드 트랜지션 (View Transitions API)
         const themeToggle = document.getElementById('theme-toggle');
-        
+
         themeToggle.addEventListener('click', (e) => {
             const isDark = document.documentElement.classList.contains('dark');
             const x = e.clientX;
@@ -331,7 +331,8 @@
 
                 document.documentElement.animate(
                     {
-                        clipPath:
+                        // 배열 형태로 시작점과 끝점의 상태를 명시하여 문법 오류 해결
+                        clipPath:,
                     },
                     {
                         duration: 600,
@@ -365,7 +366,9 @@
             }));
 
             const container = d3.select("#chart-container");
-            const width = container.node().getBoundingClientRect().width;
+            const width = container.node().getBoundingClientRect().width |
+
+        | 800;
             const height = 352;
             const margin = {top: 24, right: 24, bottom: 32, left: 56};
 
@@ -404,10 +407,10 @@
             svg.append("g")
             .attr("transform", `translate(${margin.left},0)`)
             .call(d3.axisLeft(y).ticks(5).tickFormat(d => {
-                  if (d === 0) return "0";
-                  if (d >= 100000000) return (d / 100000000).toFixed(1).replace('.0', '') + "억";
-                  return (d / 10000).toFixed(0) + "만";
-              }).tickSizeOuter(0))
+                    if (d === 0) return "0";
+                    if (d >= 100000000) return (d / 100000000).toFixed(1).replace('.0', '') + "억";
+                    return (d / 10000).toFixed(0) + "만";
+                }).tickSizeOuter(0))
             .attr("font-family", "Pretendard")
             .attr("font-size", "12px")
             .style("color", "var(--text-secondary)");
@@ -435,7 +438,7 @@
         };
 
         drawChart();
-        
+
         let resizeTimer;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimer);
