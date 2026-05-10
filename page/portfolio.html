@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kim Young Hoon | UX/UI & Full-Stack Architect</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <style>
+        /* Typography: Playfair Display (Serif) + Roboto (Sans-serif) */
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Roboto:wght@300;400;500;700&display=swap');
+
+        /* Refined Apple-like Color Palette */
+        :root {
+            --bg-primary: #fbfbfd;
+            --bg-secondary: #ffffff;
+            --text-primary: #1d1d1f;
+            --text-secondary: #86868b;
+            --card-bg: #ffffff;
+            --shadow-color: 0deg 0% 0%;
+            --shadow-opacity: 0.06;
+            --accent: #2997ff;
+            --border-color: rgba(0, 0, 0, 0.05);
+            --nav-bg: rgba(251, 251, 253, 0.7);
+        }
+
+        html.dark {
+            --bg-primary: #000000;
+            --bg-secondary: #1c1c1e;
+            --text-primary: #f5f5f7;
+            --text-secondary: #a1a1a6;
+            --card-bg: #1e1e1e;
+            --shadow-color: 0deg 0% 100%;
+            --shadow-opacity: 0.02;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --nav-bg: rgba(0, 0, 0, 0.7);
+        }
+
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Roboto', sans-serif;
+            overflow-x: hidden;
+            transition: background-color 0.4s ease, color 0.4s ease;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        h1, h2, h3, .logo {
+            font-family: 'Playfair Display', serif;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        p, span, a, li, input, textarea {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.7;
+            letter-spacing: 0.01em;
+        }
+
+        .container {
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Glassmorphism Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            background-color: var(--nav-bg);
+            backdrop-filter: saturate(180%) blur(15px);
+            -webkit-backdrop-filter: saturate(180%) blur(15px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.2rem 0;
+            transition: background-color 0.4s ease;
+        }
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        .logo { font-size: 1.4rem; letter-spacing: -1px; }
+
+        ::view-transition-old(root),
+        ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+
+        /* Minimal Theme Toggle */
+        #theme-toggle {
+            padding: 0.6rem 1.4rem;
+            cursor: pointer;
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+        #theme-toggle:hover { background: var(--text-primary); color: var(--bg-primary); }
+
+        /* Smooth Sections */
+        section { padding: 10rem 0; }
+        .section-title { font-size: 3.2rem; margin-bottom: 3.5rem; }
+
+        /* Multi-layered Soft Shadows (Elevated Cards) */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            padding: 3.5rem;
+            margin-bottom: 3.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 
+                0 2px 4px hsl(var(--shadow-color) / calc(var(--shadow-opacity) * 0.5)),
+                0 8px 16px hsl(var(--shadow-color) / calc(var(--shadow-opacity) * 0.8)),
+                0 16px 32px hsl(var(--shadow-color) / var(--shadow-opacity));
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .card:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 
+                0 4px 8px hsl(var(--shadow-color) / calc(var(--shadow-opacity) * 0.5)),
+                0 16px 32px hsl(var(--shadow-color) / calc(var(--shadow-opacity) * 0.8)),
+                0 32px 64px hsl(var(--shadow-color) / var(--shadow-opacity));
+        }
+
+        /* Magnetic Button Refined */
+        .magnetic-btn {
+            display: inline-block;
+            padding: 1.1rem 3.5rem;
+            background-color: var(--text-primary);
+            color: var(--bg-primary);
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 2rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            will-change: transform;
+        }
+
+        /* Elegant Timeline */
+        .timeline { border-left: 1px solid var(--border-color); padding-left: 2.5rem; margin-left: 1rem; }
+        .timeline-item { margin-bottom: 4rem; position: relative; }
+        .timeline-item::before {
+            content: ''; position: absolute; left: -46px; top: 8px; width: 10px; height: 10px;
+            background: var(--accent); border-radius: 50%;
+            box-shadow: 0 0 0 4px var(--bg-primary);
+        }
+        .timeline-item h3 { font-size: 1.4rem; margin-bottom: 0.3rem; font-family: 'Roboto', sans-serif; font-weight: 700; }
+        .timeline-item span { color: var(--accent); font-weight: 500; font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase; }
+        .timeline-item p { color: var(--text-secondary); margin-top: 12px; max-width: 600px; }
+
+        /* D3 Chart Styling */
+        #chart-container { width: 100%; height: 380px; margin-top: 4rem; position: relative; }
+        .line { fill: none; stroke: url(#line-gradient); stroke-width: 3.5px; stroke-linecap: round; filter: drop-shadow(0 8px 8px rgba(41, 151, 255, 0.2)); }
+        .domain, .tick line { stroke: var(--border-color); }
+        .tick text { fill: var(--text-secondary); font-family: 'Roboto', sans-serif; font-size: 11px; }
+
+        /* Sophisticated Contact Form */
+        .contact-form { display: flex; flex-direction: column; gap: 1.2rem; max-width: 600px; }
+        .contact-form input, .contact-form textarea {
+            width: 100%; padding: 1.2rem 1.5rem; border: 1px solid var(--border-color);
+            background: rgba(128, 128, 128, 0.03); color: var(--text-primary);
+            border-radius: 14px; box-sizing: border-box; font-size: 1rem;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+        }
+        .contact-form input:focus, .contact-form textarea:focus { 
+            outline: none; border-color: var(--accent); background: transparent;
+        }
+
+        /* Hero Text Fade-in Animation */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            section { padding: 6rem 0; }
+            .section-title { font-size: 2.5rem; }
+            .card { padding: 2.5rem; }
+            #hero h1 { font-size: 3rem !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-inner">
+            <div class="logo">KYH.</div>
+            <button id="theme-toggle">Dark Mode</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        
+        <section id="hero" style="min-height: 80vh; display: flex; flex-direction: column; justify-content: center;">
+            <h1 class="fade-in-up" style="font-size: 4.5rem; line-height: 1.05; margin-bottom: 1.5rem;">
+                Digital Convergence:<br><i style="font-weight: 600; color: var(--text-secondary);">Design & Engineering.</i>
+            </h1>
+            <p class="fade-in-up delay-1" style="font-size: 1.2rem; color: var(--text-secondary); max-width: 650px;">
+                시각 디자인에서 시작해 풀스택 서비스 총괄까지.<br>미니멀리즘 철학과 정교한 엔지니어링을 결합하여 비즈니스 가치를 지닌 프로덕트를 만듭니다.
+            </p>
+            <div class="fade-in-up delay-2">
+                <a href="#contact" class="magnetic-btn">Let's Connect</a>
+            </div>
+        </section>
+
+        <section id="experience">
+            <h2 class="section-title">The Evolution</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h3>Service Architect & Full-stack Developer</h3>
+                    <span>2022 - Present</span>
+                    <p>알파코 RPA 자동화 프로젝트 구축, 삼성 SSAFY 수료, Python 기반 AI 챗봇 '공감이' 기획 및 개발 총괄. 기획-디자인-개발 간의 병목 현상을 해결하는 링커(Linker) 역할 수행.</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>UX/UI & Front-end Designer</h3>
+                    <span>2019 - 2022</span>
+                    <p>에너지 플랫폼 '모햇', 'H-ENERGY', '김태양' 실무 디자인 및 웹 퍼블리싱. 심미성을 넘어선 데이터 기반의 사용자 경험(UX) 설계.</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>Visual Designer</h3>
+                    <span>2015 - 2019</span>
+                    <p>시각디자인 전공 베이스. 200회 이상의 프리랜서 상용 프로젝트 리드 및 8회 수상 이력을 통해 다져진 픽셀 퍼펙트(Pixel-perfect) 역량.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects">
+            <h2 class="section-title">Selected Works</h2>
+            
+            <div class="card">
+                <h3 style="font-size: 2.2rem; margin-bottom: 0.5rem;">Apple KR (2024)</h3>
+                <p style="color: var(--accent); margin-bottom: 1.5rem; font-weight: 500; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;">New Release Visual Contract</p>
+                <p style="color: var(--text-secondary);">시각적 여백과 정제된 타이포그래피를 통해 본질적인 브랜드 가치에 집중했습니다. 애플 특유의 미니멀리즘과 글로벌 스탠다드를 유지하기 위해 과도한 장식을 배제하고 디테일한 시각적 완성도를 극대화한 프로젝트입니다.</p>
+            </div>
+
+            <div class="card" id="biznc-card">
+                <h3 style="font-size: 2.2rem; margin-bottom: 0.5rem;">의료창고 (Biz & C)</h3>
+                <p style="color: var(--accent); margin-bottom: 1.5rem; font-weight: 500; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;">Service PM & Full-stack Pipeline</p>
+                <p style="color: var(--text-secondary);">단순한 UI 리뉴얼을 넘어, 풀스택 데이터 파이프라인 구축 및 백엔드 데이터를 바탕으로 재고 회전율을 최적화했습니다. 서비스 총괄로서 기여한 <strong>우상향 매출 성장 지표</strong>를 데이터 시각화로 증명합니다.</p>
+                
+                <div id="chart-container"></div>
+            </div>
+        </section>
+
+        <section id="contact" style="padding-bottom: 12rem;">
+            <h2 class="section-title">Get in Touch</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 3.5rem; font-size: 1.1rem;">함께 가치 있는 프로덕트를 만들어갈 기회를 기다립니다.</p>
+            
+            <form class="contact-form" action="https://formspree.io/f/YOUR_ENDPOINT" method="POST">
+                <input type="text" name="name" placeholder="Name or Company" required>
+                <input type="email" name="email" placeholder="Email Address" required>
+                <textarea name="message" rows="5" placeholder="Tell me about your project..." required></textarea>
+                <button type="submit" class="magnetic-btn" style="width: 100%; margin-top: 1rem;">Send Message</button>
+            </form>
+        </section>
+
+    </div>
+
+    <script>
+        // 1. View Transitions API (Dark Mode)
+        const themeToggle = document.getElementById('theme-toggle');
+        
+        themeToggle.addEventListener('click', (e) => {
+            const isDark = document.documentElement.classList.contains('dark');
+            const x = e.clientX;
+            const y = e.clientY;
+
+            if (!document.startViewTransition) {
+                document.documentElement.classList.toggle('dark');
+                themeToggle.textContent = isDark ? 'Dark Mode' : 'Light Mode';
+                return;
+            }
+
+            const transition = document.startViewTransition(() => {
+                document.documentElement.classList.toggle('dark');
+                themeToggle.textContent = document.documentElement.classList.contains('dark') ? 'Light Mode' : 'Dark Mode';
+            });
+
+            transition.ready.then(() => {
+                const maxRadius = Math.hypot(
+                    Math.max(x, window.innerWidth - x),
+                    Math.max(y, window.innerHeight - y)
+                );
+                
+                const clipPath = [
+                    `circle(0px at ${x}px ${y}px)`,
+                    `circle(${maxRadius}px at ${x}px ${y}px)`
+                ];
+
+                document.documentElement.animate(
+                    { clipPath: document.documentElement.classList.contains('dark') ? clipPath : clipPath.reverse() },
+                    { duration: 700, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', pseudoElement: '::view-transition-new(root)' }
+                );
+            });
+        });
+
+        // 2. Refined GSAP Magnetic Physics
+        const magnets = document.querySelectorAll('.magnetic-btn');
+        magnets.forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = (e.clientX - rect.left - rect.width / 2) * 0.3; // 텐션 조절
+                const y = (e.clientY - rect.top - rect.height / 2) * 0.3;
+                
+                gsap.to(btn, { x: x, y: y, scale: 1.05, duration: 0.3, ease: "power2.out" });
+            });
+            
+            btn.addEventListener('mouseleave', () => {
+                gsap.to(btn, { x: 0, y: 0, scale: 1, duration: 0.6, ease: "elastic.out(1, 0.3)" }); // 탄성 조절
+            });
+        });
+
+        // 3. D3.js Chart Drawing Logic
+        let chartDrawn = false;
+        const drawChart = () => {
+            if (chartDrawn) return;
+            chartDrawn = true;
+
+            const csvData = `Date,Revenue
+            2025-06-01,120000
+            2025-07-01,145000
+            2025-08-01,180000
+            2025-09-01,210000
+            2025-10-01,260000
+            2025-11-01,310000
+            2025-12-01,380000
+            2026-01-01,420000
+            2026-02-01,490000
+            2026-03-01,560000`;
+
+            const data = d3.csvParse(csvData, d => ({ date: new Date(d.Date), value: +d.Revenue }));
+            const container = d3.select("#chart-container");
+            const width = container.node().getBoundingClientRect().width;
+            const height = 380;
+            const margin = {top: 30, right: 20, bottom: 30, left: 40};
+
+            const svg = container.append("svg").attr("width", width).attr("height", height).style("overflow", "visible");
+
+            const defs = svg.append("defs");
+            const gradient = defs.append("linearGradient").attr("id", "line-gradient").attr("x1", "0%").attr("y1", "0%").attr("x2", "100%").attr("y2", "0%");
+            gradient.append("stop").attr("offset", "0%").attr("stop-color", "#2997ff"); // Apple Blue
+            gradient.append("stop").attr("offset", "100%").attr("stop-color", "#ff295c"); // Warm Accent
+
+            const x = d3.scaleTime().domain(d3.extent(data, d => d.date)).range([margin.left, width - margin.right]);
+            const y = d3.scaleLinear().domain([0, d3.max(data, d => d.value) * 1.1]).range([height - margin.bottom, margin.top]);
+
+            // X Axis
+            svg.append("g").attr("transform", `translate(0,${height - margin.bottom})`)
+               .call(d3.axisBottom(x).ticks(6).tickFormat(d3.timeFormat("%y.%m")).tickSizeOuter(0).tickPadding(10))
+               .select(".domain").attr("stroke-width", 0); // Hide main line for minimalism
+
+            // Y Axis
+            svg.append("g").attr("transform", `translate(${margin.left},0)`)
+               .call(d3.axisLeft(y).ticks(5).tickFormat(d => (d / 1000) + "k").tickSizeOuter(0).tickPadding(10))
+               .select(".domain").attr("stroke-width", 0);
+
+            // Grid Lines (Subtle horizontal)
+            svg.append("g").attr("class", "grid")
+               .call(d3.axisLeft(y).tickSize(-width + margin.left + margin.right).tickFormat("").ticks(5))
+               .attr("transform", `translate(${margin.left},0)`)
+               .selectAll("line").attr("stroke", "var(--border-color)").attr("stroke-dasharray", "3,3");
+            svg.select(".grid .domain").remove();
+
+            const line = d3.line().x(d => x(d.date)).y(d => y(d.value)).curve(d3.curveMonotoneX);
+
+            const path = svg.append("path").datum(data).attr("class", "line").attr("d", line);
+
+            const totalLength = path.node().getTotalLength();
+            path.attr("stroke-dasharray", totalLength + " " + totalLength)
+                .attr("stroke-dashoffset", totalLength)
+                .transition().duration(2500).ease(d3.easeCubicOut)
+                .attr("stroke-dashoffset", 0);
+        };
+
+        // 4. Intersection Observer for Chart Trigger on Scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    drawChart();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 }); // 30% 정도 보였을 때 실행
+
+        observer.observe(document.getElementById('biznc-card'));
+
+        window.addEventListener('resize', () => {
+            if (chartDrawn) {
+                d3.select("#chart-container").selectAll("*").remove();
+                chartDrawn = false;
+                drawChart();
+            }
+        });
+    </script>
+</body>
+</html>
