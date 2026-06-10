@@ -9,11 +9,11 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
     
     <style>
-        /* 1. Typography: Pretendard Variable + Roboto */
+        /* 1. Typography: Pretendard + Roboto */
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css');
 
-        /* 2. 기본 모드 (다크 모드) 설정 */
+        /* 3. 기본 모드를 다크 모드로 설정 */
         :root {
             --bg-primary: #000000;
             --bg-secondary: #1c1c1e;
@@ -27,7 +27,7 @@
             --nav-bg: rgba(0, 0, 0, 0.7);
         }
 
-        /* 3. 라이트 모드 변수 */
+        /* 3. 밝은 모드 (라이트 모드) 변수 */
         html.light {
             --bg-primary: #fbfbfd;
             --bg-secondary: #ffffff;
@@ -45,30 +45,30 @@
             margin: 0;
             background-color: var(--bg-primary);
             color: var(--text-primary);
-            font-family: 'Pretendard Variable', Pretendard, 'Roboto', sans-serif;
+            font-family: 'Roboto', 'Pretendard Variable', Pretendard, sans-serif;
             overflow-x: hidden;
             transition: background-color 0.4s ease, color 0.4s ease;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
 
-        h1, h2, h3,.logo {
+        /* 1. Playfair Display 폰트를 Pretendard로 수정 */
+        h1, h2, h3, .logo {
             font-family: 'Pretendard Variable', Pretendard, sans-serif;
             font-weight: 800;
             letter-spacing: -0.02em;
         }
 
         p, span, a, li, input, textarea {
-            font-family: 'Pretendard Variable', Pretendard, 'Roboto', sans-serif;
+            font-family: 'Roboto', 'Pretendard Variable', Pretendard, sans-serif;
             line-height: 1.7;
             letter-spacing: 0.01em;
         }
 
-       .container {
+        .container {
             max-width: 1040px;
             margin: 0 auto;
             padding: 0 2rem;
-            position: relative;
         }
 
         /* Glassmorphism Navigation */
@@ -83,7 +83,7 @@
             padding: 1.2rem 0;
             transition: background-color 0.4s ease;
         }
-       .nav-inner {
+        .nav-inner {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -91,7 +91,7 @@
             margin: 0 auto;
             padding: 0 2rem;
         }
-       .logo { font-size: 1.4rem; letter-spacing: -1px; }
+        .logo { font-size: 1.4rem; letter-spacing: -1px; }
 
         ::view-transition-old(root),
         ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
@@ -104,8 +104,8 @@
             color: var(--text-primary);
             border: 1px solid var(--border-color);
             border-radius: 30px;
-            font-family: 'Pretendard Variable', sans-serif;
-            font-weight: 600;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
             font-size: 0.85rem;
             transition: all 0.3s ease;
         }
@@ -113,10 +113,10 @@
 
         /* Smooth Sections */
         section { padding: 10rem 0; }
-       .section-title { font-size: 3.2rem; margin-bottom: 3.5rem; }
+        .section-title { font-size: 3.2rem; margin-bottom: 3.5rem; }
 
         /* Multi-layered Soft Shadows (Elevated Cards) */
-       .card {
+        .card {
             background-color: var(--card-bg);
             border-radius: 24px;
             padding: 3.5rem;
@@ -128,7 +128,7 @@
                 0 16px 32px hsl(var(--shadow-color) / var(--shadow-opacity));
             transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s ease;
         }
-       .card:hover { 
+        .card:hover { 
             transform: translateY(-8px); 
             box-shadow: 
                 0 4px 8px hsl(var(--shadow-color) / calc(var(--shadow-opacity) * 0.5)),
@@ -137,14 +137,14 @@
         }
 
         /* Magnetic Button Refined */
-       .magnetic-btn {
+        .magnetic-btn {
             display: inline-block;
             padding: 1.1rem 3.5rem;
             background-color: var(--text-primary);
             color: var(--bg-primary);
             border-radius: 50px;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 500;
             margin-top: 2rem;
             border: none;
             cursor: pointer;
@@ -154,184 +154,53 @@
         }
 
         /* Elegant Timeline */
-       .timeline { border-left: 1px solid var(--border-color); padding-left: 2.5rem; margin-left: 1rem; }
-       .timeline-item { margin-bottom: 4rem; position: relative; }
-       .timeline-item::before {
+        .timeline { border-left: 1px solid var(--border-color); padding-left: 2.5rem; margin-left: 1rem; }
+        .timeline-item { margin-bottom: 4rem; position: relative; }
+        .timeline-item::before {
             content: ''; position: absolute; left: -46px; top: 8px; width: 10px; height: 10px;
             background: var(--accent); border-radius: 50%;
             box-shadow: 0 0 0 4px var(--bg-primary);
         }
-       .timeline-item h3 { font-size: 1.4rem; margin-bottom: 0.3rem; font-family: 'Pretendard Variable', sans-serif; font-weight: 700; }
-       .timeline-item span { color: var(--accent); font-weight: 600; font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase; }
-       .timeline-item p { color: var(--text-secondary); margin-top: 12px; max-width: 600px; }
+        .timeline-item h3 { font-size: 1.4rem; margin-bottom: 0.3rem; font-family: 'Pretendard Variable', sans-serif; font-weight: 700; }
+        .timeline-item span { color: var(--accent); font-weight: 500; font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase; }
+        .timeline-item p { color: var(--text-secondary); margin-top: 12px; max-width: 600px; }
 
         /* D3 Chart Styling */
         #chart-container { width: 100%; height: 380px; margin-top: 4rem; position: relative; }
-       .line { fill: none; stroke: url(#line-gradient); stroke-width: 3.5px; stroke-linecap: round; filter: drop-shadow(0 8px 8px rgba(41, 151, 255, 0.2)); }
-       .domain,.tick line { stroke: var(--border-color); }
-       .tick text { fill: var(--text-secondary); font-family: 'Pretendard Variable', sans-serif; font-size: 12px; }
+        .line { fill: none; stroke: url(#line-gradient); stroke-width: 3.5px; stroke-linecap: round; filter: drop-shadow(0 8px 8px rgba(41, 151, 255, 0.2)); }
+        .domain, .tick line { stroke: var(--border-color); }
+        .tick text { fill: var(--text-secondary); font-family: 'Roboto', sans-serif; font-size: 11px; }
 
         /* Sophisticated Contact Form */
-       .contact-form { display: flex; flex-direction: column; gap: 1.2rem; max-width: 600px; }
-       .contact-form input,.contact-form textarea {
+        .contact-form { display: flex; flex-direction: column; gap: 1.2rem; max-width: 600px; }
+        .contact-form input, .contact-form textarea {
             width: 100%; padding: 1.2rem 1.5rem; border: 1px solid var(--border-color);
             background: rgba(128, 128, 128, 0.03); color: var(--text-primary);
             border-radius: 14px; box-sizing: border-box; font-size: 1rem;
-            font-family: 'Pretendard Variable', sans-serif;
             transition: border-color 0.3s ease, background-color 0.3s ease;
         }
-       .contact-form input:focus,.contact-form textarea:focus { 
+        .contact-form input:focus, .contact-form textarea:focus { 
             outline: none; border-color: var(--accent); background: transparent;
         }
 
         /* Hero Text Fade-in Animation */
-       .fade-in-up {
+        .fade-in-up {
             opacity: 0;
             transform: translateY(30px);
             animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-       .delay-1 { animation-delay: 0.2s; }
-       .delay-2 { animation-delay: 0.4s; }
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
 
         @keyframes fadeInUp {
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Floating TOC & Print Button Styles */
-       .floating-toc {
-            position: fixed;
-            right: 3rem;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 999;
-            background: var(--nav-bg);
-            backdrop-filter: saturate(180%) blur(15px);
-            -webkit-backdrop-filter: saturate(180%) blur(15px);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 1.5rem 1.8rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            box-shadow: 0 8px 32px hsl(var(--shadow-color) / calc(var(--shadow-opacity) * 1.5));
-            opacity: 0;
-            animation: fadeInRight 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            animation-delay: 0.5s;
-        }
-
-        @keyframes fadeInRight {
-            from { opacity: 0; transform: translate(30px, -50%); }
-            to { opacity: 1; transform: translate(0, -50%); }
-        }
-
-       .floating-toc ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-        }
-
-       .floating-toc a {
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: color 0.3s ease;
-            position: relative;
-            padding-left: 1.2rem;
-            display: flex;
-            align-items: center;
-        }
-
-        /* TOC 활성화 인디케이터 (점) */
-       .floating-toc a::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background-color: transparent;
-            transition: background-color 0.3s ease;
-        }
-
-       .floating-toc a:hover {
-            color: var(--text-primary);
-        }
-
-        /* 활성화된 목차 스타일 */
-       .floating-toc a.active {
-            color: var(--text-primary);
-            font-weight: 700;
-        }
-
-       .floating-toc a.active::before {
-            background-color: var(--accent);
-        }
-
-        /* Print Button */
-       .print-btn {
-            background: transparent;
-            border: none;
-            border-top: 1px solid var(--border-color);
-            padding-top: 1.2rem;
-            margin-top: 0.5rem;
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            transition: color 0.3s ease;
-        }
-
-       .print-btn:hover {
-            color: var(--text-primary);
-        }
-
-        /* 반응형: 1200px 이하 모바일/태블릿에서는 TOC 숨김 */
-        @media (max-width: 1200px) {
-           .floating-toc { display: none; }
-        }
-
         @media (max-width: 768px) {
             section { padding: 6rem 0; }
-           .section-title { font-size: 2.5rem; }
-           .card { padding: 2.5rem; }
-            #hero h1 { font-size: 3rem!important; }
-        }
-
-        /* 인쇄 최적화 설정 */
-        @media print {
-            nav,.floating-toc, #contact form,.magnetic-btn, #theme-toggle {
-                display: none!important;
-            }
-            body {
-                background: #ffffff!important;
-                color: #000000!important;
-            }
-           .card {
-                box-shadow: none!important;
-                border: 1px solid #e0e0e0!important;
-                break-inside: avoid;
-            }
-            section {
-                padding: 3rem 0!important;
-            }
-            #chart-container {
-                page-break-inside: avoid;
-            }
-            * {
-                -webkit-print-color-adjust: exact!important;
-                color-adjust: exact!important;
-            }
+            .section-title { font-size: 2.5rem; }
+            .card { padding: 2.5rem; }
+            #hero h1 { font-size: 3rem !important; }
         }
     </style>
 </head>
@@ -343,23 +212,6 @@
             <button id="theme-toggle">Light Mode</button>
         </div>
     </nav>
-
-    <aside class="floating-toc">
-        <ul>
-            <li><a href="#hero" class="active">Intro</a></li>
-            <li><a href="#experience">Experience</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-        <button class="print-btn" onclick="window.print()" title="Print Portfolio">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="6 9 6 2 18 2 18 9"></polyline>
-                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-                <rect x="6" y="14" width="12" height="8"></rect>
-            </svg>
-            Print
-        </button>
-    </aside>
 
     <div class="container">
         
@@ -395,18 +247,8 @@
                 </div>
                 <div class="timeline-item">
                     <h3>디자인 및 개발 프리랜서</h3>
-                    <span>2017. 01 - 2022. 01</span>
-                    <p>시각 디자인 전공 베이스를 살려 200회 이상의 프리랜서 및 외주 프로젝트를 성공적으로 완수했습니다. 기획, UI/UX 디자인, 기획 영상 편집 등 디자인 역량을 다졌습니다.</p>
-                </div>
-                <div class="timeline-item">
-                    <h3>SSAFY & Alpaco (Academy Projects)</h3>
-                    <span>Since 2019</span>
-                    <p>개발자로 전향하며 역량을 강화하기 위해 수행한 프로젝트입니다. 삼성 청년 SW 아카데미(SSAFY)에서 Python 기반 AI 챗봇 '공감이' 딥러닝과 '딱정이', 'JJOBPLANET' 웹 디자인을 구현했으며, 삼성 SW 역량 테스트 A형을 패스했습니다. 이후 Alpaco에서 UiPath 기반 RPA 시스템을 구축했습니다.</p>
-                </div>
-                <div class="timeline-item">
-                    <h3>Visual Design & Engineering Tools</h3>
-                    <span>Background</span>
-                    <p>시각디자인 전공으로 학생회 기획부장 및 졸업 전시 위원장을 역임했습니다. 융합 디자이너 과정을 수료하고 GTQ 1급을 취득했으며, AutoCAD와 3D 프린터를 활용한 건축물 및 의료 Canula 부품 도면 설계 역량을 갖추고 있습니다.</p>
+                    <span>2018. 03 - 2022. 01</span>
+                    <p>시각 디자인 전공 베이스를 살려 다수의 상용 프로젝트를 리드했습니다. 기획, UI/UX 디자인, 프론트엔드 및 백엔드 개발을 통합적으로 수행하며 디자이너와 풀스택 개발자를 아우르는 기반 역량을 다졌습니다.</p>
                 </div>
             </div>
         </section>
@@ -415,11 +257,12 @@
             <h2 class="section-title">Selected Works</h2>
             
             <div class="card">
-                <h3 style="font-size: 2.2rem; margin-bottom: 0.5rem;">Apple KR - iPhone 16 New Release</h3>
-                <p style="color: var(--accent); margin-bottom: 1.5rem; font-weight: 500; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;">Visual Contract</p>
+                <h3 style="font-size: 2.2rem; margin-bottom: 0.5rem;">Apple KR - iPhone 16 New Release Visual Contract</h3>
+                <p style="color: var(--accent); margin-bottom: 1.5rem; font-weight: 500; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;">New Release Visual Contract</p>
                 <p style="color: var(--text-secondary);">2024 애플 프로젝트에 참여하였습니다. 보안 서약으로 인해 자세한 내용은 발설할 수 없지만, 애플 특유의 미니멀리즘과 글로벌 스탠다드를 유지하고 정제된, 디테일한 시각적 완성도를 극대화한 프로젝트입니다.</p>
             </div>
 
+            <!-- 1. 태양광 프로젝트 카드 -->
             <div class="card">
                 <h3 style="font-size: 2.2rem; margin-bottom: 0.5rem;">태양광 에너지 서비스 통합 플랫폼</h3>
                 <p style="color: var(--accent); margin-bottom: 1.5rem; font-weight: 500; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;">UI/UX Design & Front-end</p>
@@ -447,8 +290,9 @@
                 </div>
             </div>
 
+            <!-- 2. 의료/복지용구 프로젝트 카드 -->
             <div class="card" id="biznc-card">
-                <h3 style="font-size: 2.2rem; margin-bottom: 0.5rem;">의료·복지용구 통합 플랫폼 (Biz & C)</h3>
+                <h3 style="font-size: 2.2rem; margin-bottom: 0.5rem;">의료·복지용구 B2B/B2C 통합 플랫폼</h3>
                 <p style="color: var(--accent); margin-bottom: 1.5rem; font-weight: 500; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;">Service PM & Full-stack Architect</p>
                 <p style="color: var(--text-secondary); margin-bottom: 2rem;">2,500여 개의 SKU를 다루는 복잡한 비즈니스 로직을 자동화하고, 디자인 시스템부터 백엔드 파이프라인까지 전 과정을 리드했습니다. 서비스 총괄로서 기여한 <strong>우상향 매출 성장 지표</strong>를 아래 시각화로 증명합니다.</p>
                 
@@ -475,8 +319,10 @@
                     <span style="padding: 0.4rem 1rem; background: rgba(128,128,128,0.1); border-radius: 20px; font-size: 0.8rem; font-weight: 500;">Javascript</span>
                     <span style="padding: 0.4rem 1rem; background: rgba(128,128,128,0.1); border-radius: 20px; font-size: 0.8rem; font-weight: 500;">Figma</span>
                     <span style="padding: 0.4rem 1rem; background: rgba(128,128,128,0.1); border-radius: 20px; font-size: 0.8rem; font-weight: 500;">Cafe24 / PHP</span>
+                    <span style="padding: 0.4rem 1rem; background: rgba(128,128,128,0.1); border-radius: 20px; font-size: 0.8rem; font-weight: 500;">Adobe</span>
                 </div>
                 
+                <!-- 기존에 있던 D3 차트 컨테이너 -->
                 <div id="chart-container"></div>
             </div>
         </section>
@@ -506,13 +352,13 @@
 
             if (!document.startViewTransition) {
                 document.documentElement.classList.toggle('light');
-                themeToggle.textContent = isLight? 'Light Mode' : 'Dark Mode';
+                themeToggle.textContent = isLight ? 'Light Mode' : 'Dark Mode';
                 return;
             }
 
             const transition = document.startViewTransition(() => {
                 document.documentElement.classList.toggle('light');
-                themeToggle.textContent = document.documentElement.classList.contains('light')? 'Dark Mode' : 'Light Mode';
+                themeToggle.textContent = document.documentElement.classList.contains('light') ? 'Dark Mode' : 'Light Mode';
             });
 
             transition.ready.then(() => {
@@ -521,15 +367,14 @@
                     Math.max(y, window.innerHeight - y)
                 );
                 
-                // 완전히 복구된 배열 데이터
+                // [수정 포인트] 에러가 났던 clipPath 문법 오류 수정
                 const clipPath = [
                     `circle(0px at ${x}px ${y}px)`,
                     `circle(${maxRadius}px at ${x}px ${y}px)`
                 ];
 
-
                 document.documentElement.animate(
-                    { clipPath: document.documentElement.classList.contains('light')? clipPath : [...clipPath].reverse() },
+                    { clipPath: document.documentElement.classList.contains('light') ? clipPath : [...clipPath].reverse() },
                     { duration: 700, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', pseudoElement: '::view-transition-new(root)' }
                 );
             });
@@ -539,18 +384,22 @@
         const buttons = document.querySelectorAll('.magnetic-btn');
 
         buttons.forEach(btn => {
+            // 마우스 호버 시: 부드럽게 약간 커지며 위로 살짝 떠오름
             btn.addEventListener('mouseenter', () => {
                 gsap.to(btn, { scale: 1.03, y: -3, duration: 0.4, ease: "power3.out" });
             });
             
+            // 마우스 호버 해제 시: 원래 상태로 부드럽게 복구
             btn.addEventListener('mouseleave', () => {
                 gsap.to(btn, { scale: 1, y: 0, duration: 0.5, ease: "power2.out" });
             });
             
+            // 마우스 클릭 (누를 때): 물리적 버튼처럼 살짝 작아지며 눌리는 효과
             btn.addEventListener('mousedown', () => {
                 gsap.to(btn, { scale: 0.97, y: 0, duration: 0.1, ease: "power1.inOut" });
             });
             
+            // 마우스 클릭 (뗄 때): 원래 호버 상태로 탄력 있게 튕기며 복구
             btn.addEventListener('mouseup', () => {
                 gsap.to(btn, { scale: 1.03, y: -3, duration: 0.4, ease: "back.out(1.5)" });
             });
@@ -562,7 +411,7 @@
             if (chartDrawn) return;
             chartDrawn = true;
 
-            // 완전히 복구된 JSON 데이터 객체
+            // [수정 포인트] TSV의 빈칸/탭 인식 에러를 막기 위해 안전한 JSON 객체 형태로 데이터 변경
             const rawData = [
                 { date: "Apr-26", value: 124828580 },
                 { date: "Mar-26", value: 66870773 },
@@ -604,23 +453,23 @@
 
             // X Axis
             svg.append("g").attr("transform", `translate(0,${height - margin.bottom})`)
-             .call(d3.axisBottom(x).ticks(d3.timeMonth.every(2)).tickFormat(d3.timeFormat("%y.%m")).tickSizeOuter(0).tickPadding(10))
-             .select(".domain").attr("stroke-width", 0);
+              .call(d3.axisBottom(x).ticks(d3.timeMonth.every(2)).tickFormat(d3.timeFormat("%y.%m")).tickSizeOuter(0).tickPadding(10))
+              .select(".domain").attr("stroke-width", 0);
 
             // Y Axis
             svg.append("g").attr("transform", `translate(${margin.left},0)`)
-             .call(d3.axisLeft(y).ticks(5).tickFormat(d => {
+              .call(d3.axisLeft(y).ticks(5).tickFormat(d => {
                     if (d === 0) return "0";
                     if (d >= 100000000) return (d / 100000000).toFixed(1).replace('.0', '') + "억";
                     return (d / 10000).toFixed(0) + "만";
                }).tickSizeOuter(0).tickPadding(10))
-             .select(".domain").attr("stroke-width", 0);
+              .select(".domain").attr("stroke-width", 0);
 
             // Grid Lines
             svg.append("g").attr("class", "grid")
-             .call(d3.axisLeft(y).tickSize(-width + margin.left + margin.right).tickFormat("").ticks(5))
-             .attr("transform", `translate(${margin.left},0)`)
-             .selectAll("line").attr("stroke", "var(--border-color)").attr("stroke-dasharray", "3,3");
+              .call(d3.axisLeft(y).tickSize(-width + margin.left + margin.right).tickFormat("").ticks(5))
+              .attr("transform", `translate(${margin.left},0)`)
+              .selectAll("line").attr("stroke", "var(--border-color)").attr("stroke-dasharray", "3,3");
             svg.select(".grid.domain").remove();
 
             const line = d3.line().x(d => x(d.date)).y(d => y(d.value)).curve(d3.curveMonotoneX);
@@ -630,12 +479,12 @@
             // 드로잉 애니메이션
             const totalLength = path.node().getTotalLength();
             path.attr("stroke-dasharray", totalLength + " " + totalLength)
-              .attr("stroke-dashoffset", totalLength)
-              .transition().duration(2500).ease(d3.easeCubicOut)
-              .attr("stroke-dashoffset", 0);
+               .attr("stroke-dashoffset", totalLength)
+               .transition().duration(2500).ease(d3.easeCubicOut)
+               .attr("stroke-dashoffset", 0);
         };
 
-        // 4. 스크롤 인터섹션 옵저버 (차트 애니메이션 트리거)
+        // 4. 스크롤 인터섹션 옵저버
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -653,33 +502,6 @@
                 chartDrawn = false;
                 drawChart();
             }
-        });
-
-        // 5. Scroll Spy: 스크롤 위치에 따라 TOC 활성화 효과 적용
-        const sections = document.querySelectorAll('section');
-        const navLinks = document.querySelectorAll('.floating-toc a');
-
-        const tocObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                // threshold가 0이므로, 판정선에 닿는 순간 isIntersecting이 true가 됩니다.
-                if (entry.isIntersecting) {
-                    navLinks.forEach(link => {
-                        link.classList.remove('active');
-                        // 요소의 ID와 목차 링크의 해시값이 일치하면 active 클래스 추가
-                        if (link.getAttribute('href').substring(1) === entry.target.id) {
-                            link.classList.add('active');
-                        }
-                    });
-                }
-            });
-        }, { 
-            // 화면 상단에서 20% 내려온 지점부터 하단에서 70% 올라간 지점 사이(약 10%의 얇은 띠)를 판정 영역으로 만듭니다.
-            rootMargin: "-20% 0px -70% 0px", 
-            threshold: 0 
-        });
-
-        sections.forEach(section => {
-            tocObserver.observe(section);
         });
     </script>
 </body>
