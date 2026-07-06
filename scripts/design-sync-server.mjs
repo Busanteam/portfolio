@@ -108,9 +108,14 @@ async function saveOverrides(updates) {
     }
 
     const map = parseRulesFromCss(existing);
-    updates.forEach(({ selector, property, value }) => {
-        if (!selector || !property || value === undefined || value === '') return;
-        map.set(`${selector}|||${property}`, { selector, prop: property, value: String(value).trim() });
+    updates.forEach(({ selector, property, value, remove }) => {
+        if (!selector || !property) return;
+        const key = `${selector}|||${property}`;
+        if (remove || value === '' || value === null || value === undefined) {
+            map.delete(key);
+            return;
+        }
+        map.set(key, { selector, prop: property, value: String(value).trim() });
     });
 
     const output = serializeRules(map);

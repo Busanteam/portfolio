@@ -2,7 +2,6 @@
     'use strict';
 
     const DEV_HOSTS = new Set(['localhost', '127.0.0.1', '::1']);
-    const DEV_PORTS = new Set(['3847', '']);
     const API = '/__design-sync';
 
     if (!DEV_HOSTS.has(window.location.hostname)) return;
@@ -11,6 +10,8 @@
     const pending = new Map();
     let saveTimer = null;
     let connected = false;
+    let selectedElement = null;
+    let pickMode = false;
 
     function getSelector(el) {
         if (!(el instanceof Element)) return null;
@@ -36,7 +37,7 @@
         return parts.join(' > ');
     }
 
-    function collectInlineRules(el) {
+    function collectInlineRules(el, { includeRemove = false } = {}) {
         const selector = getSelector(el);
         if (!selector || !el.style) return [];
         const rules = [];
@@ -48,16 +49,23 @@
         return rules;
     }
 
-    function queueSave(updates) {
+    function queueSave(updates, { immediate = false } = {}) {
         updates.forEach(u => {
-            if (u.selector && u.property) pending.set(`${u.selector}|||${u.property}`, u);
+            if (!u.selector || !u.property) return;
+            const key = `${u.selector}|||${u.property}`;
+            if (u.remove) pending.set(key, u);
+            else if (u.value !== undefined && u.value !== '') pending.set(key, u);
         });
         clearTimeout(saveTimer);
-        saveTimer = setTimeout(flushSave, 600);
+        if (immediate) flushSave();
+        else saveTimer = setTimeout(flushSave, 600);
     }
 
     async function flushSave() {
-        if (pending.size === 0) return;
+        if (pending.size === 0) {
+            setStatus('저장할 변경 없음', 'idle');
+            return;
+        }
         const updates = [...pending.values()];
         pending.clear();
         try {
@@ -81,6 +89,152 @@
         el.dataset.tone = tone || 'idle';
     }
 
+    function updateSelectedUI() {
+        const target = document.getElementById('design-sync-target');
+        const editor = document.getElementById('design-sync-editor');
+        if (!target || !editor) return;
+
+        if (!selectedElement || !document.contains(selectedElement)) {
+            target.textContent = '선택된 요소 없음 — Pick으로 요소를 지정하세요';
+            editor.classList.add('is-disabled');
+            return;
+        }
+
+        editor.classList.remove('is-disabled');
+        const sel = getSelector(selectedElement);
+        const tag = selectedElement.tagName.toLowerCase();
+        target.innerHTML = `<code>${sel || tag}</code>`;
+        refreshStyleList();
+    }
+
+    function refreshStyleList() {
+        const list = document.getElementById('design-sync-styles-list');
+        if (!list || !selectedElement) return;
+        const rules = collectInlineRules(selectedElement);
+        if (!rules.length) {
+            list.innerHTML = '<li class="design-sync-style-empty">적용된 인라인 스타일 없음</li>';
+            return;
+        }
+        list.innerHTML = rules.map(r =>
+            `<li><code>${r.property}</code>: ${r.value}</li>`
+        ).join('');
+    }
+
+    function parseCommands(text) {
+        const commands = [];
+        text.split(/[;\n]+/).forEach(chunk => {
+            let line = chunk.trim();
+            if (!line) return;
+
+            const unsetMatch = line.match(/^(?:unset|remove|del)\s+(.+)$/i);
+            if (unsetMatch) {
+                commands.push({ type: 'remove', property: unsetMatch[1].trim() });
+                return;
+            }
+
+            const colon = line.indexOf(':');
+            if (colon === -1) {
+                commands.push({ type: 'error', raw: line, message: '형식: property: value' });
+                return;
+            }
+
+            const property = line.slice(0, colon).trim();
+            const value = line.slice(colon + 1).trim();
+            if (!property) return;
+            commands.push({ type: 'set', property, value });
+        });
+        return commands;
+    }
+
+    function applyCommands(commands, { immediate = true } = {}) {
+        if (!selectedElement) {
+            setStatus('먼저 요소를 선택하세요', 'err');
+            return false;
+        }
+
+        const selector = getSelector(selectedElement);
+        const updates = [];
+        const errors = [];
+
+        commands.forEach(cmd => {
+            if (cmd.type === 'error') {
+                errors.push(cmd.message);
+                return;
+            }
+            if (cmd.type === 'remove') {
+                selectedElement.style.removeProperty(cmd.property);
+                updates.push({ selector, property: cmd.property, remove: true });
+                return;
+            }
+            selectedElement.style.setProperty(cmd.property, cmd.value);
+            updates.push({ selector, property: cmd.property, value: cmd.value });
+        });
+
+        if (errors.length) {
+            setStatus(errors[0], 'err');
+            return false;
+        }
+
+        if (!updates.length) {
+            setStatus('적용할 명령이 없습니다', 'err');
+            return false;
+        }
+
+        queueSave(updates, { immediate });
+        refreshStyleList();
+        setStatus(`적용 ${updates.length}건${immediate ? ' · 저장 중' : ''}`, 'ok');
+        return true;
+    }
+
+    function applyQuickAction(action) {
+        if (!selectedElement) {
+            setStatus('먼저 요소를 선택하세요', 'err');
+            return;
+        }
+
+        const cs = getComputedStyle(selectedElement);
+        const map = {
+            'gap+': () => {
+                const cur = parseFloat(cs.gap) || parseFloat(cs.columnGap) || 0;
+                return [{ type: 'set', property: 'gap', value: `${cur + 4}px` }];
+            },
+            'gap-': () => {
+                const cur = parseFloat(cs.gap) || parseFloat(cs.columnGap) || 8;
+                return [{ type: 'set', property: 'gap', value: `${Math.max(0, cur - 4)}px` }];
+            },
+            'pad+': () => {
+                const cur = parseFloat(cs.paddingTop) || 0;
+                return [{ type: 'set', property: 'padding', value: `${cur + 4}px` }];
+            },
+            'pad-': () => {
+                const cur = parseFloat(cs.paddingTop) || 8;
+                return [{ type: 'set', property: 'padding', value: `${Math.max(0, cur - 4)}px` }];
+            },
+            'hide': () => [{ type: 'set', property: 'display', value: 'none' }],
+            'show': () => [{ type: 'set', property: 'display', value: '' }, { type: 'remove', property: 'display' }],
+            'bold': () => [{ type: 'set', property: 'font-weight', value: '700' }],
+            'center': () => [{ type: 'set', property: 'text-align', value: 'center' }],
+            'flex': () => [{ type: 'set', property: 'display', value: 'flex' }],
+            'reset': () => {
+                const props = [...selectedElement.style];
+                return props.map(p => ({ type: 'remove', property: p }));
+            }
+        };
+
+        const fn = map[action];
+        if (!fn) return;
+        applyCommands(fn());
+    }
+
+    function selectElement(el) {
+        document.querySelectorAll('.design-sync-highlight').forEach(n => n.classList.remove('design-sync-highlight'));
+        selectedElement = el;
+        el.classList.add('design-sync-highlight');
+        updateSelectedUI();
+        queueSave(collectInlineRules(el));
+        setStatus('요소 선택됨 — 아래에서 수정 명령을 입력하세요', 'ok');
+    }
+
     function buildUI() {
         const panel = document.createElement('div');
         panel.id = 'design-sync-panel';
@@ -90,10 +244,48 @@
                 <span class="design-sync-dot" id="design-sync-dot"></span>
                 <strong>Design Sync</strong>
             </div>
-            <p class="design-sync-desc">개발자도구에서 요소의 <code>style</code> / <code>class</code>를 수정하면<br><code>portfolio.overrides.css</code>에 자동 저장됩니다.</p>
+            <p class="design-sync-desc">요소 선택 후 CSS 명령을 입력해 적용·저장합니다.<br>예: <code>column-gap: 1rem</code> · <code>unset margin-top</code></p>
             <p class="design-sync-status" id="design-sync-status">대기 중</p>
-            <button type="button" class="design-sync-btn" id="design-sync-pick">요소 선택 (Pick)</button>
-            <button type="button" class="design-sync-btn design-sync-btn-ghost" id="design-sync-flush">지금 저장</button>
+
+            <div class="design-sync-actions">
+                <button type="button" class="design-sync-btn" id="design-sync-pick">요소 선택 (Pick)</button>
+                <button type="button" class="design-sync-btn design-sync-btn-ghost" id="design-sync-flush">지금 저장</button>
+            </div>
+
+            <div class="design-sync-target-wrap">
+                <span class="design-sync-label">선택 요소</span>
+                <p class="design-sync-target" id="design-sync-target">선택된 요소 없음</p>
+            </div>
+
+            <div class="design-sync-editor is-disabled" id="design-sync-editor">
+                <div class="design-sync-row">
+                    <input type="text" class="design-sync-input" id="design-sync-prop" placeholder="속성 (예: gap)" aria-label="CSS property">
+                    <input type="text" class="design-sync-input" id="design-sync-val" placeholder="값 (예: 1rem)" aria-label="CSS value">
+                    <button type="button" class="design-sync-btn design-sync-btn-sm" id="design-sync-apply-pair">적용</button>
+                </div>
+
+                <label class="design-sync-label" for="design-sync-cmd">수정 명령 (여러 줄 가능)</label>
+                <textarea id="design-sync-cmd" class="design-sync-textarea" rows="3" placeholder="column-gap: 1rem&#10;padding-left: 0.75rem&#10;unset margin-top"></textarea>
+                <div class="design-sync-actions">
+                    <button type="button" class="design-sync-btn design-sync-btn-sm" id="design-sync-apply-cmd">명령 적용</button>
+                    <button type="button" class="design-sync-btn design-sync-btn-sm design-sync-btn-ghost" id="design-sync-clear-cmd">입력 지우기</button>
+                </div>
+
+                <div class="design-sync-quick">
+                    <button type="button" class="design-sync-chip" data-action="gap+">gap +4</button>
+                    <button type="button" class="design-sync-chip" data-action="gap-">gap −4</button>
+                    <button type="button" class="design-sync-chip" data-action="pad+">pad +4</button>
+                    <button type="button" class="design-sync-chip" data-action="pad-">pad −4</button>
+                    <button type="button" class="design-sync-chip" data-action="flex">flex</button>
+                    <button type="button" class="design-sync-chip" data-action="center">center</button>
+                    <button type="button" class="design-sync-chip" data-action="bold">bold</button>
+                    <button type="button" class="design-sync-chip" data-action="hide">hide</button>
+                    <button type="button" class="design-sync-chip" data-action="show">show</button>
+                    <button type="button" class="design-sync-chip" data-action="reset">reset</button>
+                </div>
+
+                <ul class="design-sync-styles-list" id="design-sync-styles-list"></ul>
+            </div>
         `;
         document.body.appendChild(panel);
 
@@ -103,40 +295,105 @@
             style.textContent = `
                 .design-sync-panel {
                     position: fixed; bottom: 1.25rem; left: 1.25rem; z-index: 10000;
-                    width: min(300px, calc(100vw - 2rem));
+                    width: min(340px, calc(100vw - 2rem)); max-height: calc(100vh - 2rem); overflow: auto;
                     padding: 1rem 1.1rem; border-radius: 16px;
-                    background: rgba(20,20,22,.88); color: #f5f5f7;
+                    background: rgba(20,20,22,.92); color: #f5f5f7;
                     border: 1px solid rgba(255,255,255,.12);
                     backdrop-filter: blur(16px); font: 12px/1.5 Pretendard, sans-serif;
                     box-shadow: 0 16px 48px rgba(0,0,0,.4);
                 }
                 .design-sync-head { display:flex; align-items:center; gap:.5rem; margin-bottom:.5rem; font-size:13px; }
-                .design-sync-dot { width:8px; height:8px; border-radius:50%; background:#6b7280; }
+                .design-sync-dot { width:8px; height:8px; border-radius:50%; background:#6b7280; flex-shrink:0; }
                 .design-sync-dot.is-on { background:#30d158; box-shadow:0 0 0 4px rgba(48,209,88,.2); }
-                .design-sync-desc { margin:0 0 .6rem; color:#a1a1a6; font-size:11px; }
+                .design-sync-desc { margin:0 0 .5rem; color:#a1a1a6; font-size:11px; }
                 .design-sync-desc code { color:#7dc4ff; }
-                .design-sync-status { margin:0 0 .75rem; font-size:11px; color:#a1a1a6; }
+                .design-sync-status { margin:0 0 .6rem; font-size:11px; color:#a1a1a6; }
                 .design-sync-status[data-tone="ok"] { color:#30d158; }
                 .design-sync-status[data-tone="err"] { color:#ff453a; }
+                .design-sync-label { display:block; font-size:10px; font-weight:600; color:#a1a1a6; margin:.5rem 0 .25rem; text-transform:uppercase; letter-spacing:.04em; }
+                .design-sync-target { margin:0; font-size:11px; word-break:break-all; color:#e5e5ea; }
+                .design-sync-target code { color:#7dc4ff; }
+                .design-sync-actions { display:flex; flex-wrap:wrap; gap:.35rem; margin-bottom:.5rem; }
                 .design-sync-btn {
-                    display:inline-block; margin-right:.4rem; margin-bottom:.35rem;
                     padding:.45rem .75rem; border-radius:999px; border:0; cursor:pointer;
                     background:#2997ff; color:#fff; font:inherit; font-weight:600;
                 }
+                .design-sync-btn-sm { padding:.35rem .65rem; font-size:11px; }
                 .design-sync-btn-ghost { background:transparent; border:1px solid rgba(255,255,255,.18); color:#f5f5f7; }
-                .design-sync-pick-active { outline: 2px dashed #2997ff !important; outline-offset: 2px; cursor: crosshair !important; }
-                .design-sync-highlight { outline: 2px solid #30d158 !important; outline-offset: 2px; }
+                .design-sync-editor.is-disabled { opacity:.45; pointer-events:none; }
+                .design-sync-row { display:grid; grid-template-columns:1fr 1fr auto; gap:.35rem; align-items:center; }
+                .design-sync-input, .design-sync-textarea {
+                    width:100%; box-sizing:border-box; border-radius:10px;
+                    border:1px solid rgba(255,255,255,.15); background:rgba(255,255,255,.06);
+                    color:#f5f5f7; font:inherit; padding:.45rem .55rem;
+                }
+                .design-sync-textarea { resize:vertical; min-height:64px; margin-bottom:.35rem; }
+                .design-sync-input:focus, .design-sync-textarea:focus { outline:2px solid #2997ff; border-color:transparent; }
+                .design-sync-quick { display:flex; flex-wrap:wrap; gap:.3rem; margin:.4rem 0; }
+                .design-sync-chip {
+                    padding:.2rem .5rem; border-radius:999px; border:1px solid rgba(255,255,255,.14);
+                    background:rgba(255,255,255,.05); color:#d1d1d6; font:inherit; font-size:10px; cursor:pointer;
+                }
+                .design-sync-chip:hover { background:rgba(41,151,255,.2); border-color:rgba(41,151,255,.4); color:#fff; }
+                .design-sync-styles-list {
+                    margin:.5rem 0 0; padding:.5rem .65rem; list-style:none;
+                    background:rgba(0,0,0,.25); border-radius:10px; max-height:88px; overflow:auto;
+                }
+                .design-sync-styles-list li { font-size:10px; color:#a1a1a6; padding:.15rem 0; }
+                .design-sync-styles-list code { color:#7dc4ff; }
+                .design-sync-style-empty { color:#6b7280; font-style:italic; }
+                .design-sync-pick-active { outline:2px dashed #2997ff !important; outline-offset:2px; cursor:crosshair !important; }
+                .design-sync-highlight { outline:2px solid #30d158 !important; outline-offset:2px; }
             `;
             document.head.appendChild(style);
         }
 
         document.getElementById('design-sync-flush').addEventListener('click', flushSave);
 
-        let pickMode = false;
         document.getElementById('design-sync-pick').addEventListener('click', () => {
             pickMode = !pickMode;
             document.body.classList.toggle('design-sync-pick-active', pickMode);
             setStatus(pickMode ? '요소를 클릭하세요' : '대기 중', pickMode ? 'ok' : 'idle');
+        });
+
+        document.getElementById('design-sync-apply-pair').addEventListener('click', () => {
+            const prop = document.getElementById('design-sync-prop').value.trim();
+            const val = document.getElementById('design-sync-val').value.trim();
+            if (!prop) { setStatus('속성을 입력하세요', 'err'); return; }
+            if (!val) {
+                applyCommands([{ type: 'remove', property: prop }]);
+            } else {
+                applyCommands([{ type: 'set', property: prop, value: val }]);
+            }
+        });
+
+        document.getElementById('design-sync-apply-cmd').addEventListener('click', () => {
+            const text = document.getElementById('design-sync-cmd').value;
+            applyCommands(parseCommands(text));
+        });
+
+        document.getElementById('design-sync-clear-cmd').addEventListener('click', () => {
+            document.getElementById('design-sync-cmd').value = '';
+        });
+
+        document.getElementById('design-sync-cmd').addEventListener('keydown', e => {
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                applyCommands(parseCommands(e.target.value));
+            }
+        });
+
+        ['design-sync-prop', 'design-sync-val'].forEach(id => {
+            document.getElementById(id).addEventListener('keydown', e => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    document.getElementById('design-sync-apply-pair').click();
+                }
+            });
+        });
+
+        document.querySelectorAll('.design-sync-chip').forEach(chip => {
+            chip.addEventListener('click', () => applyQuickAction(chip.dataset.action));
         });
 
         document.addEventListener('click', e => {
@@ -146,10 +403,7 @@
             e.stopPropagation();
             pickMode = false;
             document.body.classList.remove('design-sync-pick-active');
-            document.querySelectorAll('.design-sync-highlight').forEach(n => n.classList.remove('design-sync-highlight'));
-            e.target.classList.add('design-sync-highlight');
-            queueSave(collectInlineRules(e.target));
-            setStatus(`선택: ${getSelector(e.target)}`, 'ok');
+            selectElement(e.target);
         }, true);
     }
 
@@ -159,6 +413,7 @@
             mutations.forEach(m => {
                 if (m.type === 'attributes' && (m.attributeName === 'style' || m.attributeName === 'class')) {
                     if (m.target.closest && m.target.closest('#design-sync-panel')) return;
+                    if (m.target === selectedElement) refreshStyleList();
                     updates.push(...collectInlineRules(m.target));
                 }
             });
@@ -201,7 +456,7 @@
         watchMutations();
         connectReload();
         document.getElementById('design-sync-dot')?.classList.add('is-on');
-        setStatus('연결됨 — DevTools 수정 시 자동 저장', 'ok');
+        setStatus('연결됨 — Pick 후 수정 명령 입력', 'ok');
     }
 
     if (document.readyState === 'loading') {
