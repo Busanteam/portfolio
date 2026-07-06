@@ -1,4 +1,11 @@
 {
+  "name": "portfolio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/design-sync-server.mjs",
+    "portfolio:dev": "node scripts/design-sync-server.mjs"
+  },
   "dependencies": {
     "bootstrap": "^5.3.3"
   }
