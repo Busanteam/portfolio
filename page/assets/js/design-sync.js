@@ -21,18 +21,34 @@
         document.body.classList.remove('lightbox-open', 'design-sync-pick-on');
     }
 
-    function isValidOpenAiKey(key) {
+    function detectProvider(key) {
+        return (key || '').trim().startsWith('sk-') ? 'openai' : 'gemini';
+    }
+
+    function isValidApiKey(key) {
         const k = (key || '').trim();
-        return /^sk-[A-Za-z0-9_-]{10,}$/.test(k);
+        if (k.length < 8) return false;
+        if (k.startsWith('sk-')) return /^sk-[A-Za-z0-9_-]{10,}$/.test(k);
+        return true;
     }
 
     function formatApiError(message) {
         if (!message) return 'AI 요청 실패';
-        if (message.includes('Incorrect API key') || message.includes('401')) {
-            return 'OpenAI API 키가 올바르지 않습니다. sk- 로 시작하는 키를 https://platform.openai.com/api-keys 에서 발급받으세요. (다른 서비스 키는 사용할 수 없습니다)';
+        if (message.includes('Gemini API error') || message.includes('API key not valid') || message.includes('PERMISSION_DENIED')) {
+            return 'Gemini API 키를 확인하세요. https://aistudio.google.com/apikey 에서 발급한 키(AQ. 또는 AIza...)를 입력하세요.';
         }
-        if (message.includes('OPENAI_API_KEY')) return message;
+        if (message.includes('Incorrect API key') || message.includes('OpenAI API error')) {
+            return 'OpenAI API 키가 올바르지 않습니다. sk- 로 시작하는 키를 https://platform.openai.com/api-keys 에서 발급하세요.';
+        }
+        if (message.includes('API Key')) return message;
         return message;
+    }
+
+    function getStoredApiKey() {
+        const key = localStorage.getItem('design-sync-api-key')
+            || localStorage.getItem('design-sync-openai-key')
+            || '';
+        return key.trim();
     }
 
     function cancelPickMode() {
@@ -290,10 +306,10 @@
         }
 
         setStatus('AI 처리 중…', 'ok');
-        const apiKey = (localStorage.getItem('design-sync-openai-key') || '').trim();
+        const apiKey = getStoredApiKey();
 
-        if (apiKey && !isValidOpenAiKey(apiKey)) {
-            setStatus('API Key 형식 오류: OpenAI 키는 sk- 로 시작해야 합니다', 'err');
+        if (apiKey && !isValidApiKey(apiKey)) {
+            setStatus('API Key 형식이 올바르지 않습니다', 'err');
             return;
         }
 
@@ -376,7 +392,7 @@
                 <div class="design-sync-actions">
                     <button type="button" class="design-sync-btn design-sync-btn-sm design-sync-btn-ai" id="design-sync-apply-ai">AI 적용</button>
                 </div>
-                <input type="password" class="design-sync-input" id="design-sync-api-key" placeholder="OpenAI API Key (sk-... 만 가능)" autocomplete="off" style="margin-bottom:.5rem;font-size:10px;">
+                <input type="password" class="design-sync-input" id="design-sync-api-key" placeholder="Gemini API Key (AQ...)" autocomplete="off" style="margin-bottom:.5rem;font-size:10px;">
 
                 <div class="design-sync-divider">또는 CSS 직접 입력</div>
 
@@ -495,10 +511,12 @@
         document.getElementById('design-sync-flush').addEventListener('click', flushSave);
 
         const apiKeyInput = document.getElementById('design-sync-api-key');
-        const savedKey = localStorage.getItem('design-sync-openai-key');
+        const savedKey = getStoredApiKey();
         if (savedKey) apiKeyInput.value = savedKey;
         apiKeyInput.addEventListener('change', () => {
-            localStorage.setItem('design-sync-openai-key', apiKeyInput.value.trim());
+            const val = apiKeyInput.value.trim();
+            localStorage.setItem('design-sync-api-key', val);
+            localStorage.removeItem('design-sync-openai-key');
         });
 
         document.getElementById('design-sync-apply-ai').addEventListener('click', () => {
@@ -616,8 +634,8 @@
         watchMutations();
         connectReload();
         document.getElementById('design-sync-dot')?.classList.add('is-on');
-        const aiNote = health.aiConfigured ? 'AI 준비됨' : 'AI Key 필요';
-        setStatus(`연결됨 — Pick 후 AI 또는 CSS 명령 (${aiNote})`, 'ok');
+        const aiNote = health.aiConfigured ? 'AI 준비됨' : 'Gemini/OpenAI Key 입력';
+        setStatus(`연결됨 — Pick 후 AI 명령 (${aiNote})`, 'ok');
     }
 
     if (document.readyState === 'loading') {

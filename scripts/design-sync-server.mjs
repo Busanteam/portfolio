@@ -161,15 +161,7 @@ async function postJson(url, headers, payload) {
     });
 }
 
-async function callAiForCss({ prompt, selector, context, apiKey }) {
-    const key = (apiKey || process.env.OPENAI_API_KEY || '').trim();
-    if (!key) throw new Error('OPENAI_API_KEY가 설정되지 않았습니다. 패널에 API Key를 입력하거나 환경 변수를 설정하세요.');
-    if (!/^sk-[A-Za-z0-9_-]{10,}$/.test(key)) {
-        throw new Error('OpenAI API 키 형식이 아닙니다. sk- 로 시작하는 키만 사용할 수 있습니다. (입력된 키는 다른 서비스 키일 수 있습니다)');
-    }
-
-    const model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
-    const system = `You are a CSS assistant for a local portfolio Design Sync dev tool.
+const CSS_AI_SYSTEM = `You are a CSS assistant for a local portfolio Design Sync dev tool.
 The user selected an HTML element and describes visual changes in natural language (Korean or English).
 
 Return ONLY valid JSON (no markdown fences):
@@ -187,13 +179,26 @@ Rules:
 - If HTML structure must change (not just CSS), return empty commands and put instructions in htmlHint
 - Do not invent selectors; commands apply to the already-selected element only`;
 
-    const user = `Selector: ${selector}
+function buildUserPrompt({ prompt, selector, context }) {
+    return `Selector: ${selector}
 Element: <${context.tagName}> class="${context.className}" id="${context.id || ''}"
 Current inline style: ${context.inlineStyle || '(none)'}
 Text preview: ${context.textPreview || ''}
 
 User request:
 ${prompt}`;
+}
+
+function parseAiJson(content) {
+    const parsed = JSON.parse(content);
+    if (!Array.isArray(parsed.commands)) parsed.commands = [];
+    return parsed;
+}
+
+async function callOpenAiForCss({ prompt, selector, context, apiKey }) {
+    const key = apiKey.trim();
+    const model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
+    const user = buildUserPrompt({ prompt, selector, context });
 
     const { status, body: responseText } = await postJson(
         'https://api.openai.com/v1/chat/completions',
@@ -203,23 +208,73 @@ ${prompt}`;
             temperature: 0.2,
             response_format: { type: 'json_object' },
             messages: [
-                { role: 'system', content: system },
+                { role: 'system', content: CSS_AI_SYSTEM },
                 { role: 'user', content: user }
             ]
         }
     );
 
     if (status < 200 || status >= 300) {
-        throw new Error(`OpenAI API error (${status}): ${responseText.slice(0, 200)}`);
+        throw new Error(`OpenAI API error (${status}): ${responseText.slice(0, 300)}`);
     }
 
     const data = JSON.parse(responseText);
     const content = data.choices?.[0]?.message?.content;
     if (!content) throw new Error('AI 응답이 비어 있습니다.');
+    return parseAiJson(content);
+}
 
-    const parsed = JSON.parse(content);
-    if (!Array.isArray(parsed.commands)) parsed.commands = [];
-    return parsed;
+async function callGeminiForCss({ prompt, selector, context, apiKey }) {
+    const key = apiKey.trim();
+    const model = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
+    const user = buildUserPrompt({ prompt, selector, context });
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
+
+    const { status, body: responseText } = await postJson(url, {}, {
+        systemInstruction: { parts: [{ text: CSS_AI_SYSTEM }] },
+        contents: [{ role: 'user', parts: [{ text: user }] }],
+        generationConfig: {
+            temperature: 0.2,
+            responseMimeType: 'application/json'
+        }
+    });
+
+    if (status < 200 || status >= 300) {
+        throw new Error(`Gemini API error (${status}): ${responseText.slice(0, 300)}`);
+    }
+
+    const data = JSON.parse(responseText);
+    const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!content) {
+        const block = data.candidates?.[0]?.finishReason || data.promptFeedback?.blockReason;
+        throw new Error(`Gemini 응답이 비어 있습니다.${block ? ` (${block})` : ''}`);
+    }
+    return parseAiJson(content);
+}
+
+function resolveApiKey(panelKey) {
+    return (panelKey || process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY || '').trim();
+}
+
+function detectProvider(key) {
+    if (key.startsWith('sk-')) return 'openai';
+    return 'gemini';
+}
+
+async function callAiForCss({ prompt, selector, context, apiKey }) {
+    const key = resolveApiKey(apiKey);
+    if (!key) {
+        throw new Error('API Key가 필요합니다. GEMINI_API_KEY 환경변수 또는 패널에 Gemini/OpenAI 키를 입력하세요.');
+    }
+
+    if (detectProvider(key) === 'openai') {
+        if (!/^sk-[A-Za-z0-9_-]{10,}$/.test(key)) {
+            throw new Error('OpenAI API 키 형식이 아닙니다. sk- 로 시작해야 합니다.');
+        }
+        return callOpenAiForCss({ prompt, selector, context, apiKey: key });
+    }
+
+    return callGeminiForCss({ prompt, selector, context, apiKey: key });
 }
 
 function broadcastReload() {
@@ -268,7 +323,8 @@ const server = http.createServer(async (req, res) => {
             ok: true,
             port: PORT,
             overrides: OVERRIDES_PATH,
-            aiConfigured: !!(process.env.OPENAI_API_KEY)
+            aiConfigured: !!(process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY),
+            aiProviders: ['gemini', 'openai']
         });
         return;
     }
@@ -350,8 +406,10 @@ server.listen(PORT, HOST, () => {
     console.log('');
     console.log('  개발자도구에서 style/class 수정 → 자동 로컬 저장');
     console.log('  CSS/JS/HTML 파일 저장 시 페이지 자동 새로고침');
-    console.log('  AI:      POST /__design-sync/ai-command');
-    console.log(`  AI Key:  ${process.env.OPENAI_API_KEY ? 'env configured ✓' : 'OPENAI_API_KEY 환경변수 또는 패널 입력'}`);
+    console.log('  AI:      Gemini (AQ./AIza...) 또는 OpenAI (sk-...)');
+    const geminiEnv = process.env.GEMINI_API_KEY ? 'GEMINI ✓' : '';
+    const openaiEnv = process.env.OPENAI_API_KEY ? 'OPENAI ✓' : '';
+    console.log(`  AI Key:  ${[geminiEnv, openaiEnv].filter(Boolean).join(' ') || '패널 입력 또는 GEMINI_API_KEY 환경변수'}`);
     console.log('');
 });
 
