@@ -12,6 +12,59 @@
     let connected = false;
     let selectedElement = null;
     let pickMode = false;
+    let pickOverlay = null;
+
+    function unlockScroll() {
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.documentElement.style.overflow = '';
+        document.body.classList.remove('lightbox-open', 'design-sync-pick-on');
+    }
+
+    function isValidOpenAiKey(key) {
+        const k = (key || '').trim();
+        return /^sk-[A-Za-z0-9_-]{10,}$/.test(k);
+    }
+
+    function formatApiError(message) {
+        if (!message) return 'AI 요청 실패';
+        if (message.includes('Incorrect API key') || message.includes('401')) {
+            return 'OpenAI API 키가 올바르지 않습니다. sk- 로 시작하는 키를 https://platform.openai.com/api-keys 에서 발급받으세요. (다른 서비스 키는 사용할 수 없습니다)';
+        }
+        if (message.includes('OPENAI_API_KEY')) return message;
+        return message;
+    }
+
+    function cancelPickMode() {
+        pickMode = false;
+        document.body.classList.remove('design-sync-pick-on');
+        if (pickOverlay) pickOverlay.style.display = 'none';
+        const pickBtn = document.getElementById('design-sync-pick');
+        if (pickBtn) pickBtn.setAttribute('aria-pressed', 'false');
+        setStatus('요소 선택 취소됨', 'idle');
+    }
+
+    function startPickMode() {
+        pickMode = true;
+        document.body.classList.add('design-sync-pick-on');
+        if (!pickOverlay) {
+            pickOverlay = document.createElement('div');
+            pickOverlay.id = 'design-sync-pick-overlay';
+            pickOverlay.className = 'design-sync-pick-overlay';
+            pickOverlay.innerHTML = '<p class="design-sync-pick-hint">요소를 클릭하세요 · <kbd>Esc</kbd> 취소</p>';
+            pickOverlay.addEventListener('click', e => {
+                pickOverlay.style.pointerEvents = 'none';
+                const target = document.elementFromPoint(e.clientX, e.clientY);
+                pickOverlay.style.pointerEvents = 'auto';
+                if (!target || target.closest('#design-sync-panel') || target.closest('#design-sync-pick-overlay')) return;
+                cancelPickMode();
+                selectElement(target);
+            });
+            document.body.appendChild(pickOverlay);
+        }
+        pickOverlay.style.display = 'flex';
+        setStatus('요소를 클릭하세요 (Esc 취소)', 'ok');
+    }
 
     function getSelector(el) {
         if (!(el instanceof Element)) return null;
@@ -237,7 +290,12 @@
         }
 
         setStatus('AI 처리 중…', 'ok');
-        const apiKey = localStorage.getItem('design-sync-openai-key') || '';
+        const apiKey = (localStorage.getItem('design-sync-openai-key') || '').trim();
+
+        if (apiKey && !isValidOpenAiKey(apiKey)) {
+            setStatus('API Key 형식 오류: OpenAI 키는 sk- 로 시작해야 합니다', 'err');
+            return;
+        }
 
         try {
             const res = await fetch(`${API}/ai-command`, {
@@ -257,7 +315,7 @@
                 })
             });
             const data = await res.json();
-            if (!data.ok) throw new Error(data.error || 'AI 요청 실패');
+            if (!data.ok) throw new Error(formatApiError(data.error || 'AI 요청 실패'));
 
             if (data.htmlHint) {
                 setStatus(`HTML 수정 필요: ${data.htmlHint}`, 'err');
@@ -277,7 +335,7 @@
             applyCommands(commands);
             setStatus(data.explanation || `AI 적용 ${commands.length}건`, 'ok');
         } catch (e) {
-            setStatus(e.message, 'err');
+            setStatus(formatApiError(e.message), 'err');
         }
     }
 
@@ -318,7 +376,7 @@
                 <div class="design-sync-actions">
                     <button type="button" class="design-sync-btn design-sync-btn-sm design-sync-btn-ai" id="design-sync-apply-ai">AI 적용</button>
                 </div>
-                <input type="password" class="design-sync-input" id="design-sync-api-key" placeholder="OpenAI API Key (선택, 로컬 저장)" autocomplete="off" style="margin-bottom:.5rem;font-size:10px;">
+                <input type="password" class="design-sync-input" id="design-sync-api-key" placeholder="OpenAI API Key (sk-... 만 가능)" autocomplete="off" style="margin-bottom:.5rem;font-size:10px;">
 
                 <div class="design-sync-divider">또는 CSS 직접 입력</div>
 
@@ -412,7 +470,23 @@
                 .design-sync-styles-list li { font-size:10px; color:#a1a1a6; padding:.15rem 0; }
                 .design-sync-styles-list code { color:#7dc4ff; }
                 .design-sync-style-empty { color:#6b7280; font-style:italic; }
-                .design-sync-pick-active { outline:2px dashed #2997ff !important; outline-offset:2px; cursor:crosshair !important; }
+                .design-sync-pick-on { cursor: crosshair; }
+                .design-sync-pick-overlay {
+                    position: fixed; inset: 0; z-index: 9999;
+                    display: none; align-items: flex-start; justify-content: center;
+                    padding-top: 4.5rem; background: rgba(41,151,255,0.06);
+                    cursor: crosshair; pointer-events: auto;
+                }
+                .design-sync-pick-hint {
+                    margin: 0; padding: .5rem 1rem; border-radius: 999px;
+                    background: rgba(20,20,22,.9); color: #f5f5f7; font-size: 12px;
+                    border: 1px solid rgba(41,151,255,.35);
+                    pointer-events: none;
+                }
+                .design-sync-pick-hint kbd {
+                    padding: .1rem .35rem; border-radius: 4px;
+                    background: rgba(255,255,255,.12); font-size: 11px;
+                }
                 .design-sync-highlight { outline:2px solid #30d158 !important; outline-offset:2px; }
             `;
             document.head.appendChild(style);
@@ -438,9 +512,16 @@
         });
 
         document.getElementById('design-sync-pick').addEventListener('click', () => {
-            pickMode = !pickMode;
-            document.body.classList.toggle('design-sync-pick-active', pickMode);
-            setStatus(pickMode ? '요소를 클릭하세요' : '대기 중', pickMode ? 'ok' : 'idle');
+            if (pickMode) {
+                cancelPickMode();
+                return;
+            }
+            startPickMode();
+            document.getElementById('design-sync-pick').setAttribute('aria-pressed', 'true');
+        });
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape' && pickMode) cancelPickMode();
         });
 
         document.getElementById('design-sync-apply-pair').addEventListener('click', () => {
@@ -482,16 +563,6 @@
         document.querySelectorAll('.design-sync-chip').forEach(chip => {
             chip.addEventListener('click', () => applyQuickAction(chip.dataset.action));
         });
-
-        document.addEventListener('click', e => {
-            if (!pickMode) return;
-            if (e.target.closest('#design-sync-panel')) return;
-            e.preventDefault();
-            e.stopPropagation();
-            pickMode = false;
-            document.body.classList.remove('design-sync-pick-active');
-            selectElement(e.target);
-        }, true);
     }
 
     function watchMutations() {
@@ -540,6 +611,7 @@
 
         if (!connected) return;
 
+        unlockScroll();
         buildUI();
         watchMutations();
         connectReload();

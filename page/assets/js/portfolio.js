@@ -723,14 +723,14 @@
         lb.classList.add('open');
         lb.setAttribute('aria-hidden', 'false');
         document.getElementById('lightbox-close').focus();
-        document.body.style.overflow = 'hidden';
+        document.body.classList.add('lightbox-open');
     }
 
     function closeLightbox() {
         const lb = document.getElementById('lightbox');
         lb.classList.remove('open');
         lb.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
+        document.body.classList.remove('lightbox-open');
     }
 
     function renderLightbox() {

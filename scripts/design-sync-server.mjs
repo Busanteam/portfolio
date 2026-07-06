@@ -162,8 +162,11 @@ async function postJson(url, headers, payload) {
 }
 
 async function callAiForCss({ prompt, selector, context, apiKey }) {
-    const key = apiKey || process.env.OPENAI_API_KEY;
+    const key = (apiKey || process.env.OPENAI_API_KEY || '').trim();
     if (!key) throw new Error('OPENAI_API_KEY가 설정되지 않았습니다. 패널에 API Key를 입력하거나 환경 변수를 설정하세요.');
+    if (!/^sk-[A-Za-z0-9_-]{10,}$/.test(key)) {
+        throw new Error('OpenAI API 키 형식이 아닙니다. sk- 로 시작하는 키만 사용할 수 있습니다. (입력된 키는 다른 서비스 키일 수 있습니다)');
+    }
 
     const model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
     const system = `You are a CSS assistant for a local portfolio Design Sync dev tool.
