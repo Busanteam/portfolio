@@ -35,10 +35,10 @@ const MIME = {
 };
 
 const sseClients = new Set();
+// portfolio.overrides.css is excluded — Design Sync writes it; watching would reload on every pick/save.
 const WATCH_PATHS = [
     'index.html',
     'assets/css/portfolio.css',
-    'assets/css/portfolio.overrides.css',
     'assets/js/portfolio.js',
     'assets/js/design-sync.js'
 ];
@@ -404,8 +404,8 @@ server.listen(PORT, HOST, () => {
     console.log(`  Local:   http://${HOST}:${PORT}/`);
     console.log(`  Saves:   page/assets/css/portfolio.overrides.css`);
     console.log('');
-    console.log('  개발자도구에서 style/class 수정 → 자동 로컬 저장');
-    console.log('  CSS/JS/HTML 파일 저장 시 페이지 자동 새로고침');
+    console.log('  개발자도구에서 style 수정 → portfolio.overrides.css 자동 저장 (저장 시 새로고침 없음)');
+    console.log('  CSS/JS/HTML 소스 파일 저장 시에만 페이지 자동 새로고침');
     console.log('  AI:      Gemini (AQ./AIza...) 또는 OpenAI (sk-...)');
     const geminiEnv = process.env.GEMINI_API_KEY ? 'GEMINI ✓' : '';
     const openaiEnv = process.env.OPENAI_API_KEY ? 'OPENAI ✓' : '';

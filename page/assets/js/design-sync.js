@@ -10,13 +10,17 @@
     const pending = new Map();
     let saveTimer = null;
     let connected = false;
+    let serverAiConfigured = false;
     let selectedElement = null;
     let pickMode = false;
-    let pickOverlay = null;
+    let pickBanner = null;
+    let pickClickHandler = null;
 
     function unlockScroll() {
         document.body.style.overflow = '';
         document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
         document.documentElement.style.overflow = '';
         document.body.classList.remove('lightbox-open', 'design-sync-pick-on');
     }
@@ -51,34 +55,72 @@
         return key.trim();
     }
 
+    function hasApiKey() {
+        return !!(getStoredApiKey() || serverAiConfigured);
+    }
+
+    function updateApiHint() {
+        const hint = document.getElementById('design-sync-api-hint');
+        const keyInput = document.getElementById('design-sync-api-key');
+        if (!hint) return;
+
+        const panelKey = getStoredApiKey();
+        if (panelKey) {
+            hint.textContent = `${detectProvider(panelKey) === 'openai' ? 'OpenAI' : 'Gemini'} 키 (패널 입력)`;
+            hint.dataset.tone = 'ok';
+            if (keyInput) keyInput.placeholder = '패널에 키가 저장됨 — 변경 시 덮어씀';
+            return;
+        }
+        if (serverAiConfigured) {
+            hint.textContent = '서버 환경변수 API 키 사용 중 (GEMINI_API_KEY / OPENAI_API_KEY)';
+            hint.dataset.tone = 'ok';
+            if (keyInput) keyInput.placeholder = '선택: 패널에 키 입력 (없으면 서버 env 사용)';
+            return;
+        }
+        hint.textContent = 'Gemini(AQ./AIza...) 또는 OpenAI(sk-) 키를 입력하거나 터미널에 GEMINI_API_KEY 설정';
+        hint.dataset.tone = 'idle';
+    }
+
     function cancelPickMode() {
         pickMode = false;
         document.body.classList.remove('design-sync-pick-on');
-        if (pickOverlay) pickOverlay.style.display = 'none';
+        if (pickBanner) pickBanner.style.display = 'none';
+        if (pickClickHandler) {
+            document.removeEventListener('click', pickClickHandler, true);
+            pickClickHandler = null;
+        }
         const pickBtn = document.getElementById('design-sync-pick');
         if (pickBtn) pickBtn.setAttribute('aria-pressed', 'false');
+        unlockScroll();
         setStatus('요소 선택 취소됨', 'idle');
     }
 
     function startPickMode() {
         pickMode = true;
+        unlockScroll();
         document.body.classList.add('design-sync-pick-on');
-        if (!pickOverlay) {
-            pickOverlay = document.createElement('div');
-            pickOverlay.id = 'design-sync-pick-overlay';
-            pickOverlay.className = 'design-sync-pick-overlay';
-            pickOverlay.innerHTML = '<p class="design-sync-pick-hint">요소를 클릭하세요 · <kbd>Esc</kbd> 취소</p>';
-            pickOverlay.addEventListener('click', e => {
-                pickOverlay.style.pointerEvents = 'none';
-                const target = document.elementFromPoint(e.clientX, e.clientY);
-                pickOverlay.style.pointerEvents = 'auto';
-                if (!target || target.closest('#design-sync-panel') || target.closest('#design-sync-pick-overlay')) return;
-                cancelPickMode();
-                selectElement(target);
-            });
-            document.body.appendChild(pickOverlay);
+
+        if (!pickBanner) {
+            pickBanner = document.createElement('div');
+            pickBanner.id = 'design-sync-pick-banner';
+            pickBanner.className = 'design-sync-pick-banner';
+            pickBanner.innerHTML = '<p class="design-sync-pick-hint">요소를 클릭하세요 · 스크롤 가능 · <kbd>Esc</kbd> 취소</p>';
+            document.body.appendChild(pickBanner);
         }
-        pickOverlay.style.display = 'flex';
+        pickBanner.style.display = 'block';
+
+        pickClickHandler = e => {
+            if (!pickMode) return;
+            const target = e.target;
+            if (!target || !(target instanceof Element)) return;
+            if (target.closest('#design-sync-panel') || target.closest('#design-sync-pick-banner')) return;
+            e.preventDefault();
+            e.stopPropagation();
+            cancelPickMode();
+            selectElement(target);
+        };
+        document.addEventListener('click', pickClickHandler, true);
+
         setStatus('요소를 클릭하세요 (Esc 취소)', 'ok');
     }
 
@@ -106,7 +148,7 @@
         return parts.join(' > ');
     }
 
-    function collectInlineRules(el, { includeRemove = false } = {}) {
+    function collectInlineRules(el) {
         const selector = getSelector(el);
         if (!selector || !el.style) return [];
         const rules = [];
@@ -119,8 +161,10 @@
     }
 
     function queueSave(updates, { immediate = false } = {}) {
-        updates.forEach(u => {
-            if (!u.selector || !u.property) return;
+        const valid = updates.filter(u => u.selector && u.property);
+        if (!valid.length) return;
+
+        valid.forEach(u => {
             const key = `${u.selector}|||${u.property}`;
             if (u.remove) pending.set(key, u);
             else if (u.value !== undefined && u.value !== '') pending.set(key, u);
@@ -297,7 +341,7 @@
 
     async function applyAiPrompt(promptText) {
         if (!selectedElement) {
-            setStatus('먼저 요소를 선택하세요', 'err');
+            setStatus('먼저 Pick으로 요소를 선택하세요', 'err');
             return;
         }
         if (!promptText.trim()) {
@@ -305,13 +349,17 @@
             return;
         }
 
-        setStatus('AI 처리 중…', 'ok');
         const apiKey = getStoredApiKey();
-
+        if (!apiKey && !serverAiConfigured) {
+            setStatus('API Key가 필요합니다 — 패널 입력 또는 GEMINI_API_KEY 환경변수', 'err');
+            return;
+        }
         if (apiKey && !isValidApiKey(apiKey)) {
             setStatus('API Key 형식이 올바르지 않습니다', 'err');
             return;
         }
+
+        setStatus('AI 처리 중…', 'ok');
 
         try {
             const res = await fetch(`${API}/ai-command`, {
@@ -360,8 +408,7 @@
         selectedElement = el;
         el.classList.add('design-sync-highlight');
         updateSelectedUI();
-        queueSave(collectInlineRules(el));
-        setStatus('요소 선택됨 — 아래에서 수정 명령을 입력하세요', 'ok');
+        setStatus('요소 선택됨 — AI 또는 CSS 명령으로 수정하세요', 'ok');
     }
 
     function buildUI() {
@@ -383,18 +430,21 @@
 
             <div class="design-sync-target-wrap">
                 <span class="design-sync-label">선택 요소</span>
-                <p class="design-sync-target" id="design-sync-target">선택된 요소 없음</p>
+                <p class="design-sync-target" id="design-sync-target">선택된 요소 없음 — Pick으로 요소를 지정하세요</p>
             </div>
 
-            <div class="design-sync-editor is-disabled" id="design-sync-editor">
+            <div class="design-sync-ai-block" id="design-sync-ai-block">
                 <label class="design-sync-label" for="design-sync-ai-prompt">AI 수정 명령</label>
                 <textarea id="design-sync-ai-prompt" class="design-sync-textarea design-sync-ai" rows="3" placeholder="예: 블러 오버레이를 제거하고 하단에만 자물쇠 아이콘을 보여줘"></textarea>
                 <div class="design-sync-actions">
                     <button type="button" class="design-sync-btn design-sync-btn-sm design-sync-btn-ai" id="design-sync-apply-ai">AI 적용</button>
                 </div>
-                <input type="password" class="design-sync-input" id="design-sync-api-key" placeholder="Gemini API Key (AQ...)" autocomplete="off" style="margin-bottom:.5rem;font-size:10px;">
+                <p class="design-sync-api-hint" id="design-sync-api-hint" data-tone="idle"></p>
+                <input type="password" class="design-sync-input" id="design-sync-api-key" placeholder="Gemini API Key (AQ...)" autocomplete="off">
+            </div>
 
-                <div class="design-sync-divider">또는 CSS 직접 입력</div>
+            <div class="design-sync-editor is-disabled" id="design-sync-editor">
+                <div class="design-sync-divider">CSS 직접 입력 (요소 선택 필요)</div>
 
                 <div class="design-sync-row">
                     <input type="text" class="design-sync-input" id="design-sync-prop" placeholder="속성 (예: gap)" aria-label="CSS property">
@@ -459,6 +509,10 @@
                 .design-sync-btn-sm { padding:.35rem .65rem; font-size:11px; }
                 .design-sync-btn-ghost { background:transparent; border:1px solid rgba(255,255,255,.18); color:#f5f5f7; }
                 .design-sync-editor.is-disabled { opacity:.45; pointer-events:none; }
+                .design-sync-ai-block { margin-bottom:.5rem; }
+                .design-sync-api-hint { margin:.25rem 0 .35rem; font-size:10px; color:#6b7280; }
+                .design-sync-api-hint[data-tone="ok"] { color:#30d158; }
+                #design-sync-api-key { margin-bottom:.25rem; font-size:10px; }
                 .design-sync-row { display:grid; grid-template-columns:1fr 1fr auto; gap:.35rem; align-items:center; }
                 .design-sync-input, .design-sync-textarea {
                     width:100%; box-sizing:border-box; border-radius:10px;
@@ -487,17 +541,16 @@
                 .design-sync-styles-list code { color:#7dc4ff; }
                 .design-sync-style-empty { color:#6b7280; font-style:italic; }
                 .design-sync-pick-on { cursor: crosshair; }
-                .design-sync-pick-overlay {
-                    position: fixed; inset: 0; z-index: 9999;
-                    display: none; align-items: flex-start; justify-content: center;
-                    padding-top: 4.5rem; background: rgba(41,151,255,0.06);
-                    cursor: crosshair; pointer-events: auto;
+                .design-sync-pick-banner {
+                    position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+                    display: none; padding: .75rem 1rem; text-align: center;
+                    pointer-events: none;
                 }
                 .design-sync-pick-hint {
-                    margin: 0; padding: .5rem 1rem; border-radius: 999px;
-                    background: rgba(20,20,22,.9); color: #f5f5f7; font-size: 12px;
+                    display: inline-block; margin: 0; padding: .5rem 1rem; border-radius: 999px;
+                    background: rgba(20,20,22,.92); color: #f5f5f7; font-size: 12px;
                     border: 1px solid rgba(41,151,255,.35);
-                    pointer-events: none;
+                    box-shadow: 0 8px 24px rgba(0,0,0,.25);
                 }
                 .design-sync-pick-hint kbd {
                     padding: .1rem .35rem; border-radius: 4px;
@@ -517,7 +570,9 @@
             const val = apiKeyInput.value.trim();
             localStorage.setItem('design-sync-api-key', val);
             localStorage.removeItem('design-sync-openai-key');
+            updateApiHint();
         });
+        updateApiHint();
 
         document.getElementById('design-sync-apply-ai').addEventListener('click', () => {
             applyAiPrompt(document.getElementById('design-sync-ai-prompt').value);
@@ -587,11 +642,10 @@
         const observer = new MutationObserver(mutations => {
             const updates = [];
             mutations.forEach(m => {
-                if (m.type === 'attributes' && (m.attributeName === 'style' || m.attributeName === 'class')) {
-                    if (m.target.closest && m.target.closest('#design-sync-panel')) return;
-                    if (m.target === selectedElement) refreshStyleList();
-                    updates.push(...collectInlineRules(m.target));
-                }
+                if (m.type !== 'attributes' || m.attributeName !== 'style') return;
+                if (m.target.closest && m.target.closest('#design-sync-panel')) return;
+                if (m.target === selectedElement) refreshStyleList();
+                updates.push(...collectInlineRules(m.target));
             });
             if (updates.length) {
                 queueSave(updates);
@@ -601,7 +655,7 @@
 
         observer.observe(document.documentElement, {
             attributes: true,
-            attributeFilter: ['style', 'class'],
+            attributeFilter: ['style'],
             subtree: true
         });
     }
@@ -623,6 +677,7 @@
             const res = await fetch(`${API}/health`);
             health = await res.json();
             connected = !!health.ok;
+            serverAiConfigured = !!health.aiConfigured;
         } catch {
             connected = false;
         }
@@ -634,8 +689,8 @@
         watchMutations();
         connectReload();
         document.getElementById('design-sync-dot')?.classList.add('is-on');
-        const aiNote = health.aiConfigured ? 'AI 준비됨' : 'Gemini/OpenAI Key 입력';
-        setStatus(`연결됨 — Pick 후 AI 명령 (${aiNote})`, 'ok');
+        const aiNote = hasApiKey() ? 'AI 준비됨' : 'API Key 필요';
+        setStatus(`연결됨 — Pick 후 수정 (${aiNote})`, 'ok');
     }
 
     if (document.readyState === 'loading') {
