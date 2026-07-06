@@ -549,24 +549,28 @@
                         <span class="sk-brand-icon" aria-hidden="true">☀</span>
                         <span>${t('solar.dash.brand')}</span>
                     </div>
-                    <div class="sk-search">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                        <span>${t('solar.dash.search')}</span>
-                    </div>
-                    <div class="sk-top-actions" aria-hidden="true">
-                        <span class="sk-top-btn">⛶</span>
-                        <span class="sk-top-btn sk-avatar">YH</span>
+                    <div class="sk-topbar-main">
+                        <div class="sk-search">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            <span>${t('solar.dash.search')}</span>
+                        </div>
+                        <div class="sk-top-actions" aria-hidden="true">
+                            <span class="sk-top-btn">⛶</span>
+                            <span class="sk-top-btn sk-avatar">YH</span>
+                        </div>
                     </div>
                 </header>
 
                 <div class="sk-subheader">
                     <span class="sk-crumb">${t('solar.dash.breadcrumb')} ›</span>
-                    <div class="sk-alert-badges">
-                        <span class="sk-alert sk-alert-err">${t('solar.dash.commError')}</span>
-                        <span class="sk-alert sk-alert-warn">${t('solar.dash.lowGen')}</span>
+                    <div class="sk-subheader-main">
+                        <div class="sk-alert-badges">
+                            <span class="sk-alert sk-alert-err">${t('solar.dash.commError')}</span>
+                            <span class="sk-alert sk-alert-warn">${t('solar.dash.lowGen')}</span>
+                        </div>
+                        <span class="sk-plant-name">${t('solar.dash.plantName')}</span>
+                        <div class="sk-weather" aria-hidden="true">28°C · 69%</div>
                     </div>
-                    <span class="sk-plant-name">${t('solar.dash.plantName')}</span>
-                    <div class="sk-weather" aria-hidden="true">28°C · 69%</div>
                 </div>
 
                 <div class="sk-body">
