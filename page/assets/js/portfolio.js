@@ -51,13 +51,29 @@
             'solar.b3': 'inverter 하드웨어 UX/UI 및 글로벌 확장: 7-Segment 발전량 측정기 UX 기획 및 일본 진출용 로컬라이징.',
             'solar.dashboard.title': 'Energy Monitoring Dashboard',
             'solar.dashboard.hint': '클릭하여 전체 화면 미리보기',
-            'solar.stat1': '발전량',
-            'solar.stat2': '효율',
-            'solar.stat3': '알림',
-            'solar.nav1': 'Overview',
-            'solar.nav2': 'Inverters',
-            'solar.nav3': 'Reports',
-            'solar.nav4': 'Settings',
+            'solar.dash.brand': 'TEO 김태양',
+            'solar.dash.search': '발전소 검색',
+            'solar.dash.breadcrumb': 'Dashboard',
+            'solar.dash.commError': '통신이상',
+            'solar.dash.lowGen': '저발전',
+            'solar.dash.plantName': '김태양 태양광 발전소',
+            'solar.dash.connected': '연결 발전소',
+            'solar.dash.normal': '정상',
+            'solar.dash.commErr': '통신이상',
+            'solar.dash.genErr': '발전이상',
+            'solar.dash.plantList': '발전소 목록',
+            'solar.dash.installed': '설비용량',
+            'solar.dash.current': '현재발전량',
+            'solar.dash.time': '발전시간',
+            'solar.dash.hourly': '시간별 발전량 그래프',
+            'solar.dash.total': '합계',
+            'solar.dash.history': '인버터 운영 이력',
+            'solar.dash.inverterStatus': '인버터 상태',
+            'solar.dash.operating': '운전중',
+            'solar.dash.dailyGen': '일일발전',
+            'solar.dash.input': '입력전력',
+            'solar.dash.output': '출력전력',
+            'solar.dash.footer': '© 2023. H Energy Co., Ltd.',
             'biz.title': '의료·복지용구 통합 플랫폼 (Biz & C)',
             'biz.label': 'Service PM & Full-stack Architect',
             'biz.desc': '2,500여 개 SKU의 복잡한 비즈니스 로직을 자동화하고, 디자인 시스템부터 백엔드 파이프라인까지 전 과정을 리드했습니다.',
@@ -153,13 +169,29 @@
             'solar.b3': 'Inverter hardware UX & global expansion: 7-segment meter UX and Japan localization.',
             'solar.dashboard.title': 'Energy Monitoring Dashboard',
             'solar.dashboard.hint': 'Click for fullscreen preview',
-            'solar.stat1': 'Generation',
-            'solar.stat2': 'Efficiency',
-            'solar.stat3': 'Alerts',
-            'solar.nav1': 'Overview',
-            'solar.nav2': 'Inverters',
-            'solar.nav3': 'Reports',
-            'solar.nav4': 'Settings',
+            'solar.dash.brand': 'TEO Solar Kim',
+            'solar.dash.search': 'Search plants',
+            'solar.dash.breadcrumb': 'Dashboard',
+            'solar.dash.commError': 'Comm. Error',
+            'solar.dash.lowGen': 'Low Generation',
+            'solar.dash.plantName': 'Solar Kim Power Plant',
+            'solar.dash.connected': 'Connected Plants',
+            'solar.dash.normal': 'Normal',
+            'solar.dash.commErr': 'Comm. Error',
+            'solar.dash.genErr': 'Gen. Error',
+            'solar.dash.plantList': 'Plant List',
+            'solar.dash.installed': 'Installed Cap.',
+            'solar.dash.current': 'Current Gen.',
+            'solar.dash.time': 'Gen. Time',
+            'solar.dash.hourly': 'Hourly Generation',
+            'solar.dash.total': 'Total',
+            'solar.dash.history': 'Inverter Operation History',
+            'solar.dash.inverterStatus': 'Inverter Status',
+            'solar.dash.operating': 'Operating',
+            'solar.dash.dailyGen': 'Daily Gen.',
+            'solar.dash.input': 'Input',
+            'solar.dash.output': 'Output',
+            'solar.dash.footer': '© 2023. H Energy Co., Ltd.',
             'biz.title': 'Medical & Welfare Supplies Platform (Biz & C)',
             'biz.label': 'Service PM & Full-Stack Architect',
             'biz.desc': 'Automated business logic for 2,500+ SKUs and led the full stack from design system to backend pipeline.',
@@ -457,32 +489,159 @@
         });
     }
 
+    function buildGaugeSVG() {
+        return `<svg class="sk-gauge" viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="50" cy="50" r="38" fill="none" stroke="#e8edf2" stroke-width="10"/>
+            <circle cx="50" cy="50" r="38" fill="none" stroke="#22c55e" stroke-width="10" stroke-dasharray="181 58" stroke-linecap="round" transform="rotate(-90 50 50)"/>
+            <text x="50" y="54" text-anchor="middle" font-size="16" font-weight="700" fill="#1a1a1a">75.9%</text>
+        </svg>`;
+    }
+
+    function buildLineChartSVG() {
+        return `<svg class="sk-line-chart-svg" viewBox="0 0 360 100" preserveAspectRatio="none" aria-hidden="true">
+            <defs><linearGradient id="sk-area-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3b82f6" stop-opacity="0.25"/><stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/></linearGradient></defs>
+            <path d="M0,80 L45,72 L90,55 L135,40 L180,28 L225,35 L270,22 L315,30 L360,18 L360,100 L0,100 Z" fill="url(#sk-area-grad)"/>
+            <polyline points="0,80 45,72 90,55 135,40 180,28 225,35 270,22 315,30 360,18" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`;
+    }
+
     function buildDummyDashboardHTML(fullscreen) {
-        const bars = [45, 72, 58, 88, 65, 92, 78, 55, 83, 70];
-        const barHTML = bars.map(h => `<div class="dummy-bar" style="height:${h}%"></div>`).join('');
-        const cls = fullscreen ? 'dummy-dashboard lightbox-dashboard' : 'dummy-dashboard';
+        const mode = fullscreen ? 'is-expanded' : 'is-compact';
+        const plants = [
+            { status: 'ok', name: '김태양 1호' },
+            { status: 'warn', name: '김태양 2호' },
+            { status: 'ok', name: '김태양 3호' },
+            { status: 'err', name: '김태양 4호' },
+            { status: 'ok', name: '김태양 5호' }
+        ];
+        const plantListHTML = plants.map(p =>
+            `<li class="sk-plant-item"><span class="sk-status-dot sk-status-${p.status}"></span><span>${p.name}</span></li>`
+        ).join('');
+
+        const inverters = [1, 2, 3, 4, 5, 6];
+        const inverterHTML = inverters.map(n => `
+            <div class="sk-inv-card">
+                <div class="sk-inv-head"><span>Inverter ${n}</span><span class="sk-inv-badge">${t('solar.dash.operating')}</span></div>
+                <div class="sk-inv-icon" aria-hidden="true">☀</div>
+                <div class="sk-inv-row"><span>${t('solar.dash.dailyGen')}</span><strong>${(120 + n * 8).toFixed(1)} kWh</strong></div>
+                <div class="sk-inv-row"><span>${t('solar.dash.input')}</span><strong>${(3 + n * 0.4).toFixed(1)} kW</strong></div>
+                <div class="sk-inv-row"><span>${t('solar.dash.output')}</span><strong>${(2.8 + n * 0.35).toFixed(1)} kW</strong></div>
+            </div>`).join('');
+
+        const tableRows = [
+            { badge: 'INFO', cls: 'info', msg: 'Inverter 1 normal operation' },
+            { badge: 'WARN', cls: 'warn', msg: 'Inverter 3 low output detected' },
+            { badge: 'ERROR', cls: 'err', msg: 'Inverter 4 communication lost' },
+            { badge: 'DISCONNECT', cls: 'disc', msg: 'Inverter 6 offline' }
+        ];
+        const tableHTML = tableRows.map((r, idx) => `
+            <tr>
+                <td>14:${20 + idx * 5}</td>
+                <td>INV-${idx + 1}</td>
+                <td><span class="sk-tbl-badge sk-tbl-${r.cls}">${r.badge}</span></td>
+                <td>${r.msg}</td>
+            </tr>`).join('');
+
         return `
-            <div class="${cls}" role="img" aria-label="${t('solar.dashboard.title')}">
-                <div class="dummy-dashboard-header">
-                    <div class="dummy-dots" aria-hidden="true"><span></span><span></span><span></span></div>
-                    <span>${t('solar.dashboard.title')}</span>
-                </div>
-                <div class="dummy-dashboard-body">
-                    <nav class="dummy-sidebar" aria-label="Dashboard navigation">
-                        <div class="dummy-nav-item active"><span class="dummy-icon"></span>${t('solar.nav1')}</div>
-                        <div class="dummy-nav-item"><span class="dummy-icon muted"></span>${t('solar.nav2')}</div>
-                        <div class="dummy-nav-item"><span class="dummy-icon muted"></span>${t('solar.nav3')}</div>
-                        <div class="dummy-nav-item"><span class="dummy-icon muted"></span>${t('solar.nav4')}</div>
-                    </nav>
-                    <div class="dummy-main">
-                        <div class="dummy-stats">
-                            <div class="dummy-stat"><div class="dummy-stat-label"><span class="dummy-icon"></span>${t('solar.stat1')}</div><div class="dummy-stat-value">128.4 kWh</div></div>
-                            <div class="dummy-stat"><div class="dummy-stat-label"><span class="dummy-icon"></span>${t('solar.stat2')}</div><div class="dummy-stat-value">94.2%</div></div>
-                            <div class="dummy-stat"><div class="dummy-stat-label"><span class="dummy-icon"></span>${t('solar.stat3')}</div><div class="dummy-stat-value">2</div></div>
-                        </div>
-                        <div class="dummy-chart-area" aria-hidden="true">${barHTML}</div>
+            <div class="dummy-dashboard sk-dashboard ${mode}" role="img" aria-label="${t('solar.dashboard.title')}">
+                <header class="sk-topbar">
+                    <div class="sk-brand">
+                        <span class="sk-brand-icon" aria-hidden="true">☀</span>
+                        <span>${t('solar.dash.brand')}</span>
                     </div>
+                    <div class="sk-search">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <span>${t('solar.dash.search')}</span>
+                    </div>
+                    <div class="sk-top-actions" aria-hidden="true">
+                        <span class="sk-top-btn">⛶</span>
+                        <span class="sk-top-btn sk-avatar">YH</span>
+                    </div>
+                </header>
+
+                <div class="sk-subheader">
+                    <span class="sk-crumb">${t('solar.dash.breadcrumb')} ›</span>
+                    <div class="sk-alert-badges">
+                        <span class="sk-alert sk-alert-err">${t('solar.dash.commError')}</span>
+                        <span class="sk-alert sk-alert-warn">${t('solar.dash.lowGen')}</span>
+                    </div>
+                    <span class="sk-plant-name">${t('solar.dash.plantName')}</span>
+                    <div class="sk-weather" aria-hidden="true">28°C · 69%</div>
                 </div>
+
+                <div class="sk-body">
+                    <aside class="sk-sidebar">
+                        <div class="sk-count-card">
+                            <span class="sk-count-label">${t('solar.dash.connected')}</span>
+                            <span class="sk-count-value">1,000</span>
+                        </div>
+                        <div class="sk-status-row">
+                            <div class="sk-status-card sk-status-ok-card">
+                                <span class="sk-status-icon">☀</span>
+                                <span class="sk-status-num">999</span>
+                                <span class="sk-status-label">${t('solar.dash.normal')}</span>
+                            </div>
+                            <div class="sk-status-card sk-status-warn-card">
+                                <span class="sk-status-icon">📡</span>
+                                <span class="sk-status-num">356</span>
+                                <span class="sk-status-label">${t('solar.dash.commErr')}</span>
+                            </div>
+                            <div class="sk-status-card sk-status-err-card">
+                                <span class="sk-status-icon">⚠</span>
+                                <span class="sk-status-num">123</span>
+                                <span class="sk-status-label">${t('solar.dash.genErr')}</span>
+                            </div>
+                        </div>
+                        <div class="sk-plant-list-wrap">
+                            <h4 class="sk-list-title">${t('solar.dash.plantList')}</h4>
+                            <ul class="sk-plant-list">${plantListHTML}</ul>
+                        </div>
+                    </aside>
+
+                    <main class="sk-main">
+                        <div class="sk-grid">
+                            <section class="sk-panel sk-panel-summary">
+                                <div class="sk-summary-stats">
+                                    <div class="sk-metric"><span>${t('solar.dash.installed')}</span><strong>99.99 kW</strong></div>
+                                    <div class="sk-metric"><span>${t('solar.dash.current')}</span><strong>999.99 kWh</strong></div>
+                                    <div class="sk-metric"><span>${t('solar.dash.time')}</span><strong>3.9 h</strong></div>
+                                </div>
+                                <div class="sk-gauge-wrap">${buildGaugeSVG()}</div>
+                            </section>
+
+                            <section class="sk-panel sk-panel-chart">
+                                <div class="sk-panel-head">
+                                    <h4>${t('solar.dash.hourly')}</h4>
+                                    <div class="sk-legend">
+                                        <span class="sk-legend-pill sk-legend-total">${t('solar.dash.total')}</span>
+                                        <span class="sk-legend-pill">INV 1</span>
+                                        <span class="sk-legend-pill">INV 2</span>
+                                    </div>
+                                </div>
+                                ${buildLineChartSVG()}
+                                <div class="sk-chart-axis" aria-hidden="true"><span>5</span><span>9</span><span>13</span><span>17</span><span>19</span></div>
+                            </section>
+
+                            <section class="sk-panel sk-panel-table">
+                                <h4 class="sk-panel-head">${t('solar.dash.history')} ›</h4>
+                                <table class="sk-table">
+                                    <thead><tr><th>Time</th><th>INV</th><th>Level</th><th>Message</th></tr></thead>
+                                    <tbody>${tableHTML}</tbody>
+                                </table>
+                            </section>
+
+                            <section class="sk-panel sk-panel-inverters">
+                                <h4 class="sk-panel-head">${t('solar.dash.inverterStatus')}</h4>
+                                <div class="sk-inv-grid">${inverterHTML}</div>
+                            </section>
+                        </div>
+                    </main>
+                </div>
+
+                <footer class="sk-footer">
+                    <span>busanteam_business@naver.com</span>
+                    <span>${t('solar.dash.footer')}</span>
+                </footer>
             </div>`;
     }
 
