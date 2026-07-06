@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" role="img" aria-label="Lighthouse Performance score 94">
+  <circle cx="36" cy="36" r="34" fill="none" stroke="#e0e0e0" stroke-width="4"/>
+  <circle cx="36" cy="36" r="34" fill="none" stroke="#0cce6b" stroke-width="4" stroke-dasharray="187 27" transform="rotate(-90 36 36)"/>
+  <text x="36" y="40" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#0cce6b">94</text>
+  <text x="36" y="58" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8" fill="#666">Perf</text>
+</svg>
