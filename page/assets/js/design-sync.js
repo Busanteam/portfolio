@@ -11,6 +11,8 @@
     let saveTimer = null;
     let connected = false;
     let serverAiConfigured = false;
+    let serverGeminiConfigured = false;
+    let serverOpenaiConfigured = false;
     let selectedElement = null;
     let pickMode = false;
     let pickBanner = null;
@@ -25,27 +27,52 @@
         document.body.classList.remove('lightbox-open', 'design-sync-pick-on');
     }
 
+    function ensurePageScrollable() {
+        document.documentElement.classList.add('design-sync-scroll-fix');
+        unlockScroll();
+    }
+
     function detectProvider(key) {
-        return (key || '').trim().startsWith('sk-') ? 'openai' : 'gemini';
+        const k = (key || '').trim();
+        if (/^sk-(proj-)?/i.test(k)) return 'openai';
+        if (/^(AIza|AQ\.)/i.test(k)) return 'gemini';
+        return 'gemini';
     }
 
     function isValidApiKey(key) {
         const k = (key || '').trim();
         if (k.length < 8) return false;
-        if (k.startsWith('sk-')) return /^sk-[A-Za-z0-9_-]{10,}$/.test(k);
-        return true;
+        if (/^sk-(proj-)?/i.test(k)) return /^sk-(proj-)?[A-Za-z0-9_-]{10,}$/i.test(k);
+        if (/^(AIza|AQ\.)/i.test(k)) return k.length >= 20;
+        return k.length >= 12;
     }
 
-    function formatApiError(message) {
+    function formatApiError(message, provider) {
         if (!message) return 'AI 요청 실패';
-        if (message.includes('Gemini API error') || message.includes('API key not valid') || message.includes('PERMISSION_DENIED')) {
-            return 'Gemini API 키를 확인하세요. https://aistudio.google.com/apikey 에서 발급한 키(AQ. 또는 AIza...)를 입력하세요.';
+        const p = provider || (message.includes('OpenAI API error') ? 'openai' : 'gemini');
+
+        if (p === 'openai' || message.includes('OpenAI API error')) {
+            if (message.includes('OpenAI API error')) return message;
+            return 'OpenAI API 키를 확인하세요. sk- 로 시작하는 키를 https://platform.openai.com/api-keys 에서 발급하세요.';
         }
-        if (message.includes('Incorrect API key') || message.includes('OpenAI API error')) {
-            return 'OpenAI API 키가 올바르지 않습니다. sk- 로 시작하는 키를 https://platform.openai.com/api-keys 에서 발급하세요.';
+
+        if (message.includes('Gemini API error') || message.includes('API key not valid') || message.includes('PERMISSION_DENIED')) {
+            return message.includes('Gemini API error') ? message : 'Gemini API 키를 확인하세요. https://aistudio.google.com/apikey (AQ. 또는 AIza...)';
         }
         if (message.includes('API Key')) return message;
         return message;
+    }
+
+    function getPanelApiKey() {
+        const input = document.getElementById('design-sync-api-key');
+        const fromInput = input ? input.value.trim() : '';
+        if (fromInput) return fromInput;
+        return getStoredApiKey();
+    }
+
+    function getProviderHint() {
+        const sel = document.getElementById('design-sync-provider');
+        return sel ? sel.value : 'auto';
     }
 
     function getStoredApiKey() {
@@ -56,7 +83,16 @@
     }
 
     function hasApiKey() {
-        return !!(getStoredApiKey() || serverAiConfigured);
+        return !!(getPanelApiKey() || serverAiConfigured);
+    }
+
+    function clearStoredApiKey() {
+        localStorage.removeItem('design-sync-api-key');
+        localStorage.removeItem('design-sync-openai-key');
+        const input = document.getElementById('design-sync-api-key');
+        if (input) input.value = '';
+        updateApiHint();
+        setStatus('저장된 API 키 삭제됨 — 서버 env 키 사용', 'ok');
     }
 
     function updateApiHint() {
@@ -64,17 +100,24 @@
         const keyInput = document.getElementById('design-sync-api-key');
         if (!hint) return;
 
-        const panelKey = getStoredApiKey();
+        const panelKey = getPanelApiKey();
         if (panelKey) {
-            hint.textContent = `${detectProvider(panelKey) === 'openai' ? 'OpenAI' : 'Gemini'} 키 (패널 입력)`;
+            const provider = getProviderHint() !== 'auto' ? getProviderHint() : detectProvider(panelKey);
+            hint.textContent = `${provider === 'openai' ? 'OpenAI' : 'Gemini'} 키 (패널 입력)`;
             hint.dataset.tone = 'ok';
             if (keyInput) keyInput.placeholder = '패널에 키가 저장됨 — 변경 시 덮어씀';
             return;
         }
-        if (serverAiConfigured) {
-            hint.textContent = '서버 환경변수 API 키 사용 중 (GEMINI_API_KEY / OPENAI_API_KEY)';
+        if (serverGeminiConfigured) {
+            hint.textContent = '서버 GEMINI_API_KEY 사용 중 (패널 키가 있으면 패널 우선)';
             hint.dataset.tone = 'ok';
-            if (keyInput) keyInput.placeholder = '선택: 패널에 키 입력 (없으면 서버 env 사용)';
+            if (keyInput) keyInput.placeholder = '선택: 패널 키 입력 (비우면 서버 env 사용)';
+            return;
+        }
+        if (serverOpenaiConfigured) {
+            hint.textContent = '서버 OPENAI_API_KEY 사용 중 (패널 키가 있으면 패널 우선)';
+            hint.dataset.tone = 'ok';
+            if (keyInput) keyInput.placeholder = '선택: 패널 키 입력 (비우면 서버 env 사용)';
             return;
         }
         hint.textContent = 'Gemini(AQ./AIza...) 또는 OpenAI(sk-) 키를 입력하거나 터미널에 GEMINI_API_KEY 설정';
@@ -114,7 +157,6 @@
             const target = e.target;
             if (!target || !(target instanceof Element)) return;
             if (target.closest('#design-sync-panel') || target.closest('#design-sync-pick-banner')) return;
-            e.preventDefault();
             e.stopPropagation();
             cancelPickMode();
             selectElement(target);
@@ -349,7 +391,8 @@
             return;
         }
 
-        const apiKey = getStoredApiKey();
+        const apiKey = getPanelApiKey();
+        const provider = getProviderHint();
         if (!apiKey && !serverAiConfigured) {
             setStatus('API Key가 필요합니다 — 패널 입력 또는 GEMINI_API_KEY 환경변수', 'err');
             return;
@@ -359,7 +402,8 @@
             return;
         }
 
-        setStatus('AI 처리 중…', 'ok');
+        const resolvedProvider = provider !== 'auto' ? provider : (apiKey ? detectProvider(apiKey) : (serverGeminiConfigured ? 'gemini' : 'openai'));
+        setStatus(`AI 처리 중… (${resolvedProvider})`, 'ok');
 
         try {
             const res = await fetch(`${API}/ai-command`, {
@@ -368,6 +412,7 @@
                 body: JSON.stringify({
                     prompt: promptText.trim(),
                     selector: getSelector(selectedElement),
+                    provider,
                     context: {
                         tagName: selectedElement.tagName.toLowerCase(),
                         className: selectedElement.className,
@@ -379,7 +424,7 @@
                 })
             });
             const data = await res.json();
-            if (!data.ok) throw new Error(formatApiError(data.error || 'AI 요청 실패'));
+            if (!data.ok) throw new Error(data.error || 'AI 요청 실패');
 
             if (data.htmlHint) {
                 setStatus(`HTML 수정 필요: ${data.htmlHint}`, 'err');
@@ -399,7 +444,8 @@
             applyCommands(commands);
             setStatus(data.explanation || `AI 적용 ${commands.length}건`, 'ok');
         } catch (e) {
-            setStatus(formatApiError(e.message), 'err');
+            const provider = getProviderHint() !== 'auto' ? getProviderHint() : detectProvider(getPanelApiKey());
+            setStatus(formatApiError(e.message, provider), 'err');
         }
     }
 
@@ -440,7 +486,16 @@
                     <button type="button" class="design-sync-btn design-sync-btn-sm design-sync-btn-ai" id="design-sync-apply-ai">AI 적용</button>
                 </div>
                 <p class="design-sync-api-hint" id="design-sync-api-hint" data-tone="idle"></p>
+                <div class="design-sync-row design-sync-provider-row">
+                    <label class="design-sync-label design-sync-label-inline" for="design-sync-provider">AI 제공자</label>
+                    <select id="design-sync-provider" class="design-sync-input design-sync-select">
+                        <option value="auto">자동 감지</option>
+                        <option value="gemini">Gemini (AQ./AIza)</option>
+                        <option value="openai">OpenAI (sk-)</option>
+                    </select>
+                </div>
                 <input type="password" class="design-sync-input" id="design-sync-api-key" placeholder="Gemini API Key (AQ...)" autocomplete="off">
+                <button type="button" class="design-sync-btn design-sync-btn-sm design-sync-btn-ghost" id="design-sync-clear-key">저장된 키 지우기</button>
             </div>
 
             <div class="design-sync-editor is-disabled" id="design-sync-editor">
@@ -509,7 +564,18 @@
                 .design-sync-btn-sm { padding:.35rem .65rem; font-size:11px; }
                 .design-sync-btn-ghost { background:transparent; border:1px solid rgba(255,255,255,.18); color:#f5f5f7; }
                 .design-sync-editor.is-disabled { opacity:.45; pointer-events:none; }
+                html.design-sync-scroll-fix,
+                html.design-sync-scroll-fix body:not(.lightbox-open) {
+                    overflow-y: auto !important;
+                    overflow-x: hidden !important;
+                    position: static !important;
+                    height: auto !important;
+                    touch-action: pan-y;
+                }
                 .design-sync-ai-block { margin-bottom:.5rem; }
+                .design-sync-provider-row { grid-template-columns: auto 1fr; margin-bottom:.35rem; }
+                .design-sync-label-inline { margin:0; text-transform:none; letter-spacing:0; }
+                .design-sync-select { cursor:pointer; }
                 .design-sync-api-hint { margin:.25rem 0 .35rem; font-size:10px; color:#6b7280; }
                 .design-sync-api-hint[data-tone="ok"] { color:#30d158; }
                 #design-sync-api-key { margin-bottom:.25rem; font-size:10px; }
@@ -565,13 +631,26 @@
 
         const apiKeyInput = document.getElementById('design-sync-api-key');
         const savedKey = getStoredApiKey();
-        if (savedKey) apiKeyInput.value = savedKey;
+        if (savedKey) {
+            const savedProvider = detectProvider(savedKey);
+            const envMismatch = serverGeminiConfigured && savedProvider === 'openai';
+            if (envMismatch) {
+                setStatus('저장된 OpenAI 키가 GEMINI_API_KEY를 가립니다 — "저장된 키 지우기" 클릭', 'err');
+            } else {
+                apiKeyInput.value = savedKey;
+            }
+        }
+        apiKeyInput.addEventListener('input', () => updateApiHint());
         apiKeyInput.addEventListener('change', () => {
             const val = apiKeyInput.value.trim();
-            localStorage.setItem('design-sync-api-key', val);
-            localStorage.removeItem('design-sync-openai-key');
+            if (val) {
+                localStorage.setItem('design-sync-api-key', val);
+                localStorage.removeItem('design-sync-openai-key');
+            }
             updateApiHint();
         });
+        document.getElementById('design-sync-clear-key').addEventListener('click', clearStoredApiKey);
+        document.getElementById('design-sync-provider').addEventListener('change', updateApiHint);
         updateApiHint();
 
         document.getElementById('design-sync-apply-ai').addEventListener('click', () => {
@@ -678,16 +757,24 @@
             health = await res.json();
             connected = !!health.ok;
             serverAiConfigured = !!health.aiConfigured;
+            serverGeminiConfigured = !!health.geminiConfigured;
+            serverOpenaiConfigured = !!health.openaiConfigured;
         } catch {
             connected = false;
         }
 
         if (!connected) return;
 
-        unlockScroll();
+        ensurePageScrollable();
         buildUI();
         watchMutations();
         connectReload();
+
+        const scrollGuard = new MutationObserver(() => {
+            if (!document.body.classList.contains('lightbox-open')) ensurePageScrollable();
+        });
+        scrollGuard.observe(document.body, { attributes: true, attributeFilter: ['class', 'style'] });
+
         document.getElementById('design-sync-dot')?.classList.add('is-on');
         const aiNote = hasApiKey() ? 'AI 준비됨' : 'API Key 필요';
         setStatus(`연결됨 — Pick 후 수정 (${aiNote})`, 'ok');

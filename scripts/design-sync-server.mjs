@@ -215,7 +215,7 @@ async function callOpenAiForCss({ prompt, selector, context, apiKey }) {
     );
 
     if (status < 200 || status >= 300) {
-        throw new Error(`OpenAI API error (${status}): ${responseText.slice(0, 300)}`);
+        throw new Error(parseProviderError(status, responseText, 'openai'));
     }
 
     const data = JSON.parse(responseText);
@@ -226,11 +226,13 @@ async function callOpenAiForCss({ prompt, selector, context, apiKey }) {
 
 async function callGeminiForCss({ prompt, selector, context, apiKey }) {
     const key = apiKey.trim();
-    const model = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
+    const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
     const user = buildUserPrompt({ prompt, selector, context });
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
 
-    const { status, body: responseText } = await postJson(url, {}, {
+    const { status, body: responseText } = await postJson(url, {
+        'x-goog-api-key': key
+    }, {
         systemInstruction: { parts: [{ text: CSS_AI_SYSTEM }] },
         contents: [{ role: 'user', parts: [{ text: user }] }],
         generationConfig: {
@@ -240,7 +242,7 @@ async function callGeminiForCss({ prompt, selector, context, apiKey }) {
     });
 
     if (status < 200 || status >= 300) {
-        throw new Error(`Gemini API error (${status}): ${responseText.slice(0, 300)}`);
+        throw new Error(parseProviderError(status, responseText, 'gemini'));
     }
 
     const data = JSON.parse(responseText);
@@ -252,29 +254,60 @@ async function callGeminiForCss({ prompt, selector, context, apiKey }) {
     return parseAiJson(content);
 }
 
-function resolveApiKey(panelKey) {
-    return (panelKey || process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY || '').trim();
-}
-
 function detectProvider(key) {
-    if (key.startsWith('sk-')) return 'openai';
+    const k = (key || '').trim();
+    if (/^sk-(proj-)?/i.test(k)) return 'openai';
+    if (/^(AIza|AQ\.)/i.test(k)) return 'gemini';
     return 'gemini';
 }
 
-async function callAiForCss({ prompt, selector, context, apiKey }) {
-    const key = resolveApiKey(apiKey);
+function resolveApiKey(panelKey, providerHint) {
+    const panel = (panelKey || '').trim();
+    if (panel) return panel;
+
+    const hint = (providerHint || '').toLowerCase();
+    if (hint === 'openai') return (process.env.OPENAI_API_KEY || '').trim();
+    if (hint === 'gemini') {
+        return (process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '').trim();
+    }
+
+    if (process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY) {
+        return (process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '').trim();
+    }
+    return (process.env.OPENAI_API_KEY || '').trim();
+}
+
+function parseProviderError(status, responseText, provider) {
+    let detail = responseText.slice(0, 400);
+    try {
+        const parsed = JSON.parse(responseText);
+        detail = parsed.error?.message || parsed.error?.status || parsed.message || detail;
+    } catch { /* keep raw */ }
+
+    if (provider === 'openai') {
+        return `OpenAI API error (${status}): ${detail}`;
+    }
+    return `Gemini API error (${status}): ${detail}`;
+}
+
+async function callAiForCss({ prompt, selector, context, apiKey, providerHint }) {
+    const key = resolveApiKey(apiKey, providerHint);
     if (!key) {
         throw new Error('API Key가 필요합니다. GEMINI_API_KEY 환경변수 또는 패널에 Gemini/OpenAI 키를 입력하세요.');
     }
 
-    if (detectProvider(key) === 'openai') {
-        if (!/^sk-[A-Za-z0-9_-]{10,}$/.test(key)) {
+    const provider = providerHint && providerHint !== 'auto'
+        ? providerHint
+        : detectProvider(key);
+
+    if (provider === 'openai') {
+        if (!/^sk-(proj-)?[A-Za-z0-9_-]{10,}$/i.test(key)) {
             throw new Error('OpenAI API 키 형식이 아닙니다. sk- 로 시작해야 합니다.');
         }
-        return callOpenAiForCss({ prompt, selector, context, apiKey: key });
+        return { ...(await callOpenAiForCss({ prompt, selector, context, apiKey: key })), provider: 'openai' };
     }
 
-    return callGeminiForCss({ prompt, selector, context, apiKey: key });
+    return { ...(await callGeminiForCss({ prompt, selector, context, apiKey: key })), provider: 'gemini' };
 }
 
 function broadcastReload() {
@@ -319,11 +352,15 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (url.pathname === '/__design-sync/health') {
+        const geminiKey = (process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '').trim();
+        const openaiKey = (process.env.OPENAI_API_KEY || '').trim();
         sendJson(res, 200, {
             ok: true,
             port: PORT,
             overrides: OVERRIDES_PATH,
-            aiConfigured: !!(process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY),
+            aiConfigured: !!(geminiKey || openaiKey),
+            geminiConfigured: !!geminiKey,
+            openaiConfigured: !!openaiKey,
             aiProviders: ['gemini', 'openai']
         });
         return;
@@ -350,7 +387,8 @@ const server = http.createServer(async (req, res) => {
                 prompt: body.prompt || '',
                 selector: body.selector || '',
                 context: body.context || {},
-                apiKey: body.apiKey || ''
+                apiKey: body.apiKey || '',
+                providerHint: body.provider || 'auto'
             });
             sendJson(res, 200, { ok: true, ...result });
         } catch (e) {
