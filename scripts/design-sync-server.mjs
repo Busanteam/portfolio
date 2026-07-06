@@ -6,6 +6,7 @@
  * - Live reload when source files change
  */
 import http from 'http';
+import https from 'https';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -124,6 +125,42 @@ async function saveOverrides(updates) {
     return { saved: updates.length, path: OVERRIDES_PATH };
 }
 
+async function postJson(url, headers, payload) {
+    const body = JSON.stringify(payload);
+    const parsed = new URL(url);
+
+    if (globalThis.fetch) {
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: { ...headers, 'Content-Type': 'application/json' },
+            body
+        });
+        return { status: res.status, body: await res.text() };
+    }
+
+    const transport = parsed.protocol === 'https:' ? https : http;
+    return new Promise((resolve, reject) => {
+        const req = transport.request({
+            hostname: parsed.hostname,
+            port: parsed.port || (parsed.protocol === 'https:' ? 443 : 80),
+            path: `${parsed.pathname}${parsed.search}`,
+            method: 'POST',
+            headers: {
+                ...headers,
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(body)
+            }
+        }, res => {
+            const chunks = [];
+            res.on('data', chunk => chunks.push(chunk));
+            res.on('end', () => resolve({ status: res.statusCode || 0, body: Buffer.concat(chunks).toString('utf8') }));
+        });
+        req.on('error', reject);
+        req.write(body);
+        req.end();
+    });
+}
+
 async function callAiForCss({ prompt, selector, context, apiKey }) {
     const key = apiKey || process.env.OPENAI_API_KEY;
     if (!key) throw new Error('OPENAI_API_KEY가 설정되지 않았습니다. 패널에 API Key를 입력하거나 환경 변수를 설정하세요.');
@@ -155,13 +192,10 @@ Text preview: ${context.textPreview || ''}
 User request:
 ${prompt}`;
 
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${key}`
-        },
-        body: JSON.stringify({
+    const { status, body: responseText } = await postJson(
+        'https://api.openai.com/v1/chat/completions',
+        { Authorization: `Bearer ${key}` },
+        {
             model,
             temperature: 0.2,
             response_format: { type: 'json_object' },
@@ -169,15 +203,14 @@ ${prompt}`;
                 { role: 'system', content: system },
                 { role: 'user', content: user }
             ]
-        })
-    });
+        }
+    );
 
-    if (!res.ok) {
-        const errText = await res.text();
-        throw new Error(`OpenAI API error (${res.status}): ${errText.slice(0, 200)}`);
+    if (status < 200 || status >= 300) {
+        throw new Error(`OpenAI API error (${status}): ${responseText.slice(0, 200)}`);
     }
 
-    const data = await res.json();
+    const data = JSON.parse(responseText);
     const content = data.choices?.[0]?.message?.content;
     if (!content) throw new Error('AI 응답이 비어 있습니다.');
 

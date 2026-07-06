@@ -269,57 +269,72 @@ section { padding: 10rem 0; }
 }
 .nda-footer {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: center;
     margin-top: 2rem;
     padding-top: 1.5rem;
     border-top: 1px solid var(--border-color);
-    position: relative;
+}
+.nda-lock-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.85rem;
+    width: 100%;
+    max-width: 380px;
+    padding: 1.35rem 1.5rem;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+    text-align: center;
+    cursor: default;
+    transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+    box-shadow:
+        0 2px 4px hsl(var(--shadow-color) / calc(var(--shadow-opacity) * 0.5)),
+        0 8px 20px hsl(var(--shadow-color) / var(--shadow-opacity));
+}
+.nda-lock-card:hover,
+.nda-lock-card:focus-within {
+    border-color: rgba(41, 151, 255, 0.35);
+    background: rgba(41, 151, 255, 0.04);
+    box-shadow:
+        0 4px 12px hsl(var(--shadow-color) / calc(var(--shadow-opacity) * 0.8)),
+        0 12px 32px hsl(var(--shadow-color) / calc(var(--shadow-opacity) * 1.5));
 }
 .nda-lock-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
     border: 1px solid var(--border-color);
-    background: var(--bg-secondary);
+    background: var(--card-bg);
     color: var(--text-secondary);
     cursor: help;
     transition: color 0.25s, border-color 0.25s, background 0.25s;
 }
+.nda-lock-card:hover .nda-lock-btn,
+.nda-lock-card:focus-within .nda-lock-btn,
 .nda-lock-btn:hover,
 .nda-lock-btn:focus-visible {
     color: var(--accent);
     border-color: var(--accent);
-    background: rgba(41, 151, 255, 0.08);
+    background: rgba(41, 151, 255, 0.1);
     outline: none;
 }
 .nda-tooltip {
-    position: absolute;
-    bottom: calc(100% + 0.5rem);
-    left: 50%;
-    transform: translateX(-50%) translateY(6px);
-    max-width: 280px;
-    padding: 0.65rem 0.9rem;
-    font-size: 0.85rem;
-    line-height: 1.5;
-    text-align: center;
-    color: var(--text-primary);
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    box-shadow: 0 8px 24px hsl(var(--shadow-color) / calc(var(--shadow-opacity) * 3));
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s, transform 0.25s;
-    z-index: 2;
+    margin: 0;
+    max-width: 100%;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    opacity: 0.72;
+    transition: opacity 0.25s, color 0.25s;
 }
-.nda-footer:hover .nda-tooltip,
-.nda-footer:focus-within .nda-tooltip {
+.nda-lock-card:hover .nda-tooltip,
+.nda-lock-card:focus-within .nda-tooltip {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    color: var(--text-primary);
 }
 
 /* Solar Dashboard Mock (Dashboard_2 layout) */
@@ -1079,5 +1094,5 @@ section { padding: 10rem 0; }
     body { background: #fff !important; color: #000 !important; }
     .card { box-shadow: none !important; border: 1px solid #e0e0e0 !important; break-inside: avoid; }
     section { padding: 3rem 0 !important; }
-    .nda-footer { display: none !important; }
+    .nda-lock-card { display: none !important; }
 }
