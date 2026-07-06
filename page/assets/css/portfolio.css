@@ -262,44 +262,64 @@ section { padding: 10rem 0; }
     font-weight: 500;
 }
 
-/* NDA Shield */
-.nda-card { position: relative; overflow: hidden; }
-.nda-shield {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(6px);
+/* NDA footer — title/content visible, lock icon at bottom */
+.nda-card {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2;
-    border-radius: 24px;
-    cursor: not-allowed;
+    flex-direction: column;
 }
-html.light .nda-shield { background: rgba(255, 255, 255, 0.72); }
-
-.nda-lock {
+.nda-footer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
-    color: var(--text-primary);
-    text-align: center;
-    padding: 2rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    position: relative;
 }
-.nda-lock svg { opacity: 0.9; }
+.nda-lock-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    cursor: help;
+    transition: color 0.25s, border-color 0.25s, background 0.25s;
+}
+.nda-lock-btn:hover,
+.nda-lock-btn:focus-visible {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: rgba(41, 151, 255, 0.08);
+    outline: none;
+}
 .nda-tooltip {
+    position: absolute;
+    bottom: calc(100% + 0.5rem);
+    left: 50%;
+    transform: translateX(-50%) translateY(6px);
     max-width: 280px;
-    font-size: 0.9rem;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.85rem;
     line-height: 1.5;
+    text-align: center;
+    color: var(--text-primary);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px hsl(var(--shadow-color) / calc(var(--shadow-opacity) * 3));
     opacity: 0;
-    transform: translateY(8px);
-    transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none;
+    transition: opacity 0.25s, transform 0.25s;
+    z-index: 2;
 }
-.nda-shield:hover .nda-tooltip,
-.nda-shield:focus-within .nda-tooltip {
+.nda-footer:hover .nda-tooltip,
+.nda-footer:focus-within .nda-tooltip {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0);
 }
 
 /* Solar Dashboard Mock (Dashboard_2 layout) */
@@ -1059,5 +1079,5 @@ html.light .nda-shield { background: rgba(255, 255, 255, 0.72); }
     body { background: #fff !important; color: #000 !important; }
     .card { box-shadow: none !important; border: 1px solid #e0e0e0 !important; break-inside: avoid; }
     section { padding: 3rem 0 !important; }
-    .nda-shield { display: none !important; }
+    .nda-footer { display: none !important; }
 }

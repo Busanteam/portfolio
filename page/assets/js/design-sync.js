@@ -226,6 +226,61 @@
         applyCommands(fn());
     }
 
+    async function applyAiPrompt(promptText) {
+        if (!selectedElement) {
+            setStatus('먼저 요소를 선택하세요', 'err');
+            return;
+        }
+        if (!promptText.trim()) {
+            setStatus('AI 수정 요청을 입력하세요', 'err');
+            return;
+        }
+
+        setStatus('AI 처리 중…', 'ok');
+        const apiKey = localStorage.getItem('design-sync-openai-key') || '';
+
+        try {
+            const res = await fetch(`${API}/ai-command`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    prompt: promptText.trim(),
+                    selector: getSelector(selectedElement),
+                    context: {
+                        tagName: selectedElement.tagName.toLowerCase(),
+                        className: selectedElement.className,
+                        id: selectedElement.id,
+                        inlineStyle: selectedElement.getAttribute('style') || '',
+                        textPreview: (selectedElement.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 160)
+                    },
+                    apiKey
+                })
+            });
+            const data = await res.json();
+            if (!data.ok) throw new Error(data.error || 'AI 요청 실패');
+
+            if (data.htmlHint) {
+                setStatus(`HTML 수정 필요: ${data.htmlHint}`, 'err');
+                return;
+            }
+
+            const commands = (data.commands || []).map(c => {
+                if (c.remove) return { type: 'remove', property: c.property };
+                return { type: 'set', property: c.property, value: c.value };
+            });
+
+            if (!commands.length) {
+                setStatus(data.explanation || '적용할 CSS 명령이 없습니다', 'err');
+                return;
+            }
+
+            applyCommands(commands);
+            setStatus(data.explanation || `AI 적용 ${commands.length}건`, 'ok');
+        } catch (e) {
+            setStatus(e.message, 'err');
+        }
+    }
+
     function selectElement(el) {
         document.querySelectorAll('.design-sync-highlight').forEach(n => n.classList.remove('design-sync-highlight'));
         selectedElement = el;
@@ -244,7 +299,7 @@
                 <span class="design-sync-dot" id="design-sync-dot"></span>
                 <strong>Design Sync</strong>
             </div>
-            <p class="design-sync-desc">요소 선택 후 CSS 명령을 입력해 적용·저장합니다.<br>예: <code>column-gap: 1rem</code> · <code>unset margin-top</code></p>
+            <p class="design-sync-desc">요소 선택 후 <strong>AI 자연어</strong> 또는 CSS 명령으로 수정·저장합니다.</p>
             <p class="design-sync-status" id="design-sync-status">대기 중</p>
 
             <div class="design-sync-actions">
@@ -258,6 +313,15 @@
             </div>
 
             <div class="design-sync-editor is-disabled" id="design-sync-editor">
+                <label class="design-sync-label" for="design-sync-ai-prompt">AI 수정 명령</label>
+                <textarea id="design-sync-ai-prompt" class="design-sync-textarea design-sync-ai" rows="3" placeholder="예: 블러 오버레이를 제거하고 하단에만 자물쇠 아이콘을 보여줘"></textarea>
+                <div class="design-sync-actions">
+                    <button type="button" class="design-sync-btn design-sync-btn-sm design-sync-btn-ai" id="design-sync-apply-ai">AI 적용</button>
+                </div>
+                <input type="password" class="design-sync-input" id="design-sync-api-key" placeholder="OpenAI API Key (선택, 로컬 저장)" autocomplete="off" style="margin-bottom:.5rem;font-size:10px;">
+
+                <div class="design-sync-divider">또는 CSS 직접 입력</div>
+
                 <div class="design-sync-row">
                     <input type="text" class="design-sync-input" id="design-sync-prop" placeholder="속성 (예: gap)" aria-label="CSS property">
                     <input type="text" class="design-sync-input" id="design-sync-val" placeholder="값 (예: 1rem)" aria-label="CSS value">
@@ -335,6 +399,12 @@
                     background:rgba(255,255,255,.05); color:#d1d1d6; font:inherit; font-size:10px; cursor:pointer;
                 }
                 .design-sync-chip:hover { background:rgba(41,151,255,.2); border-color:rgba(41,151,255,.4); color:#fff; }
+                .design-sync-btn-ai { background: linear-gradient(135deg, #2997ff, #5856d6); }
+                .design-sync-ai { min-height: 72px; }
+                .design-sync-divider {
+                    margin: .75rem 0 .5rem; font-size: 10px; color: #6b7280; text-align: center;
+                    border-top: 1px solid rgba(255,255,255,.08); padding-top: .65rem;
+                }
                 .design-sync-styles-list {
                     margin:.5rem 0 0; padding:.5rem .65rem; list-style:none;
                     background:rgba(0,0,0,.25); border-radius:10px; max-height:88px; overflow:auto;
@@ -349,6 +419,23 @@
         }
 
         document.getElementById('design-sync-flush').addEventListener('click', flushSave);
+
+        const apiKeyInput = document.getElementById('design-sync-api-key');
+        const savedKey = localStorage.getItem('design-sync-openai-key');
+        if (savedKey) apiKeyInput.value = savedKey;
+        apiKeyInput.addEventListener('change', () => {
+            localStorage.setItem('design-sync-openai-key', apiKeyInput.value.trim());
+        });
+
+        document.getElementById('design-sync-apply-ai').addEventListener('click', () => {
+            applyAiPrompt(document.getElementById('design-sync-ai-prompt').value);
+        });
+        document.getElementById('design-sync-ai-prompt').addEventListener('keydown', e => {
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                applyAiPrompt(e.target.value);
+            }
+        });
 
         document.getElementById('design-sync-pick').addEventListener('click', () => {
             pickMode = !pickMode;
@@ -442,10 +529,11 @@
     }
 
     async function init() {
+        let health = {};
         try {
             const res = await fetch(`${API}/health`);
-            const data = await res.json();
-            connected = !!data.ok;
+            health = await res.json();
+            connected = !!health.ok;
         } catch {
             connected = false;
         }
@@ -456,7 +544,8 @@
         watchMutations();
         connectReload();
         document.getElementById('design-sync-dot')?.classList.add('is-on');
-        setStatus('연결됨 — Pick 후 수정 명령 입력', 'ok');
+        const aiNote = health.aiConfigured ? 'AI 준비됨' : 'AI Key 필요';
+        setStatus(`연결됨 — Pick 후 AI 또는 CSS 명령 (${aiNote})`, 'ok');
     }
 
     if (document.readyState === 'loading') {

@@ -124,6 +124,68 @@ async function saveOverrides(updates) {
     return { saved: updates.length, path: OVERRIDES_PATH };
 }
 
+async function callAiForCss({ prompt, selector, context, apiKey }) {
+    const key = apiKey || process.env.OPENAI_API_KEY;
+    if (!key) throw new Error('OPENAI_API_KEY가 설정되지 않았습니다. 패널에 API Key를 입력하거나 환경 변수를 설정하세요.');
+
+    const model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
+    const system = `You are a CSS assistant for a local portfolio Design Sync dev tool.
+The user selected an HTML element and describes visual changes in natural language (Korean or English).
+
+Return ONLY valid JSON (no markdown fences):
+{
+  "commands": [
+    { "property": "kebab-case-css-property", "value": "css value" },
+    { "property": "property-name", "remove": true }
+  ],
+  "explanation": "Brief Korean summary of what was applied"
+}
+
+Rules:
+- Prefer CSS commands the browser can apply via element.style
+- Use remove:true to unset properties
+- If HTML structure must change (not just CSS), return empty commands and put instructions in htmlHint
+- Do not invent selectors; commands apply to the already-selected element only`;
+
+    const user = `Selector: ${selector}
+Element: <${context.tagName}> class="${context.className}" id="${context.id || ''}"
+Current inline style: ${context.inlineStyle || '(none)'}
+Text preview: ${context.textPreview || ''}
+
+User request:
+${prompt}`;
+
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${key}`
+        },
+        body: JSON.stringify({
+            model,
+            temperature: 0.2,
+            response_format: { type: 'json_object' },
+            messages: [
+                { role: 'system', content: system },
+                { role: 'user', content: user }
+            ]
+        })
+    });
+
+    if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`OpenAI API error (${res.status}): ${errText.slice(0, 200)}`);
+    }
+
+    const data = await res.json();
+    const content = data.choices?.[0]?.message?.content;
+    if (!content) throw new Error('AI 응답이 비어 있습니다.');
+
+    const parsed = JSON.parse(content);
+    if (!Array.isArray(parsed.commands)) parsed.commands = [];
+    return parsed;
+}
+
 function broadcastReload() {
     const payload = `data: ${JSON.stringify({ type: 'reload', at: Date.now() })}\n\n`;
     sseClients.forEach(res => {
@@ -166,7 +228,12 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (url.pathname === '/__design-sync/health') {
-        sendJson(res, 200, { ok: true, port: PORT, overrides: OVERRIDES_PATH });
+        sendJson(res, 200, {
+            ok: true,
+            port: PORT,
+            overrides: OVERRIDES_PATH,
+            aiConfigured: !!(process.env.OPENAI_API_KEY)
+        });
         return;
     }
 
@@ -180,6 +247,23 @@ const server = http.createServer(async (req, res) => {
         res.write(`data: ${JSON.stringify({ type: 'connected' })}\n\n`);
         sseClients.add(res);
         req.on('close', () => sseClients.delete(res));
+        return;
+    }
+
+    if (url.pathname === '/__design-sync/ai-command' && req.method === 'POST') {
+        try {
+            const raw = await readBody(req);
+            const body = JSON.parse(raw || '{}');
+            const result = await callAiForCss({
+                prompt: body.prompt || '',
+                selector: body.selector || '',
+                context: body.context || {},
+                apiKey: body.apiKey || ''
+            });
+            sendJson(res, 200, { ok: true, ...result });
+        } catch (e) {
+            sendJson(res, 500, { ok: false, error: e.message });
+        }
         return;
     }
 
@@ -230,6 +314,8 @@ server.listen(PORT, HOST, () => {
     console.log('');
     console.log('  개발자도구에서 style/class 수정 → 자동 로컬 저장');
     console.log('  CSS/JS/HTML 파일 저장 시 페이지 자동 새로고침');
+    console.log('  AI:      POST /__design-sync/ai-command');
+    console.log(`  AI Key:  ${process.env.OPENAI_API_KEY ? 'env configured ✓' : 'OPENAI_API_KEY 환경변수 또는 패널 입력'}`);
     console.log('');
 });
 
