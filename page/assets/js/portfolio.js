@@ -382,17 +382,25 @@
         flowDrawn = true;
 
         const steps = [
-            { id: 'flow.1', x: 0 },
-            { id: 'flow.2', x: 1 },
-            { id: 'flow.3', x: 2 },
-            { id: 'flow.4', x: 3 },
-            { id: 'flow.5', x: 4 }
+            { id: 'flow.1' },
+            { id: 'flow.2' },
+            { id: 'flow.3' },
+            { id: 'flow.4' },
+            { id: 'flow.5' }
         ].map(s => ({ ...s, label: t(s.id) }));
 
         const container = d3.select('#flow-container');
         const width = container.node().getBoundingClientRect().width;
         const height = 320;
         const margin = { top: 40, right: 20, bottom: 40, left: 20 };
+        const nodeW = Math.min(140, (width - margin.left - margin.right) / 5 - 12);
+        const nodeH = 56;
+        const gap = (width - margin.left - margin.right - nodeW * 5) / 4;
+        const y = height / 2 - nodeH / 2;
+        const connectorPad = 12;
+        const yMid = y + nodeH / 2;
+
+        const positions = steps.map((_, i) => margin.left + i * (nodeW + gap));
 
         const svg = container.append('svg')
             .attr('width', width)
@@ -400,29 +408,37 @@
             .attr('role', 'img')
             .attr('aria-label', t('biz.flow'));
 
-        const nodeW = Math.min(140, (width - margin.left - margin.right) / 5 - 12);
-        const nodeH = 56;
-        const gap = (width - margin.left - margin.right - nodeW * 5) / 4;
-        const y = height / 2 - nodeH / 2;
+        const defs = svg.append('defs');
+        defs.append('marker')
+            .attr('id', 'flow-arrowhead')
+            .attr('viewBox', '0 0 10 10')
+            .attr('refX', 8)
+            .attr('refY', 5)
+            .attr('markerWidth', 7)
+            .attr('markerHeight', 7)
+            .attr('orient', 'auto')
+            .append('path')
+            .attr('d', 'M 0 0 L 10 5 L 0 10 Z')
+            .attr('fill', 'var(--accent)')
+            .attr('opacity', 0.85);
 
+        const connectors = svg.append('g').attr('class', 'flow-connectors');
+        for (let i = 0; i < steps.length - 1; i++) {
+            const lineStart = positions[i] + nodeW + connectorPad;
+            const lineEnd = positions[i + 1] - connectorPad;
+            connectors.append('line')
+                .attr('class', 'flow-link')
+                .attr('x1', lineStart)
+                .attr('y1', yMid)
+                .attr('x2', lineEnd)
+                .attr('y2', yMid)
+                .attr('marker-end', 'url(#flow-arrowhead)');
+        }
+
+        const nodes = svg.append('g').attr('class', 'flow-nodes');
         steps.forEach((step, i) => {
-            const x = margin.left + i * (nodeW + gap);
-
-            if (i < steps.length - 1) {
-                const ax = x + nodeW + 4;
-                const ay = y + nodeH / 2;
-                svg.append('line')
-                    .attr('class', 'flow-link')
-                    .attr('x1', ax)
-                    .attr('y1', ay)
-                    .attr('x2', ax + gap - 8)
-                    .attr('y2', ay);
-                svg.append('polygon')
-                    .attr('class', 'flow-arrow')
-                    .attr('points', `${ax + gap - 8},${ay - 5} ${ax + gap},${ay} ${ax + gap - 8},${ay + 5}`);
-            }
-
-            const g = svg.append('g').attr('class', 'flow-node').attr('transform', `translate(${x},${y})`);
+            const x = positions[i];
+            const g = nodes.append('g').attr('class', 'flow-node').attr('transform', `translate(${x},${y})`);
             g.append('rect')
                 .attr('width', nodeW)
                 .attr('height', nodeH)
@@ -563,8 +579,9 @@
             content.innerHTML = `<img src="${item.src}" alt="${item.caption}">`;
         }
         document.getElementById('lightbox-caption').textContent = item.caption || '';
-        document.getElementById('lightbox-prev').style.display = lightboxItems.length > 1 ? 'block' : 'none';
-        document.getElementById('lightbox-next').style.display = lightboxItems.length > 1 ? 'block' : 'none';
+        const showNav = lightboxItems.length > 1;
+        document.getElementById('lightbox-prev').classList.toggle('is-hidden', !showNav);
+        document.getElementById('lightbox-next').classList.toggle('is-hidden', !showNav);
     }
 
     function initLightbox() {
@@ -578,7 +595,7 @@
             renderLightbox();
         });
         document.getElementById('lightbox').addEventListener('click', e => {
-            if (e.target.id === 'lightbox') closeLightbox();
+            if (e.target.id === 'lightbox' || e.target.classList.contains('lightbox-stage')) closeLightbox();
         });
         document.addEventListener('keydown', e => {
             const lb = document.getElementById('lightbox');

@@ -209,11 +209,26 @@
     </footer>
 
     <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Image viewer">
-        <button type="button" id="lightbox-close" class="lightbox-close" aria-label="Close">&times;</button>
-        <button type="button" id="lightbox-prev" class="lightbox-nav lightbox-prev" aria-label="Previous">&#8249;</button>
-        <button type="button" id="lightbox-next" class="lightbox-nav lightbox-next" aria-label="Next">&#8250;</button>
-        <div class="lightbox-content" id="lightbox-content"></div>
-        <p id="lightbox-caption" class="lightbox-caption"></p>
+        <button type="button" id="lightbox-close" class="lightbox-close" aria-label="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+        <button type="button" id="lightbox-prev" class="lightbox-nav lightbox-prev" aria-label="Previous">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+        <div class="lightbox-stage">
+            <div class="lightbox-content" id="lightbox-content"></div>
+            <p id="lightbox-caption" class="lightbox-caption"></p>
+        </div>
+        <button type="button" id="lightbox-next" class="lightbox-nav lightbox-next" aria-label="Next">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
     </div>
 
     <style>
