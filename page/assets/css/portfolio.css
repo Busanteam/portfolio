@@ -698,13 +698,16 @@ section { padding: 10rem 0; }
 
 /* Charts */
 #chart-container,
-#flow-container {
+#flow-container,
+#flow-portal-container {
     width: 100%;
-    margin-top: 2rem;
     position: relative;
 }
-#chart-container { height: 380px; }
-#flow-container { height: 320px; }
+#chart-container { height: 380px; margin-top: 2rem; }
+#flow-container,
+#flow-portal-container { margin-top: 0.75rem; }
+#flow-container svg,
+#flow-portal-container svg { display: block; }
 
 .chart-section-title {
     font-size: 1rem;

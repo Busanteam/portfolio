@@ -9,9 +9,9 @@
             'nav.theme.dark': 'Dark Mode',
             'nav.lang': 'EN',
             'toc.intro': 'Intro',
-            'toc.experience': 'Experience',
-            'toc.projects': 'Projects',
-            'toc.gallery': 'Gallery',
+            'toc.experience': '경력',
+            'toc.projects': '프로젝트',
+            'toc.gallery': '갤러리',
             'toc.contact': 'Contact',
             'toc.print': 'Print',
             'toc.pdf': 'PDF',
@@ -19,29 +19,32 @@
             'hero.desc': '시각 디자인에서 풀스택 서비스 총괄까지.<br>미니멀리즘 철학과 정교한 엔지니어링을 결합하여 비즈니스 가치를 지닌 프로덕트를 만듭니다.',
             'hero.connect': "Let's Connect",
             'hero.resume': 'Download Resume',
-            'exp.title': 'The Evolution',
-            'exp.1.title': '의료용품 회사 개발/디자인 팀장',
-            'exp.1.date': '2025. 03 - Present',
-            'exp.1.desc': 'SME 조직의 팀장으로서 2500여 종 이상의 의료용품/복지용구 판매에 직결되는 디자인/개발을 총괄합니다. 방대한 엑셀 데이터 마이그레이션과 풀스택 파이프라인 구축을 주도하며, 기획 초기부터 물류·마케팅 팀과 협업해 커뮤니케이션 병목을 해결합니다.',
-            'exp.2.title': 'Apple Korea GP (프리랜서)',
-            'exp.2.date': '2024. 08 - 2024. 09',
-            'exp.2.desc': '글로벌 스탠다드에 부합하는 정교한 시각적 산출물을 작업했습니다. 미니멀리즘 철학을 바탕으로 정제된 타이포그래피와 여백을 활용해 디테일한 시각적 완성도를 극대화했습니다.',
-            'exp.3.title': '태양광 사업 UI·UX 디자이너',
-            'exp.3.date': '2023. 02 - 2024. 05',
-            'exp.3.desc': '에너지 비즈니스 도메인에서 복잡한 데이터를 직관적으로 이해할 수 있도록 심미성과 사용성을 고려한 UI/UX를 설계했습니다. 프론트엔드 화면을 기획·구현하며 프로덕트 가치를 높였습니다.',
-            'exp.4.title': '디자인 및 개발 프리랜서',
-            'exp.4.date': '2017. 01 - 2022. 01',
-            'exp.4.desc': '시각 디자인 전공 베이스로 200회 이상의 프리랜서·외주 프로젝트를 완수했습니다. 기획, UI/UX 디자인, 영상 편집 등 디자인 역량을 다졌습니다.',
-            'exp.5.title': 'SSAFY & Alpaco (Academy Projects)',
-            'exp.5.date': 'Since 2019',
-            'exp.5.desc': 'SSAFY에서 Python 기반 AI 챗봇·웹 디자인 프로젝트를 수행하고 삼성 SW 역량 테스트 A형을 패스했습니다. Alpaco에서 UiPath 기반 RPA 시스템을 구축했습니다.',
-            'exp.6.title': 'Visual Design & Engineering Tools',
-            'exp.6.date': 'Background',
-            'exp.6.desc': '시각디자인 전공, GTQ 1급, AutoCAD·3D 프린터 활용 건축물·의료 Canula 부품 도면 설계 역량을 갖추고 있습니다.',
-            'proj.title': 'Selected Works',
+            'exp.title': '커리어 여정',
+            'exp.1.title': 'Visual Design & Engineering Tools',
+            'exp.1.date': 'Background',
+            'exp.1.desc': '시각디자인 전공, GTQ 1급, AutoCAD·3D 프린터 활용 건축물·의료 Canula 부품 도면 설계 역량을 갖추고 있습니다.',
+            'exp.2.title': 'SSAFY & Alpaco (Academy Projects)',
+            'exp.2.date': 'Since 2019',
+            'exp.2.desc': 'SSAFY에서 Python 기반 AI 챗봇·웹 디자인 프로젝트를 수행하고 삼성 SW 역량 테스트 A형을 패스했습니다. Alpaco에서 UiPath 기반 RPA 시스템을 구축했습니다.',
+            'exp.3.title': '디자인 및 개발 프리랜서',
+            'exp.3.date': '2017. 01 - 2022. 01',
+            'exp.3.desc': '시각 디자인 전공 베이스로 200회 이상의 프리랜서·외주 프로젝트를 완수했습니다. 기획, UI/UX 디자인, 영상 편집 등 디자인 역량을 다졌습니다.',
+            'exp.4.title': '태양광 사업 UI·UX 디자이너',
+            'exp.4.date': '2023. 02 - 2024. 05',
+            'exp.4.desc': '에너지 비즈니스 도메인에서 복잡한 데이터를 직관적으로 이해할 수 있도록 심미성과 사용성을 고려한 UI/UX를 설계했습니다. 프론트엔드 화면을 기획·구현하며 프로덕트 가치를 높였습니다.',
+            'exp.5.title': 'Apple Korea GP (프리랜서)',
+            'exp.5.date': '2024. 08 - 2024. 09',
+            'exp.5.desc': '글로벌 스탠다드에 부합하는 정교한 시각적 산출물을 작업했습니다. 미니멀리즘 철학을 바탕으로 정제된 타이포그래피와 여백을 활용해 디테일한 시각적 완성도를 극대화했습니다.',
+            'exp.6.title': '의료용품 회사 개발/디자인 팀장',
+            'exp.6.date': '2025. 03 - 2026. 06',
+            'exp.6.desc': 'SME 조직의 팀장으로서 2500여 종 이상의 의료용품/복지용구 판매에 직결되는 디자인/개발을 총괄했습니다. 방대한 엑셀 데이터 마이그레이션과 풀스택 파이프라인 구축을 주도했으며, 기획 초기부터 물류·마케팅 팀과 협업해 커뮤니케이션 병목을 해결했습니다.',
+            'exp.7.title': 'Apple Korea GP (프리랜서)',
+            'exp.7.date': '2026. 07 - 2026. 09',
+            'exp.7.desc': '2024년에 이어 Apple Korea GP 프로젝트에 재섭외되어 글로벌 스탠다드에 부합하는 시각적 산출물을 작업했습니다. 미니멀리즘 철학을 바탕으로 정제된 타이포그래피와 여백을 활용해 디테일한 시각적 완성도를 극대화했습니다.',
+            'proj.title': '주요 프로젝트',
             'apple.title': 'Apple KR - iPhone 16 New Release',
             'apple.label': 'Visual Contract · NDA Protected',
-            'apple.desc': '2024 애플 프로젝트에 참여했습니다. 글로벌 스탠다드와 미니멀리즘을 유지한 시각적 완성도 극대화 프로젝트입니다.',
+            'apple.desc': '2024년과 2026년 Apple Korea GP 프로젝트에 참여했습니다. 글로벌 스탠다드와 미니멀리즘을 유지한 시각적 완성도 극대화 프로젝트입니다.',
             'apple.nda': 'NDA 체결로 인해 상세 내용을 공개할 수 없습니다. 면접 시 범위 내에서 설명드릴 수 있습니다.',
             'solar.title': '태양광 에너지 서비스 통합 플랫폼',
             'solar.label': 'UI/UX Design & Front-end',
@@ -49,6 +52,7 @@
             'solar.b1': 'UX/UI 고도화 및 컴포넌트 시스템: 5개 웹/앱 서비스 UI 컴포넌트 규격화 및 디자인 시스템 구축.',
             'solar.b2': 'PC 모니터링 대시보드: 4px Grid 기반 반응형 대시보드 설계 — 아래 인터랙티브 프리뷰를 클릭해 전체 화면을 확인하세요.',
             'solar.b3': 'inverter 하드웨어 UX/UI 및 글로벌 확장: 7-Segment 발전량 측정기 UX 기획 및 일본 진출용 로컬라이징.',
+            'solar.b4': 'IP 기반 일본 현지화: 접속 IP로 일본 사용자를 감지해 언어, 단위, 통화 등 일본 시장에 맞춘 UX를 자동 제공.',
             'solar.dashboard.title': 'Energy Monitoring Dashboard',
             'solar.dashboard.hint': '클릭하여 전체 화면 미리보기',
             'solar.dash.brand': 'TEO 김태양',
@@ -81,13 +85,19 @@
             'biz.b2': '영업 자동화: 맞춤형 복지용구 자동 매칭, 파트너 코드 URL 연동, 등급별 권한 기능.',
             'biz.b3': '크로스펑셔널 리더십: 물류·영업 실무진과 직접 소통하며 커뮤니케이션 병목을 선제 해결.',
             'biz.chart': 'Revenue Growth',
-            'biz.flow': 'Auto-Matching UX Flow',
-            'flow.1': '고객 정보 입력',
-            'flow.2': '자격 심사 API',
-            'flow.3': 'SKU 자동 매칭',
-            'flow.4': '파트너 URL 생성',
-            'flow.5': '주문 완료',
-            'gallery.title': 'Visual Archive',
+            'biz.flow': 'UX Flow for Product-Auto-Matching',
+            'biz.flow.portal': 'UX Flow for Affiliated Client Portal',
+            'flow.1': '사용중인 물품 입력',
+            'flow.2': 'AI 정보 매칭',
+            'flow.3': 'SKU 제품 매칭',
+            'flow.4': '장바구니 연동',
+            'flow.5': '고객 주문',
+            'flow.portal.1': '제휴 전용 대시보드',
+            'flow.portal.2': '공공데이터 API 호출',
+            'flow.portal.3': '제휴 신청/검토',
+            'flow.portal.4': '공지/이벤트 추가',
+            'flow.portal.5': '배포 완료',
+            'gallery.title': '디자인 갤러리',
             'gallery.desc': '구 포트폴리오의 대표 작업물과 외부 서비스 링크를 통합했습니다. 이미지를 클릭하면 라이트박스로 확대됩니다.',
             'gallery.1': 'CI / BI Design',
             'gallery.2': 'App Store Visual',
@@ -127,7 +137,7 @@
             'nav.theme.dark': 'Dark Mode',
             'nav.lang': 'KO',
             'toc.intro': 'Intro',
-            'toc.experience': 'Experience',
+            'toc.experience': 'Career',
             'toc.projects': 'Projects',
             'toc.gallery': 'Gallery',
             'toc.contact': 'Contact',
@@ -137,29 +147,32 @@
             'hero.desc': 'From visual design to full-stack service leadership.<br>I build products with business value by combining minimalism and precise engineering.',
             'hero.connect': "Let's Connect",
             'hero.resume': 'Download Resume',
-            'exp.title': 'The Evolution',
-            'exp.1.title': 'Dev/Design Team Lead — Medical Supplies Co.',
-            'exp.1.date': '2025. 03 - Present',
-            'exp.1.desc': 'Leading design and development for 2,500+ medical/welfare SKUs. Driving Excel data migration and full-stack pipelines while resolving cross-team bottlenecks with logistics and marketing.',
-            'exp.2.title': 'Apple Korea GP (Freelance)',
-            'exp.2.date': '2024. 08 - 2024. 09',
-            'exp.2.desc': 'Delivered refined visual assets aligned with global standards. Maximized visual fidelity through minimal typography and whitespace.',
-            'exp.3.title': 'Solar Energy UI/UX Designer',
-            'exp.3.date': '2023. 02 - 2024. 05',
-            'exp.3.desc': 'Designed intuitive UI/UX for complex energy data. Planned and implemented frontend screens to increase product value.',
-            'exp.4.title': 'Design & Development Freelancer',
-            'exp.4.date': '2017. 01 - 2022. 01',
-            'exp.4.desc': 'Completed 200+ freelance projects with a visual design foundation. Strengthened planning, UI/UX, and video editing skills.',
-            'exp.5.title': 'SSAFY & Alpaco (Academy Projects)',
-            'exp.5.date': 'Since 2019',
-            'exp.5.desc': 'Built AI chatbot and web design projects at SSAFY; passed Samsung SW Competency Test Type A. Built UiPath RPA at Alpaco.',
-            'exp.6.title': 'Visual Design & Engineering Tools',
-            'exp.6.date': 'Background',
-            'exp.6.desc': 'Visual design major, GTQ Level 1, AutoCAD & 3D printing for architectural and medical canula part drawings.',
-            'proj.title': 'Selected Works',
+            'exp.title': 'Career Journey',
+            'exp.1.title': 'Visual Design & Engineering Tools',
+            'exp.1.date': 'Background',
+            'exp.1.desc': 'Visual design major, GTQ Level 1, AutoCAD & 3D printing for architectural and medical canula part drawings.',
+            'exp.2.title': 'SSAFY & Alpaco (Academy Projects)',
+            'exp.2.date': 'Since 2019',
+            'exp.2.desc': 'Built AI chatbot and web design projects at SSAFY; passed Samsung SW Competency Test Type A. Built UiPath RPA at Alpaco.',
+            'exp.3.title': 'Design & Development Freelancer',
+            'exp.3.date': '2017. 01 - 2022. 01',
+            'exp.3.desc': 'Completed 200+ freelance projects with a visual design foundation. Strengthened planning, UI/UX, and video editing skills.',
+            'exp.4.title': 'Solar Energy UI/UX Designer',
+            'exp.4.date': '2023. 02 - 2024. 05',
+            'exp.4.desc': 'Designed intuitive UI/UX for complex energy data. Planned and implemented frontend screens to increase product value.',
+            'exp.5.title': 'Apple Korea GP (Freelance)',
+            'exp.5.date': '2024. 08 - 2024. 09',
+            'exp.5.desc': 'Delivered refined visual assets aligned with global standards. Maximized visual fidelity through minimal typography and whitespace.',
+            'exp.6.title': 'Dev/Design Team Lead — Medical Supplies Co.',
+            'exp.6.date': '2025. 03 - 2026. 06',
+            'exp.6.desc': 'Led design and development for 2,500+ medical/welfare SKUs. Drove Excel data migration and full-stack pipelines while resolving cross-team bottlenecks with logistics and marketing.',
+            'exp.7.title': 'Apple Korea GP (Freelance)',
+            'exp.7.date': 'Late Jul 2026 - Mid Sep 2026',
+            'exp.7.desc': 'Re-engaged for Apple Korea GP following the 2024 project. Delivered refined visual assets aligned with global standards, maximizing fidelity through minimal typography and whitespace.',
+            'proj.title': 'Key Projects',
             'apple.title': 'Apple KR - iPhone 16 New Release',
             'apple.label': 'Visual Contract · NDA Protected',
-            'apple.desc': 'Participated in Apple\'s 2024 project. A high-fidelity visual delivery aligned with global minimal standards.',
+            'apple.desc': 'Participated in Apple Korea GP projects in 2024 and 2026. A high-fidelity visual delivery aligned with global minimal standards.',
             'apple.nda': 'Details cannot be disclosed due to NDA. I can explain within scope during interviews.',
             'solar.title': 'Solar Energy Integrated Platform',
             'solar.label': 'UI/UX Design & Front-end',
@@ -167,6 +180,7 @@
             'solar.b1': 'UX/UI & component system: standardized UI across 5 web/app services with a design system.',
             'solar.b2': 'PC monitoring dashboard: 4px grid responsive dashboard — click the interactive preview below for fullscreen.',
             'solar.b3': 'Inverter hardware UX & global expansion: 7-segment meter UX and Japan localization.',
+            'solar.b4': 'IP-based Japan localization: detect Japanese visitors by IP to auto-serve language, units, and currency tailored to the Japan market.',
             'solar.dashboard.title': 'Energy Monitoring Dashboard',
             'solar.dashboard.hint': 'Click for fullscreen preview',
             'solar.dash.brand': 'TEO Solar Kim',
@@ -199,13 +213,19 @@
             'biz.b2': 'Sales automation: welfare product auto-matching, partner code URLs, role-based permissions.',
             'biz.b3': 'Cross-functional leadership: proactive communication with logistics and sales teams.',
             'biz.chart': 'Revenue Growth',
-            'biz.flow': 'Auto-Matching UX Flow',
+            'biz.flow': 'UX Flow for Product-Auto-Matching',
+            'biz.flow.portal': 'UX Flow for Affiliated Client Portal',
             'flow.1': 'Customer Input',
             'flow.2': 'Eligibility API',
             'flow.3': 'SKU Auto-Match',
             'flow.4': 'Partner URL',
             'flow.5': 'Order Complete',
-            'gallery.title': 'Visual Archive',
+            'flow.portal.1': 'Affiliated Client Dashboard',
+            'flow.portal.2': 'Public Data API Call',
+            'flow.portal.3': 'Partnership Application/Review',
+            'flow.portal.4': 'Notice/Event Publishing',
+            'flow.portal.5': 'Deployment Complete',
+            'gallery.title': 'Design Gallery',
             'gallery.desc': 'Representative works and external service links from the legacy portfolio. Click images to open the lightbox.',
             'gallery.1': 'CI / BI Design',
             'gallery.2': 'App Store Visual',
@@ -242,7 +262,24 @@
 
     let currentLang = localStorage.getItem('portfolio-lang') || 'ko';
     let chartDrawn = false;
-    let flowDrawn = false;
+    const flowDrawn = { matching: false, portal: false };
+
+    const FLOW_CONFIGS = [
+        {
+            key: 'matching',
+            containerId: '#flow-container',
+            stepKeys: ['flow.1', 'flow.2', 'flow.3', 'flow.4', 'flow.5'],
+            ariaKey: 'biz.flow',
+            markerId: 'flow-arrowhead-matching'
+        },
+        {
+            key: 'portal',
+            containerId: '#flow-portal-container',
+            stepKeys: ['flow.portal.1', 'flow.portal.2', 'flow.portal.3', 'flow.portal.4', 'flow.portal.5'],
+            ariaKey: 'biz.flow.portal',
+            markerId: 'flow-arrowhead-portal'
+        }
+    ];
     let lightboxItems = [];
     let lightboxIndex = 0;
 
@@ -282,11 +319,7 @@
             chartDrawn = false;
             drawChart();
         }
-        if (flowDrawn) {
-            d3.select('#flow-container').selectAll('*').remove();
-            flowDrawn = false;
-            drawFlowDiagram();
-        }
+        redrawFlowDiagrams();
 
         initDashboardPreview();
         initGallery();
@@ -409,40 +442,27 @@
             .attr('stroke-dashoffset', 0);
     }
 
-    function drawFlowDiagram() {
-        if (flowDrawn || typeof d3 === 'undefined') return;
-        flowDrawn = true;
+    function drawFlowDiagram(config) {
+        if (flowDrawn[config.key] || typeof d3 === 'undefined') return;
+        const containerEl = document.querySelector(config.containerId);
+        if (!containerEl) return;
+        flowDrawn[config.key] = true;
 
-        const steps = [
-            { id: 'flow.1' },
-            { id: 'flow.2' },
-            { id: 'flow.3' },
-            { id: 'flow.4' },
-            { id: 'flow.5' }
-        ].map(s => ({ ...s, label: t(s.id) }));
+        const steps = config.stepKeys.map(id => ({ id, label: t(id) }));
+        const count = steps.length;
 
-        const container = d3.select('#flow-container');
+        const container = d3.select(config.containerId);
         const width = container.node().getBoundingClientRect().width;
-        const height = 320;
-        const margin = { top: 40, right: 20, bottom: 40, left: 20 };
-        const nodeW = Math.min(140, (width - margin.left - margin.right) / 5 - 12);
-        const nodeH = 56;
-        const gap = (width - margin.left - margin.right - nodeW * 5) / 4;
-        const y = height / 2 - nodeH / 2;
-        const connectorPad = 12;
-        const yMid = y + nodeH / 2;
-
-        const positions = steps.map((_, i) => margin.left + i * (nodeW + gap));
+        const isVertical = width < 560;
 
         const svg = container.append('svg')
             .attr('width', width)
-            .attr('height', height)
             .attr('role', 'img')
-            .attr('aria-label', t('biz.flow'));
+            .attr('aria-label', t(config.ariaKey));
 
         const defs = svg.append('defs');
         defs.append('marker')
-            .attr('id', 'flow-arrowhead')
+            .attr('id', config.markerId)
             .attr('viewBox', '0 0 10 10')
             .attr('refX', 8)
             .attr('refY', 5)
@@ -455,21 +475,10 @@
             .attr('opacity', 0.85);
 
         const connectors = svg.append('g').attr('class', 'flow-connectors');
-        for (let i = 0; i < steps.length - 1; i++) {
-            const lineStart = positions[i] + nodeW + connectorPad;
-            const lineEnd = positions[i + 1] - connectorPad;
-            connectors.append('line')
-                .attr('class', 'flow-link')
-                .attr('x1', lineStart)
-                .attr('y1', yMid)
-                .attr('x2', lineEnd)
-                .attr('y2', yMid)
-                .attr('marker-end', 'url(#flow-arrowhead)');
-        }
-
         const nodes = svg.append('g').attr('class', 'flow-nodes');
-        steps.forEach((step, i) => {
-            const x = positions[i];
+        const connectorPad = 8;
+
+        const drawNode = (step, x, y, nodeW, nodeH, fontSize) => {
             const g = nodes.append('g').attr('class', 'flow-node').attr('transform', `translate(${x},${y})`);
             g.append('rect')
                 .attr('width', nodeW)
@@ -483,10 +492,75 @@
                 .attr('y', nodeH / 2 + 5)
                 .attr('text-anchor', 'middle')
                 .attr('fill', 'var(--text-primary)')
-                .attr('font-size', Math.min(12, nodeW / 8))
+                .attr('font-size', fontSize)
                 .attr('font-family', 'Pretendard Variable, sans-serif')
                 .text(step.label);
+        };
+
+        if (isVertical) {
+            const padX = 16;
+            const padY = 8;
+            const nodeW = Math.min(320, width - padX * 2);
+            const nodeH = 50;
+            const gap = 30;
+            const height = padY * 2 + count * nodeH + (count - 1) * gap;
+            const x = (width - nodeW) / 2;
+            const xMid = x + nodeW / 2;
+            const positions = steps.map((_, i) => padY + i * (nodeH + gap));
+
+            svg.attr('height', height);
+
+            for (let i = 0; i < count - 1; i++) {
+                connectors.append('line')
+                    .attr('class', 'flow-link')
+                    .attr('x1', xMid)
+                    .attr('y1', positions[i] + nodeH + connectorPad)
+                    .attr('x2', xMid)
+                    .attr('y2', positions[i + 1] - connectorPad)
+                    .attr('marker-end', `url(#${config.markerId})`);
+            }
+
+            steps.forEach((step, i) => drawNode(step, x, positions[i], nodeW, nodeH, 13));
+        } else {
+            const padX = 20;
+            const padY = 20;
+            const nodeH = 56;
+            const nodeW = Math.min(140, (width - padX * 2) / count - 12);
+            const gap = (width - padX * 2 - nodeW * count) / (count - 1);
+            const height = padY * 2 + nodeH;
+            const y = padY;
+            const yMid = y + nodeH / 2;
+            const positions = steps.map((_, i) => padX + i * (nodeW + gap));
+            const pad = Math.max(2, Math.min(connectorPad, (gap - 4) / 2));
+
+            svg.attr('height', height);
+
+            for (let i = 0; i < count - 1; i++) {
+                connectors.append('line')
+                    .attr('class', 'flow-link')
+                    .attr('x1', positions[i] + nodeW + pad)
+                    .attr('y1', yMid)
+                    .attr('x2', positions[i + 1] - pad)
+                    .attr('y2', yMid)
+                    .attr('marker-end', `url(#${config.markerId})`);
+            }
+
+            steps.forEach((step, i) => drawNode(step, positions[i], y, nodeW, nodeH, Math.min(12, nodeW / 8)));
+        }
+    }
+
+    function drawAllFlowDiagrams() {
+        FLOW_CONFIGS.forEach(drawFlowDiagram);
+    }
+
+    function redrawFlowDiagrams() {
+        const hadDrawn = FLOW_CONFIGS.some(config => flowDrawn[config.key]);
+        if (!hadDrawn) return;
+        FLOW_CONFIGS.forEach(config => {
+            d3.select(config.containerId).selectAll('*').remove();
+            flowDrawn[config.key] = false;
         });
+        drawAllFlowDiagrams();
     }
 
     function buildGaugeSVG() {
@@ -810,7 +884,7 @@
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         drawChart();
-                        drawFlowDiagram();
+                        drawAllFlowDiagrams();
                         observer.unobserve(entry.target);
                     }
                 });
@@ -841,11 +915,7 @@
             chartDrawn = false;
             drawChart();
         }
-        if (flowDrawn) {
-            d3.select('#flow-container').selectAll('*').remove();
-            flowDrawn = false;
-            drawFlowDiagram();
-        }
+        redrawFlowDiagrams();
     });
 
     document.addEventListener('DOMContentLoaded', () => {
