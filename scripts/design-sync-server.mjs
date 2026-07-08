@@ -100,7 +100,42 @@ function serializeRules(map) {
     return header + body + '\n';
 }
 
+function stripScrollLockFromCss(css) {
+    const scrollLockProps = new Set(['overflow', 'overflow-x', 'overflow-y', 'position', 'height', 'max-height', 'top', 'width']);
+    const scrollLockSelectors = /^(html|body|:root)\b/i;
+    const map = parseRulesFromCss(css);
+    let removed = 0;
+    map.forEach(({ selector, prop }, key) => {
+        if (scrollLockSelectors.test(selector) && scrollLockProps.has(prop)) {
+            map.delete(key);
+            removed++;
+        }
+    });
+    return { css: serializeRules(map), removed };
+}
+
+async function sanitizeOverridesFile() {
+    try {
+        const existing = await fs.promises.readFile(OVERRIDES_PATH, 'utf8');
+        const { css, removed } = stripScrollLockFromCss(existing);
+        if (removed > 0) {
+            await fs.promises.writeFile(OVERRIDES_PATH, css, 'utf8');
+            console.log(`  정리: portfolio.overrides.css에서 스크롤 잠금 규칙 ${removed}건 제거`);
+        }
+    } catch { /* file may not exist */ }
+}
+
 async function saveOverrides(updates) {
+    const scrollLockProps = new Set(['overflow', 'overflow-x', 'overflow-y', 'position', 'height', 'max-height', 'top', 'width']);
+    const scrollLockSelectors = /^(html|body|:root)\b/i;
+
+    const filtered = updates.filter(({ selector, property }) => {
+        if (!scrollLockSelectors.test((selector || '').trim())) return true;
+        if (!scrollLockProps.has(property)) return true;
+        console.warn(`[Design Sync] 스크롤 잠금 방지: ${selector} { ${property} } 저장 생략`);
+        return false;
+    });
+
     let existing = '';
     try {
         existing = await fs.promises.readFile(OVERRIDES_PATH, 'utf8');
@@ -109,7 +144,7 @@ async function saveOverrides(updates) {
     }
 
     const map = parseRulesFromCss(existing);
-    updates.forEach(({ selector, property, value, remove }) => {
+    filtered.forEach(({ selector, property, value, remove }) => {
         if (!selector || !property) return;
         const key = `${selector}|||${property}`;
         if (remove || value === '' || value === null || value === undefined) {
@@ -122,7 +157,7 @@ async function saveOverrides(updates) {
     const output = serializeRules(map);
     await fs.promises.mkdir(path.dirname(OVERRIDES_PATH), { recursive: true });
     await fs.promises.writeFile(OVERRIDES_PATH, output, 'utf8');
-    return { saved: updates.length, path: OVERRIDES_PATH };
+    return { saved: filtered.length, path: OVERRIDES_PATH };
 }
 
 async function postJson(url, headers, payload) {
@@ -435,7 +470,8 @@ const server = http.createServer(async (req, res) => {
     });
 });
 
-server.listen(PORT, HOST, () => {
+server.listen(PORT, HOST, async () => {
+    await sanitizeOverridesFile();
     console.log('');
     console.log('  Portfolio Design Sync Dev Server');
     console.log('  --------------------------------');
