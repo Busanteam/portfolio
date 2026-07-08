@@ -35,10 +35,10 @@ const MIME = {
 };
 
 const sseClients = new Set();
+// portfolio.overrides.css is excluded — Design Sync writes it; watching would reload on every pick/save.
 const WATCH_PATHS = [
     'index.html',
     'assets/css/portfolio.css',
-    'assets/css/portfolio.overrides.css',
     'assets/js/portfolio.js',
     'assets/js/design-sync.js'
 ];
@@ -100,7 +100,42 @@ function serializeRules(map) {
     return header + body + '\n';
 }
 
+function stripScrollLockFromCss(css) {
+    const scrollLockProps = new Set(['overflow', 'overflow-x', 'overflow-y', 'position', 'height', 'max-height', 'top', 'width']);
+    const scrollLockSelectors = /^(html|body|:root)\b/i;
+    const map = parseRulesFromCss(css);
+    let removed = 0;
+    map.forEach(({ selector, prop }, key) => {
+        if (scrollLockSelectors.test(selector) && scrollLockProps.has(prop)) {
+            map.delete(key);
+            removed++;
+        }
+    });
+    return { css: serializeRules(map), removed };
+}
+
+async function sanitizeOverridesFile() {
+    try {
+        const existing = await fs.promises.readFile(OVERRIDES_PATH, 'utf8');
+        const { css, removed } = stripScrollLockFromCss(existing);
+        if (removed > 0) {
+            await fs.promises.writeFile(OVERRIDES_PATH, css, 'utf8');
+            console.log(`  정리: portfolio.overrides.css에서 스크롤 잠금 규칙 ${removed}건 제거`);
+        }
+    } catch { /* file may not exist */ }
+}
+
 async function saveOverrides(updates) {
+    const scrollLockProps = new Set(['overflow', 'overflow-x', 'overflow-y', 'position', 'height', 'max-height', 'top', 'width']);
+    const scrollLockSelectors = /^(html|body|:root)\b/i;
+
+    const filtered = updates.filter(({ selector, property }) => {
+        if (!scrollLockSelectors.test((selector || '').trim())) return true;
+        if (!scrollLockProps.has(property)) return true;
+        console.warn(`[Design Sync] 스크롤 잠금 방지: ${selector} { ${property} } 저장 생략`);
+        return false;
+    });
+
     let existing = '';
     try {
         existing = await fs.promises.readFile(OVERRIDES_PATH, 'utf8');
@@ -109,7 +144,7 @@ async function saveOverrides(updates) {
     }
 
     const map = parseRulesFromCss(existing);
-    updates.forEach(({ selector, property, value, remove }) => {
+    filtered.forEach(({ selector, property, value, remove }) => {
         if (!selector || !property) return;
         const key = `${selector}|||${property}`;
         if (remove || value === '' || value === null || value === undefined) {
@@ -122,7 +157,7 @@ async function saveOverrides(updates) {
     const output = serializeRules(map);
     await fs.promises.mkdir(path.dirname(OVERRIDES_PATH), { recursive: true });
     await fs.promises.writeFile(OVERRIDES_PATH, output, 'utf8');
-    return { saved: updates.length, path: OVERRIDES_PATH };
+    return { saved: filtered.length, path: OVERRIDES_PATH };
 }
 
 async function postJson(url, headers, payload) {
@@ -215,7 +250,7 @@ async function callOpenAiForCss({ prompt, selector, context, apiKey }) {
     );
 
     if (status < 200 || status >= 300) {
-        throw new Error(`OpenAI API error (${status}): ${responseText.slice(0, 300)}`);
+        throw new Error(parseProviderError(status, responseText, 'openai'));
     }
 
     const data = JSON.parse(responseText);
@@ -226,11 +261,13 @@ async function callOpenAiForCss({ prompt, selector, context, apiKey }) {
 
 async function callGeminiForCss({ prompt, selector, context, apiKey }) {
     const key = apiKey.trim();
-    const model = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
+    const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
     const user = buildUserPrompt({ prompt, selector, context });
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
 
-    const { status, body: responseText } = await postJson(url, {}, {
+    const { status, body: responseText } = await postJson(url, {
+        'x-goog-api-key': key
+    }, {
         systemInstruction: { parts: [{ text: CSS_AI_SYSTEM }] },
         contents: [{ role: 'user', parts: [{ text: user }] }],
         generationConfig: {
@@ -240,7 +277,7 @@ async function callGeminiForCss({ prompt, selector, context, apiKey }) {
     });
 
     if (status < 200 || status >= 300) {
-        throw new Error(`Gemini API error (${status}): ${responseText.slice(0, 300)}`);
+        throw new Error(parseProviderError(status, responseText, 'gemini'));
     }
 
     const data = JSON.parse(responseText);
@@ -252,29 +289,60 @@ async function callGeminiForCss({ prompt, selector, context, apiKey }) {
     return parseAiJson(content);
 }
 
-function resolveApiKey(panelKey) {
-    return (panelKey || process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY || '').trim();
-}
-
 function detectProvider(key) {
-    if (key.startsWith('sk-')) return 'openai';
+    const k = (key || '').trim();
+    if (/^sk-(proj-)?/i.test(k)) return 'openai';
+    if (/^(AIza|AQ\.)/i.test(k)) return 'gemini';
     return 'gemini';
 }
 
-async function callAiForCss({ prompt, selector, context, apiKey }) {
-    const key = resolveApiKey(apiKey);
+function resolveApiKey(panelKey, providerHint) {
+    const panel = (panelKey || '').trim();
+    if (panel) return panel;
+
+    const hint = (providerHint || '').toLowerCase();
+    if (hint === 'openai') return (process.env.OPENAI_API_KEY || '').trim();
+    if (hint === 'gemini') {
+        return (process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '').trim();
+    }
+
+    if (process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY) {
+        return (process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '').trim();
+    }
+    return (process.env.OPENAI_API_KEY || '').trim();
+}
+
+function parseProviderError(status, responseText, provider) {
+    let detail = responseText.slice(0, 400);
+    try {
+        const parsed = JSON.parse(responseText);
+        detail = parsed.error?.message || parsed.error?.status || parsed.message || detail;
+    } catch { /* keep raw */ }
+
+    if (provider === 'openai') {
+        return `OpenAI API error (${status}): ${detail}`;
+    }
+    return `Gemini API error (${status}): ${detail}`;
+}
+
+async function callAiForCss({ prompt, selector, context, apiKey, providerHint }) {
+    const key = resolveApiKey(apiKey, providerHint);
     if (!key) {
         throw new Error('API Key가 필요합니다. GEMINI_API_KEY 환경변수 또는 패널에 Gemini/OpenAI 키를 입력하세요.');
     }
 
-    if (detectProvider(key) === 'openai') {
-        if (!/^sk-[A-Za-z0-9_-]{10,}$/.test(key)) {
+    const provider = providerHint && providerHint !== 'auto'
+        ? providerHint
+        : detectProvider(key);
+
+    if (provider === 'openai') {
+        if (!/^sk-(proj-)?[A-Za-z0-9_-]{10,}$/i.test(key)) {
             throw new Error('OpenAI API 키 형식이 아닙니다. sk- 로 시작해야 합니다.');
         }
-        return callOpenAiForCss({ prompt, selector, context, apiKey: key });
+        return { ...(await callOpenAiForCss({ prompt, selector, context, apiKey: key })), provider: 'openai' };
     }
 
-    return callGeminiForCss({ prompt, selector, context, apiKey: key });
+    return { ...(await callGeminiForCss({ prompt, selector, context, apiKey: key })), provider: 'gemini' };
 }
 
 function broadcastReload() {
@@ -319,11 +387,15 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (url.pathname === '/__design-sync/health') {
+        const geminiKey = (process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '').trim();
+        const openaiKey = (process.env.OPENAI_API_KEY || '').trim();
         sendJson(res, 200, {
             ok: true,
             port: PORT,
             overrides: OVERRIDES_PATH,
-            aiConfigured: !!(process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY),
+            aiConfigured: !!(geminiKey || openaiKey),
+            geminiConfigured: !!geminiKey,
+            openaiConfigured: !!openaiKey,
             aiProviders: ['gemini', 'openai']
         });
         return;
@@ -350,7 +422,8 @@ const server = http.createServer(async (req, res) => {
                 prompt: body.prompt || '',
                 selector: body.selector || '',
                 context: body.context || {},
-                apiKey: body.apiKey || ''
+                apiKey: body.apiKey || '',
+                providerHint: body.provider || 'auto'
             });
             sendJson(res, 200, { ok: true, ...result });
         } catch (e) {
@@ -397,15 +470,16 @@ const server = http.createServer(async (req, res) => {
     });
 });
 
-server.listen(PORT, HOST, () => {
+server.listen(PORT, HOST, async () => {
+    await sanitizeOverridesFile();
     console.log('');
     console.log('  Portfolio Design Sync Dev Server');
     console.log('  --------------------------------');
     console.log(`  Local:   http://${HOST}:${PORT}/`);
     console.log(`  Saves:   page/assets/css/portfolio.overrides.css`);
     console.log('');
-    console.log('  개발자도구에서 style/class 수정 → 자동 로컬 저장');
-    console.log('  CSS/JS/HTML 파일 저장 시 페이지 자동 새로고침');
+    console.log('  개발자도구에서 style 수정 → portfolio.overrides.css 자동 저장 (저장 시 새로고침 없음)');
+    console.log('  CSS/JS/HTML 소스 파일 저장 시에만 페이지 자동 새로고침');
     console.log('  AI:      Gemini (AQ./AIza...) 또는 OpenAI (sk-...)');
     const geminiEnv = process.env.GEMINI_API_KEY ? 'GEMINI ✓' : '';
     const openaiEnv = process.env.OPENAI_API_KEY ? 'OPENAI ✓' : '';

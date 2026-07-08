@@ -1,0 +1,23 @@
+/**
+ * Scroll guard — loads after portfolio.overrides.css
+ * DevTools/Design Sync로 body에 overflow:hidden이 저장돼도 페이지 스크롤 유지
+ */
+html.portfolio-scroll-guard,
+html.portfolio-scroll-guard body:not(.lightbox-open) {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    height: auto !important;
+    min-height: 100%;
+    position: static !important;
+    top: auto !important;
+    width: auto !important;
+    touch-action: pan-y;
+}
+
+html.portfolio-scroll-guard {
+    scroll-behavior: smooth;
+}
+
+body.lightbox-open {
+    overflow: hidden !important;
+}

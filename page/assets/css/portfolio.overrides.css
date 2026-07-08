@@ -1,4 +1,5 @@
 /**
  * Design Sync overrides
  * 로컬 dev 서버(npm run dev) 실행 중 개발자도구/인라인 스타일 수정 시 자동 저장됩니다.
+ * html/body 스크롤 잠금(overflow 등)은 저장되지 않습니다 — portfolio.guard.css가 보호합니다.
  */

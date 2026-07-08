@@ -331,6 +331,7 @@
     }
 
     function initMagneticButtons() {
+        if (typeof gsap === 'undefined') return;
         document.querySelectorAll('.magnetic-btn').forEach(btn => {
             btn.addEventListener('mouseenter', () => gsap.to(btn, { scale: 1.03, y: -3, duration: 0.4, ease: 'power3.out' }));
             btn.addEventListener('mouseleave', () => gsap.to(btn, { scale: 1, y: 0, duration: 0.5, ease: 'power2.out' }));
@@ -726,11 +727,34 @@
         document.body.classList.add('lightbox-open');
     }
 
+    function ensurePageScrollable() {
+        document.documentElement.classList.add('portfolio-scroll-guard');
+        if (document.body.classList.contains('lightbox-open')) return;
+
+        document.body.style.removeProperty('overflow');
+        document.body.style.removeProperty('position');
+        document.body.style.removeProperty('top');
+        document.body.style.removeProperty('width');
+        document.body.style.removeProperty('height');
+        document.documentElement.style.removeProperty('overflow');
+        document.documentElement.style.removeProperty('height');
+    }
+
+    function initScrollGuard() {
+        ensurePageScrollable();
+        window.addEventListener('pageshow', ensurePageScrollable);
+
+        const observer = new MutationObserver(() => ensurePageScrollable());
+        observer.observe(document.body, { attributes: true, attributeFilter: ['class', 'style'] });
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'style'] });
+    }
+
     function closeLightbox() {
         const lb = document.getElementById('lightbox');
         lb.classList.remove('open');
         lb.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('lightbox-open');
+        ensurePageScrollable();
     }
 
     function renderLightbox() {
@@ -849,6 +873,7 @@
     });
 
     document.addEventListener('DOMContentLoaded', () => {
+        initScrollGuard();
         initTheme();
         initLang();
         initMagneticButtons();
