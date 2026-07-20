@@ -691,8 +691,35 @@ section { padding: 10rem 0; }
     gap: 0.4rem;
 }
 
-/* Bub Diary product-tour mock (pastel island matching bub-diary CSS tokens) */
+/* Bub Diary product-tour mock — follows portfolio html.light / dark */
 .bub-tour {
+    /* Dark (portfolio default) = bub-diary .dark tokens */
+    --bub-bg: #151118;
+    --bub-elev: #231d27;
+    --bub-fg: #f8f0f3;
+    --bub-muted: #bcaab3;
+    --bub-border: #3d333b;
+    --bub-accent: #ff9eb6;
+    --bub-accent-2: #7eccb9;
+    --bub-accent-3: #9ed0f0;
+    --bub-danger: #ff8a9a;
+    --bub-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    --bub-glow:
+        radial-gradient(120% 80% at 10% 0%, rgba(244, 93, 130, 0.2) 0%, transparent 55%),
+        radial-gradient(100% 70% at 100% 10%, rgba(47, 191, 166, 0.14) 0%, transparent 50%),
+        radial-gradient(80% 60% at 50% 100%, rgba(74, 168, 224, 0.12) 0%, transparent 45%);
+    --bub-btn-grad: linear-gradient(160deg, #ff9eb6 0%, var(--bub-accent) 55%, #e84e74 100%);
+    margin: 0.5rem 0 1.75rem;
+    padding: 1.1rem;
+    border-radius: 18px;
+    border: 1px solid color-mix(in srgb, var(--bub-accent) 28%, var(--border-color));
+    background: var(--bub-glow), var(--bub-bg);
+    color: var(--bub-fg);
+    box-shadow: var(--bub-shadow);
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+html.light .bub-tour {
+    /* Light = bub-diary :root tokens */
     --bub-bg: #fff1f4;
     --bub-elev: #ffffff;
     --bub-fg: #2a1c22;
@@ -705,17 +732,11 @@ section { padding: 10rem 0; }
     --bub-shadow:
         0 1px 2px rgba(42, 28, 34, 0.04),
         0 10px 28px rgba(244, 93, 130, 0.14);
-    margin: 0.5rem 0 1.75rem;
-    padding: 1.1rem;
-    border-radius: 18px;
-    border: 1px solid color-mix(in srgb, var(--bub-accent) 28%, var(--border-color));
-    background:
+    --bub-glow:
         radial-gradient(120% 90% at 0% -10%, #ffd6e2 0%, transparent 52%),
         radial-gradient(110% 80% at 100% 0%, #c8f0e8 0%, transparent 48%),
-        radial-gradient(90% 70% at 70% 100%, #d7ebff 0%, transparent 46%),
-        var(--bub-bg);
-    color: var(--bub-fg);
-    box-shadow: var(--bub-shadow);
+        radial-gradient(90% 70% at 70% 100%, #d7ebff 0%, transparent 46%);
+    --bub-btn-grad: linear-gradient(160deg, #ff7a9c 0%, var(--bub-accent) 55%, #e84e74 100%);
 }
 .bub-tour-stage {
     display: grid;
@@ -733,6 +754,9 @@ section { padding: 10rem 0; }
     max-height: 280px;
     overflow: auto;
     min-width: 0;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--bub-fg) 6%, transparent);
+}
+html.light .bub-phone {
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
 }
 .bub-elev {
@@ -952,10 +976,13 @@ section { padding: 10rem 0; }
     cursor: not-allowed;
 }
 .bub-tour-btn-primary {
-    background: linear-gradient(160deg, #ff7a9c 0%, var(--bub-accent) 55%, #e84e74 100%);
+    background: var(--bub-btn-grad);
     border-color: transparent;
     color: #fff;
     box-shadow: 0 6px 16px color-mix(in srgb, var(--bub-accent) 35%, transparent);
+}
+html.light .bub-tour-btn-primary {
+    color: #fff;
 }
 .bub-tour-dots {
     display: flex;
