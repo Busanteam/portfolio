@@ -55,11 +55,67 @@
             'proj.title': '주요 프로젝트',
             'bub.title': 'Bub Diary',
             'bub.label': '기획 · UI/UX · Full-Stack',
-            'bub.desc': '요구 정의부터 기획·디자인·개발·배포까지 직접 진행한 아기 케어 다이어리입니다. 모바일 우선 UI, 11개 언어, 가족 공유를 Next.js + Supabase + Vercel로 출시했습니다.',
-            'bub.b1': '빠른 기록: 수유·기저귀·체온·성장·예방접종·수면·활동 등을 한 흐름으로 남깁니다.',
-            'bub.b2': '가족 공유: 초대 코드로 보호자·가족을 연결하고, 아기별 타임라인·통계를 함께 봅니다.',
-            'bub.b3': '다국어 UI: 한국어 기본 + 영어(AU)·중·일·아랍어 등 11개 언어. 아랍어 RTL, 4px 그리드 모바일 레이아웃.',
-            'bub.b4': '풀스택 출시: Next.js·TypeScript·Tailwind + Supabase Auth/DB. 가입 UX, 제품 투어, 운영 keepalive(cron)까지 포함.',
+            'bub.desc': '국민 건강 증진을 위한 아기 케어 다이어리입니다. 요구 정의부터 기획·디자인·개발·배포까지 직접 진행했고, 13개 언어·국가별 접종 일정·다국가 시간대·가족 공유를 Next.js + Supabase + Vercel로 출시했습니다.',
+            'bub.b1': '건강·의료 스케줄: 수유·기저귀·체온·성장·수면과 함께 13개국 접종·검진 일정(한국·일본·중국·베트남·캄보디아·인도·호주·미국·영국·프랑스·독일·스페인·사우디)으로 ‘다음 접종’을 안내합니다.',
+            'bub.b2': '다국어·다문화 가정: 한·영(AU)·중·힌디·스페인·프랑스·독일어·아랍·페르시아·우르두·일본·베트남·크메르 13개 언어. 아랍·페르시아·우르두 RTL. 가족마다 다른 언어로 같은 아기 기록을 나눕니다.',
+            'bub.b3': '다국가 시간대: 화면 언어와 별개로 아기 생활권 시간대를 맞춥니다. 해외 가족은 언어는 유지한 채 아기 시간만 맞춰 오늘 요약·일기를 동기화합니다.',
+            'bub.b4': '가족 공유: 초대 코드·링크로 보호자·돌보미를 연결하고, 역할로 편집 권한을 나눕니다. 타임라인·통계를 함께 봅니다.',
+            'bub.b5': '풀스택 출시: Next.js·TypeScript·Tailwind + Supabase Auth/DB. 제품 투어, 가입 UX, 운영 keepalive(cron)까지 포함.',
+            'bub.tour.title': '어떤 앱인지 둘러보기',
+            'bub.tour.prev': '이전',
+            'bub.tour.next': '다음',
+            'bub.tour.welcome.title': '아기의 하루를 가볍게',
+            'bub.tour.welcome.body': '수유·기저귀·수면·접종을 기록하고, 초대 코드로 가족과 하나의 아기 프로필을 나눠 씁니다. 다문화 가정에서도 각자 언어로 같은 기록을 볼 수 있습니다.',
+            'bub.tour.home.title': '오늘 한눈에',
+            'bub.tour.home.body': '실제 아기 홈과 같아요. 위는 이름 카드, 아래는 오늘 요약이라 돌보는 모두가 같은 상태를 봅니다.',
+            'bub.tour.quick.title': '빠른 기록',
+            'bub.tour.quick.body': '홈과 같은 타일 격자예요. 수유·기저귀·수면·체온 등을 눌러 남기면 홈에 바로 반영됩니다.',
+            'bub.tour.health.title': '검진·접종',
+            'bub.tour.health.body': '아기 설정의 국가 일정을 따라 ‘다음 접종’을 알려 줍니다. 필수·선택 접종과 병원 방문·의사 지침도 남길 수 있습니다.',
+            'bub.tour.timeline.title': '타임라인',
+            'bub.tour.timeline.body': '왼쪽에 색 막대가 있는 카드가 쌓입니다. 종류·날짜로 고른 뒤 눌러서 수정하거나 지울 수 있습니다.',
+            'bub.tour.family.title': '가족과 함께',
+            'bub.tour.family.body': '초대 코드·링크로 가족·돌보미를 초대하고 역할로 권한을 나눕니다. 언어·시간대를 각자 맞춰 다문화·해외 가족도 편하게 씁니다.',
+            'bub.tour.privacy.title': '개인정보, 안심하고',
+            'bub.tour.privacy.body': '전송·저장 시 암호화되고, 초대된 가족만 볼 수 있습니다.',
+            'bub.demo.appName': 'Bub Diary',
+            'bub.demo.tagline': '아기의 하루를 부드럽게 기록해요',
+            'bub.demo.babyName': '미나',
+            'bub.demo.babyAge': '4개월 12일',
+            'bub.demo.today': '오늘 요약',
+            'bub.demo.feeds': '수유·식사',
+            'bub.demo.feedsVal': '4회',
+            'bub.demo.sleep': '수면',
+            'bub.demo.sleepVal': '2시간 40분',
+            'bub.demo.quickAdd': '빠른 기록',
+            'bub.demo.feeding': '수유',
+            'bub.demo.nappy': '기저귀',
+            'bub.demo.sleepTile': '수면',
+            'bub.demo.temp': '체온',
+            'bub.demo.health': '검진·접종',
+            'bub.demo.nextVaccine': '다음 접종',
+            'bub.demo.vaccine': '6가 혼합백신 · 2차',
+            'bub.demo.vaccineWhen': '생후 4개월부터',
+            'bub.demo.vaccineSource': '출처: 질병관리청 NIP(2025)',
+            'bub.demo.optional': '선택 접종',
+            'bub.demo.optionalVac': '수막구균 B · 선택',
+            'bub.demo.timeline': '타임라인',
+            'bub.demo.feedRow': '분유 90ml',
+            'bub.demo.feedMeta': '10:20',
+            'bub.demo.sleepRow': '낮잠 · 아기침대',
+            'bub.demo.sleepMeta': '1시간 15분',
+            'bub.demo.nappyRow': '소변 기저귀',
+            'bub.demo.nappyMeta': '09:05',
+            'bub.demo.members': '구성원',
+            'bub.demo.parentA': '엄마',
+            'bub.demo.parentB': '아빠',
+            'bub.demo.grandparent': '할머니',
+            'bub.demo.owner': '소유자',
+            'bub.demo.caregiver': '돌보미',
+            'bub.demo.viewer': '보기만',
+            'bub.demo.invite': '초대 코드 만들기',
+            'bub.demo.privacyTitle': '닉네임만 그대로 보여요',
+            'bub.demo.langs': 'KO · EN · ZH · HI · ES · FR · DE · AR · FA · UR · JA · VI · KM',
             'apple.title': 'Apple KR - iPhone 16 New Release',
             'apple.label': 'Visual Contract · NDA Protected',
             'apple.desc': '2024년과 2026년 Apple Korea GP 프로젝트에 참여했습니다. 웹 위에 애플의 감각을 옮겨 담는 작업이었습니다.',
@@ -203,11 +259,67 @@
             'proj.title': 'Key Projects',
             'bub.title': 'Bub Diary',
             'bub.label': 'Planning · UI/UX · Full-Stack',
-            'bub.desc': 'A baby care diary owned from requirements through planning, design, build, and launch. Mobile-first UI, 11 languages, family sharing—shipped with Next.js, Supabase, and Vercel.',
-            'bub.b1': 'Quick logging: feeding, nappies, temperature, growth, immunisations, sleep, and activities in one flow.',
-            'bub.b2': 'Family sharing: invite codes for parents and caregivers, with shared per-baby timelines and stats.',
-            'bub.b3': 'Multilingual UI: Korean default plus English (AU), Chinese, Japanese, Arabic and more (11 locales). Arabic RTL, 4px-grid mobile layout.',
-            'bub.b4': 'Full-stack launch: Next.js, TypeScript, Tailwind + Supabase Auth/DB—signup UX, product tour, and operational keepalive via cron.',
+            'bub.desc': 'A baby care diary built for public health—owned from requirements through planning, design, build, and launch. 13 languages, country immunisation schedules, multi-country timezones, and family sharing—shipped with Next.js, Supabase, and Vercel.',
+            'bub.b1': 'Health & medical schedules: feeds, nappies, temperature, growth, and sleep—plus “what’s due next” from 13 national schedules (Korea, Japan, China, Vietnam, Cambodia, India, Australia, US, UK, France, Germany, Spain, Saudi Arabia).',
+            'bub.b2': 'Multilingual & multicultural families: 13 locales (KO, EN-AU, ZH, HI, ES, FR, DE, AR, FA, UR, JA, VI, KM) with RTL for Arabic, Persian, and Urdu—each caregiver can use their own language on the same baby profile.',
+            'bub.b3': 'Multi-country timezones: set bub’s living-zone clock separately from UI language so overseas family stays synced on “today,” age, and diary dates.',
+            'bub.b4': 'Family sharing: invite codes and links for parents and caregivers, with roles for safe editing—shared timelines and stats.',
+            'bub.b5': 'Full-stack launch: Next.js, TypeScript, Tailwind + Supabase Auth/DB—product tour, signup UX, and operational keepalive via cron.',
+            'bub.tour.title': 'See what this app is like',
+            'bub.tour.prev': 'Back',
+            'bub.tour.next': 'Next',
+            'bub.tour.welcome.title': 'A gentle diary for bub',
+            'bub.tour.welcome.body': 'Log feeds, nappies, sleep, and immunisations—then share one baby profile with family. Multicultural households can each use their own language.',
+            'bub.tour.home.title': 'Today at a glance',
+            'bub.tour.home.body': 'Baby home looks like this: name card on top, then today’s summary so everyone stays in sync.',
+            'bub.tour.quick.title': 'Quick add',
+            'bub.tour.quick.body': 'Same tile grid as the real home—tap Feeding, Nappy, Sleep, Temperature, and more. Saves show on home right away.',
+            'bub.tour.health.title': 'Immunisations & checks',
+            'bub.tour.health.body': 'Health follows the national schedule you pick for the baby. See what’s due next, log shots, and keep hospital visits and doctor notes.',
+            'bub.tour.timeline.title': 'Timeline',
+            'bub.tour.timeline.body': 'Recent cards stack with a colour bar on the left. Filter by type or date, then open a card to edit or delete.',
+            'bub.tour.family.title': 'Share with family',
+            'bub.tour.family.body': 'Invite parents or caregivers with a code or link, and split roles safely. Language and timezone per person make multicultural and overseas families easy.',
+            'bub.tour.privacy.title': 'Your data, protected',
+            'bub.tour.privacy.body': 'Encrypted in transit and at rest—only invited family can see it.',
+            'bub.demo.appName': 'Bub Diary',
+            'bub.demo.tagline': 'Gentle notes for your little one',
+            'bub.demo.babyName': 'Mina',
+            'bub.demo.babyAge': '4 months 12 days',
+            'bub.demo.today': 'Today’s summary',
+            'bub.demo.feeds': 'Feeds & meals',
+            'bub.demo.feedsVal': '4',
+            'bub.demo.sleep': 'Sleep',
+            'bub.demo.sleepVal': '2h 40m',
+            'bub.demo.quickAdd': 'Quick add',
+            'bub.demo.feeding': 'Feeding',
+            'bub.demo.nappy': 'Nappy',
+            'bub.demo.sleepTile': 'Sleep',
+            'bub.demo.temp': 'Temperature',
+            'bub.demo.health': 'Immunisations & checks',
+            'bub.demo.nextVaccine': 'Next due',
+            'bub.demo.vaccine': 'Hexavalent · 2nd dose',
+            'bub.demo.vaccineWhen': 'From 4 months of age',
+            'bub.demo.vaccineSource': 'Source: KDCA NIP (2025)',
+            'bub.demo.optional': 'Optional vaccines',
+            'bub.demo.optionalVac': 'MenB · optional',
+            'bub.demo.timeline': 'Timeline',
+            'bub.demo.feedRow': 'Bottle 90ml',
+            'bub.demo.feedMeta': '10:20',
+            'bub.demo.sleepRow': 'Nap · cot',
+            'bub.demo.sleepMeta': '1h 15m',
+            'bub.demo.nappyRow': 'Wet nappy',
+            'bub.demo.nappyMeta': '09:05',
+            'bub.demo.members': 'Members',
+            'bub.demo.parentA': 'Mom',
+            'bub.demo.parentB': 'Dad',
+            'bub.demo.grandparent': 'Grandma',
+            'bub.demo.owner': 'Owner',
+            'bub.demo.caregiver': 'Caregiver',
+            'bub.demo.viewer': 'Viewer',
+            'bub.demo.invite': 'Generate invite code',
+            'bub.demo.privacyTitle': 'Nicknames stay readable',
+            'bub.demo.langs': 'KO · EN · ZH · HI · ES · FR · DE · AR · FA · UR · JA · VI · KM',
             'apple.title': 'Apple KR - iPhone 16 New Release',
             'apple.label': 'Visual Contract · NDA Protected',
             'apple.desc': 'Participated in Apple Korea GP projects in 2024 and 2026. Translating Apple’s sensibility onto the web.',
@@ -362,6 +474,7 @@
         redrawFlowDiagrams();
 
         initDashboardPreview();
+        initBubTourSlides();
         initGallery();
     }
 
@@ -763,6 +876,195 @@
             </div>`;
     }
 
+    function bubIcon(kind) {
+        const paths = {
+            utensils: '<path d="M4 3v7a2 2 0 0 0 2 2h1v7"/><path d="M8 3v18"/><path d="M16 3a4 4 0 0 1 4 4v5h-4V3z"/>',
+            droplets: '<path d="M12 2.7c.4.5 6 7.3 6 11.3a6 6 0 1 1-12 0c0-4 5.6-10.8 6-11.3z"/>',
+            moon: '<path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/>',
+            thermo: '<path d="M14 14.8V5a2 2 0 1 0-4 0v9.8a4 4 0 1 0 4 0z"/><path d="M12 9v6"/>',
+            syringe: '<path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="m19 9-7.5 7.5a2 2 0 0 1-2.8 0L6 14"/><path d="m8 12 4 4"/><path d="m3 21 3-3"/>'
+        };
+        return `<svg class="bub-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[kind] || ''}</svg>`;
+    }
+
+    function buildBubPhoneVisual(slideId) {
+        if (slideId === 'welcome') {
+            return `
+                <div class="bub-phone-stack">
+                    <p class="bub-emoji" aria-hidden="true">🍼</p>
+                    <strong class="bub-phone-title">${t('bub.demo.appName')}</strong>
+                    <span class="bub-muted">${t('bub.demo.tagline')}</span>
+                    <span class="bub-lang-chip">${t('bub.demo.langs')}</span>
+                </div>`;
+        }
+        if (slideId === 'home') {
+            return `
+                <div class="bub-elev bub-baby-card">
+                    <span class="bub-muted bub-small">${t('bub.demo.appName')}</span>
+                    <strong class="bub-phone-title">${t('bub.demo.babyName')}</strong>
+                    <span class="bub-muted">${t('bub.demo.babyAge')}</span>
+                </div>
+                <div class="bub-elev bub-summary-card">
+                    <strong class="bub-phone-sub">${t('bub.demo.today')}</strong>
+                    <div class="bub-stat-grid">
+                        <div><span class="bub-muted bub-small">${t('bub.demo.feeds')}</span><strong>${t('bub.demo.feedsVal')}</strong></div>
+                        <div><span class="bub-muted bub-small">${t('bub.demo.sleep')}</span><strong>${t('bub.demo.sleepVal')}</strong></div>
+                    </div>
+                </div>`;
+        }
+        if (slideId === 'quick') {
+            const tiles = [
+                { icon: 'utensils', tone: 'accent', label: t('bub.demo.feeding') },
+                { icon: 'droplets', tone: 'accent3', label: t('bub.demo.nappy') },
+                { icon: 'moon', tone: 'accent2', label: t('bub.demo.sleepTile') },
+                { icon: 'thermo', tone: 'danger', label: t('bub.demo.temp') }
+            ];
+            return `
+                <strong class="bub-phone-sub">${t('bub.demo.quickAdd')}</strong>
+                <div class="bub-tile-grid">
+                    ${tiles.map(tile => `
+                        <div class="bub-elev bub-tile">
+                            <span class="bub-badge bub-tone-${tile.tone}">${bubIcon(tile.icon)}</span>
+                            <strong>${tile.label}</strong>
+                        </div>`).join('')}
+                </div>`;
+        }
+        if (slideId === 'health') {
+            return `
+                <strong class="bub-phone-sub">${t('bub.demo.health')}</strong>
+                <div class="bub-elev bub-health-card">
+                    <strong class="bub-phone-sub">${t('bub.demo.nextVaccine')}</strong>
+                    <span class="bub-strong">${t('bub.demo.vaccine')}</span>
+                    <span class="bub-muted bub-small">${t('bub.demo.vaccineWhen')}</span>
+                    <span class="bub-muted bub-xsmall">${t('bub.demo.vaccineSource')}</span>
+                </div>
+                <div class="bub-elev bub-optional-card">
+                    <span class="bub-muted bub-small">${t('bub.demo.optional')}</span>
+                    <div class="bub-optional-row">
+                        <span class="bub-badge bub-tone-accent2">${bubIcon('syringe')}</span>
+                        <strong>${t('bub.demo.optionalVac')}</strong>
+                    </div>
+                </div>`;
+        }
+        if (slideId === 'timeline') {
+            const rows = [
+                { title: t('bub.demo.feedRow'), detail: t('bub.demo.feeding'), meta: t('bub.demo.feedMeta'), tone: 'accent' },
+                { title: t('bub.demo.sleepRow'), detail: '', meta: t('bub.demo.sleepMeta'), tone: 'accent2' },
+                { title: t('bub.demo.nappyRow'), detail: '', meta: t('bub.demo.nappyMeta'), tone: 'accent3' }
+            ];
+            return `
+                <strong class="bub-phone-sub">${t('bub.demo.timeline')}</strong>
+                <div class="bub-timeline-list">
+                    ${rows.map(row => `
+                        <div class="bub-elev bub-timeline-row">
+                            <span class="bub-bar bub-tone-${row.tone}"></span>
+                            <div>
+                                <div class="bub-timeline-head">
+                                    <strong>${row.title}</strong>
+                                    <span class="bub-muted bub-small">${row.meta}</span>
+                                </div>
+                                ${row.detail ? `<span class="bub-muted bub-small">${row.detail}</span>` : ''}
+                            </div>
+                        </div>`).join('')}
+                </div>`;
+        }
+        if (slideId === 'family') {
+            const members = [
+                { name: t('bub.demo.parentA'), role: t('bub.demo.owner') },
+                { name: t('bub.demo.parentB'), role: t('bub.demo.caregiver') },
+                { name: t('bub.demo.grandparent'), role: t('bub.demo.viewer') }
+            ];
+            return `
+                <strong class="bub-phone-sub">${t('bub.demo.members')}</strong>
+                <div class="bub-elev bub-members">
+                    ${members.map(m => `
+                        <div class="bub-member-row">
+                            <strong>${m.name}</strong>
+                            <span class="bub-muted">${m.role}</span>
+                        </div>`).join('')}
+                </div>
+                <div class="bub-invite-btn">${t('bub.demo.invite')}</div>`;
+        }
+        return `
+            <div class="bub-elev bub-privacy-card">
+                <p class="bub-emoji" aria-hidden="true">🔒</p>
+                <strong>${t('bub.demo.privacyTitle')}</strong>
+            </div>`;
+    }
+
+    function initBubTourSlides() {
+        const wrap = document.getElementById('bub-tour');
+        if (!wrap) return;
+
+        const slides = [
+            { id: 'welcome', titleKey: 'bub.tour.welcome.title', bodyKey: 'bub.tour.welcome.body' },
+            { id: 'home', titleKey: 'bub.tour.home.title', bodyKey: 'bub.tour.home.body' },
+            { id: 'quick', titleKey: 'bub.tour.quick.title', bodyKey: 'bub.tour.quick.body' },
+            { id: 'health', titleKey: 'bub.tour.health.title', bodyKey: 'bub.tour.health.body' },
+            { id: 'timeline', titleKey: 'bub.tour.timeline.title', bodyKey: 'bub.tour.timeline.body' },
+            { id: 'family', titleKey: 'bub.tour.family.title', bodyKey: 'bub.tour.family.body' },
+            { id: 'privacy', titleKey: 'bub.tour.privacy.title', bodyKey: 'bub.tour.privacy.body' }
+        ];
+
+        let index = Number(wrap.dataset.slideIndex || 0);
+        if (Number.isNaN(index) || index < 0 || index >= slides.length) index = 0;
+        wrap.setAttribute('aria-label', t('bub.tour.title'));
+
+        const render = () => {
+            const slide = slides[index];
+            wrap.dataset.slideIndex = String(index);
+            wrap.innerHTML = `
+                <div class="bub-tour-stage">
+                    <div class="bub-phone" aria-hidden="true">${buildBubPhoneVisual(slide.id)}</div>
+                    <div class="bub-tour-copy">
+                        <p class="bub-tour-step">${index + 1} / ${slides.length}</p>
+                        <h4 class="bub-tour-heading" id="bub-tour-heading">${t(slide.titleKey)}</h4>
+                        <p class="bub-tour-body">${t(slide.bodyKey)}</p>
+                    </div>
+                </div>
+                <div class="bub-tour-controls">
+                    <button type="button" class="bub-tour-btn" data-bub-nav="prev" ${index === 0 ? 'disabled' : ''} aria-controls="bub-tour-heading">${t('bub.tour.prev')}</button>
+                    <div class="bub-tour-dots" role="tablist" aria-label="${t('bub.tour.title')}">
+                        ${slides.map((_, i) => `<button type="button" class="bub-tour-dot${i === index ? ' is-active' : ''}" data-bub-dot="${i}" aria-label="${i + 1}" aria-current="${i === index ? 'true' : 'false'}"></button>`).join('')}
+                    </div>
+                    <button type="button" class="bub-tour-btn bub-tour-btn-primary" data-bub-nav="next" aria-controls="bub-tour-heading">${t('bub.tour.next')}</button>
+                </div>`;
+
+            wrap.querySelector('[data-bub-nav="prev"]')?.addEventListener('click', () => {
+                if (index > 0) {
+                    index -= 1;
+                    render();
+                }
+            });
+            wrap.querySelector('[data-bub-nav="next"]')?.addEventListener('click', () => {
+                index = (index + 1) % slides.length;
+                render();
+            });
+            wrap.querySelectorAll('[data-bub-dot]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    index = Number(btn.getAttribute('data-bub-dot'));
+                    render();
+                });
+            });
+        };
+
+        if (!wrap.dataset.bubKeysBound) {
+            wrap.dataset.bubKeysBound = '1';
+            wrap.tabIndex = 0;
+            wrap.addEventListener('keydown', e => {
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    wrap.querySelector('[data-bub-nav="prev"]')?.click();
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    wrap.querySelector('[data-bub-nav="next"]')?.click();
+                }
+            });
+        }
+
+        render();
+    }
+
     function initDashboardPreview() {
         let wrap = document.getElementById('dashboard-preview');
         if (!wrap) return;
@@ -963,6 +1265,7 @@
         initLang();
         initMagneticButtons();
         initDashboardPreview();
+        initBubTourSlides();
         initGallery();
         initLightbox();
         initPdfDownload();
