@@ -1681,25 +1681,29 @@ html.light .bub-tour-btn-primary {
 }
 
 @media print {
-    nav, .floating-toc, #contact form, .magnetic-btn, .nav-pill, .lightbox, .site-footer .footer-badges, .bub-tour, .bub-tour-controls, .ambient-field, .hero-actions { display: none !important; }
+    nav, .floating-toc, #contact, .magnetic-btn, .nav-pill, .lightbox, .site-footer .footer-badges, .bub-tour, .bub-tour-controls, .ambient-field, .hero-actions, #gallery, #dashboard-preview, #chart-container, #flow-container, #flow-portal-container, .nda-footer, .nda-lock-card, .chart-section-title, .a11y-note { display: none !important; }
     body { background: #fff !important; color: #1d1d1f !important; }
     .container { max-width: 100% !important; padding: 0 !important; }
-    #hero { min-height: auto !important; padding-top: 1rem !important; padding-bottom: 1.5rem !important; }
-    #hero h1 { font-size: 1.8rem !important; }
-    .card, .glass-panel, .stat, .about-quote, .gallery-item, .tag, .site-footer {
+    #hero { min-height: auto !important; padding-top: 0.5rem !important; padding-bottom: 1rem !important; }
+    #hero h1 { font-size: 1.7rem !important; color: #1d1d1f !important; }
+    .card, .glass-panel, .stat, .about-quote, .tag, .site-footer {
         box-shadow: none !important;
         backdrop-filter: none !important;
         -webkit-backdrop-filter: none !important;
         background: #fff !important;
-        border: 1px solid #e0e0e0 !important;
+        border: none !important;
+        border-radius: 0 !important;
+    }
+    .card {
+        border-bottom: 1px solid #e5e5ea !important;
+        padding: 0.75rem 0 !important;
+        margin-bottom: 0.85rem !important;
         break-inside: avoid;
         page-break-inside: avoid;
     }
     .glass-panel {
-        border: none !important;
-        padding: 0.5rem 0 !important;
-        margin: 0.75rem 0 !important;
-        border-radius: 0 !important;
+        padding: 0 !important;
+        margin: 0.5rem 0 !important;
     }
     .reveal-section,
     .fade-in-up {
@@ -1709,14 +1713,11 @@ html.light .bub-tour-btn-primary {
         animation: none !important;
         --reveal-progress: 1 !important;
     }
-    section { padding: 1.25rem 0 !important; }
-    .section-title { font-size: 1.5rem !important; margin-bottom: 1rem !important; }
-    .nda-lock-card { display: none !important; }
-    .gallery-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 0.5rem !important; }
-    .gallery-item img,
-    .gallery-placeholder { height: 90px !important; }
-    .card { padding: 1rem !important; margin-bottom: 1rem !important; }
-    .timeline-item { margin-bottom: 1.25rem !important; }
+    section { padding: 0.85rem 0 !important; }
+    .section-title { font-size: 1.35rem !important; margin-bottom: 0.75rem !important; }
+    .about-grid { display: block !important; }
+    .about-stats { flex-direction: row !important; flex-wrap: wrap !important; }
+    .timeline-item { margin-bottom: 1rem !important; break-inside: avoid; }
 }
 
 /* html2pdf / html2canvas capture — flatten to a clean resume layout */

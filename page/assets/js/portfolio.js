@@ -203,7 +203,7 @@
             'lightbox.close': '닫기',
             'lightbox.prev': '이전',
             'lightbox.next': '다음',
-            'pdf.generating': 'PDF 생성 중...'
+            'pdf.generating': '인쇄 준비 중… PDF로 저장하세요'
         },
         en: {
             'meta.title': 'Kim Young Hoon | UX/UI & Full-Stack Architect',
@@ -406,7 +406,7 @@
             'lightbox.close': 'Close',
             'lightbox.prev': 'Previous',
             'lightbox.next': 'Next',
-            'pdf.generating': 'Generating PDF...'
+            'pdf.generating': 'Preparing… choose Save as PDF'
         }
     };
 
@@ -1248,23 +1248,22 @@
 
             // Prefer browser print-to-PDF: preserves fonts/layout better than html2canvas
             // for glassmorphism pages. Fall back to html2pdf only if print is unavailable.
+            let restored = false;
             const finish = () => {
+                if (restored) return;
+                restored = true;
+                window.removeEventListener('afterprint', afterPrint);
                 restore();
                 window.scrollTo(0, prevScrollY);
                 btn.innerHTML = orig;
                 btn.disabled = false;
             };
 
-            const afterPrint = () => {
-                window.removeEventListener('afterprint', afterPrint);
-                finish();
-            };
+            const afterPrint = () => finish();
             window.addEventListener('afterprint', afterPrint);
 
             // Safety restore if user cancels without afterprint in some browsers
-            setTimeout(() => {
-                if (btn.disabled) finish();
-            }, 60000);
+            setTimeout(finish, 60000);
 
             await new Promise(resolve => setTimeout(resolve, 100));
             window.print();
