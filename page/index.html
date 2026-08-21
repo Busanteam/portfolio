@@ -21,6 +21,7 @@
 </head>
 <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
+    <div class="ambient-field" aria-hidden="true"></div>
 
     <nav aria-label="Primary navigation">
         <div class="nav-inner">
@@ -53,7 +54,7 @@
 
     <main id="main-content" class="container">
 
-        <section id="hero" style="min-height: 80vh; display: flex; flex-direction: column; justify-content: center;" aria-labelledby="hero-heading">
+        <section id="hero" class="reveal-section is-hero" style="min-height: 80vh; display: flex; flex-direction: column; justify-content: center;" aria-labelledby="hero-heading">
             <h1 id="hero-heading" class="fade-in-up" style="font-size: 4.5rem; line-height: 1.05; margin-bottom: 1.5rem;" data-i18n="hero.title" data-i18n-html>
                 Digital Convergence:<br><i style="font-weight:600;color:var(--text-secondary);font-style:normal;">Design & Engineering.</i>
             </h1>
@@ -66,7 +67,7 @@
             </div>
         </section>
 
-        <section id="about" aria-labelledby="about-heading">
+        <section id="about" class="reveal-section glass-panel" aria-labelledby="about-heading">
             <h2 id="about-heading" class="section-title" data-i18n="about.title">About Me</h2>
 
             <blockquote class="about-quote">
@@ -124,7 +125,7 @@
             </div>
         </section>
 
-        <section id="experience" aria-labelledby="exp-heading">
+        <section id="experience" class="reveal-section glass-panel" aria-labelledby="exp-heading">
             <h2 id="exp-heading" class="section-title" data-i18n="exp.title">경력</h2>
             <div class="timeline">
                 <article class="timeline-item">
@@ -165,7 +166,7 @@
             </div>
         </section>
 
-        <section id="projects" aria-labelledby="proj-heading">
+        <section id="projects" class="reveal-section" aria-labelledby="proj-heading">
             <h2 id="proj-heading" class="section-title" data-i18n="proj.title">주요 프로젝트</h2>
 
             <article class="card" id="bub-card" aria-labelledby="bub-title">
@@ -264,7 +265,7 @@
             </article>
         </section>
 
-        <section id="gallery" aria-labelledby="gallery-heading">
+        <section id="gallery" class="reveal-section glass-panel" aria-labelledby="gallery-heading">
             <h2 id="gallery-heading" class="section-title" data-i18n="gallery.title">디자인 갤러리</h2>
             <p style="color: var(--text-secondary); margin-bottom: 2rem; max-width: 640px;" data-i18n="gallery.desc"></p>
             <div id="gallery-grid" class="gallery-grid" role="list"></div>
@@ -274,7 +275,7 @@
             </div>
         </section>
 
-        <section id="contact" style="padding-bottom: 4rem;" aria-labelledby="contact-heading">
+        <section id="contact" class="reveal-section glass-panel" style="padding-bottom: 4rem;" aria-labelledby="contact-heading">
             <h2 id="contact-heading" class="section-title" data-i18n="contact.title">Get in Touch</h2>
             <p style="color: var(--text-secondary); margin-bottom: 3rem; font-size: 1.1rem;" data-i18n="contact.desc"></p>
             <form class="contact-form" action="https://formspree.io/f/xaqvlvnq" method="POST" aria-label="Contact form">

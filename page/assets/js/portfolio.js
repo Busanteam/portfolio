@@ -1249,6 +1249,51 @@
             });
         }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
         sections.forEach(s => tocObserver.observe(s));
+
+        initScrollReveal();
+    }
+
+    function initScrollReveal() {
+        const revealSections = document.querySelectorAll('.reveal-section:not(.is-hero)');
+        if (!revealSections.length) return;
+
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduceMotion) {
+            revealSections.forEach(section => {
+                section.classList.add('is-revealed');
+                section.style.setProperty('--reveal-progress', '1');
+            });
+            return;
+        }
+
+        const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+        const updateRevealProgress = () => {
+            const viewportH = window.innerHeight || document.documentElement.clientHeight;
+            revealSections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                // Start revealing as the section approaches mid-viewport; finish near center.
+                const start = viewportH * 0.92;
+                const end = viewportH * 0.38;
+                const progress = clamp((start - rect.top) / (start - end), 0, 1);
+                section.style.setProperty('--reveal-progress', progress.toFixed(3));
+                section.classList.toggle('is-revealed', progress >= 0.98);
+            });
+        };
+
+        let ticking = false;
+        const onScrollOrResize = () => {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(() => {
+                updateRevealProgress();
+                ticking = false;
+            });
+        };
+
+        window.addEventListener('scroll', onScrollOrResize, { passive: true });
+        window.addEventListener('resize', onScrollOrResize);
+        updateRevealProgress();
     }
 
     window.addEventListener('resize', () => {
