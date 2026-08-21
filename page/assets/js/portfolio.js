@@ -1090,19 +1090,19 @@
 
     function initGallery() {
         const galleryData = [
-            { src: 'images/For_CI_BI_1.png', key: 'gallery.1' },
-            { src: 'images/For_App_Store_3.png', key: 'gallery.2' },
-            { src: 'images/For_SNS.png', key: 'gallery.3' },
-            { src: 'images/For_Personal_business_CMYK_1.png', key: 'gallery.4' },
-            { src: 'images/For_Personal_business_RGB_1.png', key: 'gallery.5' },
-            { src: 'images/Dashboard_2.png', key: 'gallery.6' },
-            { src: 'images/mohaet.png', key: 'gallery.7' },
-            { src: 'images/Apple_AirPods_1.png', key: 'gallery.8' },
-            { src: 'images/Apple_Hermes_1.png', key: 'gallery.9' },
-            { src: 'images/Brief_Results_1.png', key: 'gallery.10' },
-            { src: 'images/Brief_Results_2.png', key: 'gallery.11' },
-            { src: 'images/Brief_Results_3.png', key: 'gallery.12' },
-            { src: 'images/Brief_Results_4.png', key: 'gallery.13' }
+            { src: 'images/For_CI_BI_1.avif', fallback: 'images/For_CI_BI_1.png', key: 'gallery.1' },
+            { src: 'images/For_App_Store_3.avif', fallback: 'images/For_App_Store_3.png', key: 'gallery.2' },
+            { src: 'images/For_SNS.avif', fallback: 'images/For_SNS.png', key: 'gallery.3' },
+            { src: 'images/For_Personal_business_CMYK_1.avif', fallback: 'images/For_Personal_business_CMYK_1.png', key: 'gallery.4' },
+            { src: 'images/For_Personal_business_RGB_1.avif', fallback: 'images/For_Personal_business_RGB_1.png', key: 'gallery.5' },
+            { src: 'images/Dashboard_2.avif', fallback: 'images/Dashboard_2.png', key: 'gallery.6' },
+            { src: 'images/mohaet.avif', fallback: 'images/mohaet.png', key: 'gallery.7' },
+            { src: 'images/Apple_AirPods_1.avif', fallback: 'images/Apple_AirPods_1.png', key: 'gallery.8' },
+            { src: 'images/Apple_Hermes_1.avif', fallback: 'images/Apple_Hermes_1.png', key: 'gallery.9' },
+            { src: 'images/Brief_Results_1.avif', fallback: 'images/Brief_Results_1.png', key: 'gallery.10' },
+            { src: 'images/Brief_Results_2.avif', fallback: 'images/Brief_Results_2.png', key: 'gallery.11' },
+            { src: 'images/Brief_Results_3.avif', fallback: 'images/Brief_Results_3.png', key: 'gallery.12' },
+            { src: 'images/Brief_Results_4.avif', fallback: 'images/Brief_Results_4.png', key: 'gallery.13' }
         ];
 
         const grid = document.getElementById('gallery-grid');
@@ -1112,6 +1112,7 @@
         lightboxItems = galleryData.map(item => ({
             type: 'image',
             src: item.src,
+            fallback: item.fallback,
             caption: t(item.key)
         }));
 
@@ -1121,7 +1122,10 @@
             btn.type = 'button';
             btn.setAttribute('aria-label', t(item.key));
             btn.innerHTML = `
-                <img src="${item.src}" alt="${t(item.key)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                <picture>
+                    <source srcset="${item.src}" type="image/avif">
+                    <img src="${item.fallback}" data-fallback-src="${item.fallback}" alt="${t(item.key)}" loading="lazy" width="440" height="160" onerror="this.style.display='none';this.closest('picture').nextElementSibling.style.display='flex'">
+                </picture>
                 <div class="gallery-placeholder" style="display:none">${t(item.key)}</div>
                 <figcaption data-i18n="gallery.${index + 1}">${t(item.key)}</figcaption>`;
             btn.addEventListener('click', () => openLightbox(lightboxItems, index));
@@ -1152,6 +1156,12 @@
         const item = lightboxItems[lightboxIndex];
         if (item.type === 'dashboard') {
             content.innerHTML = buildDummyDashboardHTML(true);
+        } else if (item.fallback) {
+            content.innerHTML = `
+                <picture>
+                    <source srcset="${item.src}" type="image/avif">
+                    <img src="${item.fallback}" alt="${item.caption}">
+                </picture>`;
         } else {
             content.innerHTML = `<img src="${item.src}" alt="${item.caption}">`;
         }
@@ -1184,30 +1194,80 @@
     }
 
     function initPdfDownload() {
+        const preparePrintable = () => {
+            const root = document.documentElement;
+            const wasLight = root.classList.contains('light');
+            const classSnapshot = [];
+            const styleSnapshot = [];
+
+            root.classList.add('pdf-export');
+            if (!wasLight) root.classList.add('light');
+
+            document.querySelectorAll('.reveal-section, .fade-in-up').forEach(section => {
+                classSnapshot.push({ el: section, className: section.className });
+                styleSnapshot.push({ el: section, cssText: section.getAttribute('style') || '' });
+                section.classList.remove('fade-in-up', 'delay-1', 'delay-2', 'reveal-section', 'is-hero');
+                section.style.cssText += ';opacity:1!important;filter:none!important;transform:none!important;animation:none!important;';
+                section.style.setProperty('--reveal-progress', '1');
+            });
+
+            const hero = document.getElementById('hero');
+            const heroStyle = hero ? hero.getAttribute('style') || '' : '';
+            if (hero) {
+                hero.style.minHeight = 'auto';
+                hero.style.paddingTop = '0.5rem';
+                hero.style.paddingBottom = '1rem';
+            }
+
+            const restore = () => {
+                root.classList.remove('pdf-export');
+                if (!wasLight) root.classList.remove('light');
+                classSnapshot.forEach(({ el, className }) => { el.className = className; });
+                styleSnapshot.forEach(({ el, cssText }) => {
+                    if (cssText) el.setAttribute('style', cssText);
+                    else el.removeAttribute('style');
+                });
+                if (hero) {
+                    if (heroStyle) hero.setAttribute('style', heroStyle);
+                    else hero.removeAttribute('style');
+                }
+            };
+
+            return restore;
+        };
+
         const downloadPdf = async () => {
             const btn = document.getElementById('pdf-download');
             const orig = btn.innerHTML;
             btn.innerHTML = t('pdf.generating');
             btn.disabled = true;
 
-            const element = document.querySelector('.container');
-            const opt = {
-                margin: [10, 10, 10, 10],
-                filename: 'Kim_Young_Hoon_Resume.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, logging: false },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+            const prevScrollY = window.scrollY;
+            window.scrollTo(0, 0);
+            const restore = preparePrintable();
+
+            // Prefer browser print-to-PDF: preserves fonts/layout better than html2canvas
+            // for glassmorphism pages. Fall back to html2pdf only if print is unavailable.
+            const finish = () => {
+                restore();
+                window.scrollTo(0, prevScrollY);
+                btn.innerHTML = orig;
+                btn.disabled = false;
             };
 
-            try {
-                await html2pdf().set(opt).from(element).save();
-            } catch (err) {
-                console.error(err);
-                window.print();
-            }
-            btn.innerHTML = orig;
-            btn.disabled = false;
+            const afterPrint = () => {
+                window.removeEventListener('afterprint', afterPrint);
+                finish();
+            };
+            window.addEventListener('afterprint', afterPrint);
+
+            // Safety restore if user cancels without afterprint in some browsers
+            setTimeout(() => {
+                if (btn.disabled) finish();
+            }, 60000);
+
+            await new Promise(resolve => setTimeout(resolve, 100));
+            window.print();
         };
 
         document.getElementById('pdf-download').addEventListener('click', downloadPdf);

@@ -1298,6 +1298,10 @@ html.light .bub-tour-btn-primary {
         inset 0 1px 0 var(--glass-highlight),
         0 12px 32px hsl(var(--shadow-color) / calc(var(--shadow-opacity) * 2));
 }
+.gallery-item picture {
+    display: block;
+    width: 100%;
+}
 .gallery-item img {
     width: 100%;
     height: 160px;
@@ -1677,21 +1681,281 @@ html.light .bub-tour-btn-primary {
 }
 
 @media print {
-    nav, .floating-toc, #contact form, .magnetic-btn, .nav-pill, .lightbox, .site-footer .footer-badges, .bub-tour-controls, .ambient-field { display: none !important; }
-    body { background: #fff !important; color: #000 !important; }
-    .card, .glass-panel, .stat, .about-quote {
+    nav, .floating-toc, #contact form, .magnetic-btn, .nav-pill, .lightbox, .site-footer .footer-badges, .bub-tour, .bub-tour-controls, .ambient-field, .hero-actions { display: none !important; }
+    body { background: #fff !important; color: #1d1d1f !important; }
+    .container { max-width: 100% !important; padding: 0 !important; }
+    #hero { min-height: auto !important; padding-top: 1rem !important; padding-bottom: 1.5rem !important; }
+    #hero h1 { font-size: 1.8rem !important; }
+    .card, .glass-panel, .stat, .about-quote, .gallery-item, .tag, .site-footer {
         box-shadow: none !important;
         backdrop-filter: none !important;
         -webkit-backdrop-filter: none !important;
         background: #fff !important;
         border: 1px solid #e0e0e0 !important;
         break-inside: avoid;
+        page-break-inside: avoid;
     }
-    .reveal-section {
+    .glass-panel {
+        border: none !important;
+        padding: 0.5rem 0 !important;
+        margin: 0.75rem 0 !important;
+        border-radius: 0 !important;
+    }
+    .reveal-section,
+    .fade-in-up {
         opacity: 1 !important;
         filter: none !important;
         transform: none !important;
+        animation: none !important;
+        --reveal-progress: 1 !important;
     }
-    section { padding: 3rem 0 !important; }
+    section { padding: 1.25rem 0 !important; }
+    .section-title { font-size: 1.5rem !important; margin-bottom: 1rem !important; }
     .nda-lock-card { display: none !important; }
+    .gallery-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 0.5rem !important; }
+    .gallery-item img,
+    .gallery-placeholder { height: 90px !important; }
+    .card { padding: 1rem !important; margin-bottom: 1rem !important; }
+    .timeline-item { margin-bottom: 1.25rem !important; }
+}
+
+/* html2pdf / html2canvas capture — flatten to a clean resume layout */
+html.pdf-export,
+html.pdf-export body,
+html.pdf-export body * {
+    font-family: 'Pretendard Variable', Pretendard, 'Noto Sans KR', 'Apple SD Gothic Neo', Malgun Gothic, sans-serif !important;
+}
+
+html.pdf-export,
+html.pdf-export body {
+    background: #ffffff !important;
+    color: #1d1d1f !important;
+}
+
+html.pdf-export #hero,
+html.pdf-export #hero h1,
+html.pdf-export #hero p,
+html.pdf-export #hero span,
+html.pdf-export #hero i {
+    opacity: 1 !important;
+    visibility: visible !important;
+    filter: none !important;
+    transform: none !important;
+    animation: none !important;
+    color: #1d1d1f !important;
+}
+
+html.pdf-export #hero i {
+    color: #6e6e73 !important;
+}
+
+html.pdf-export .ambient-field,
+html.pdf-export nav,
+html.pdf-export .floating-toc,
+html.pdf-export .lightbox,
+html.pdf-export .skip-link,
+html.pdf-export #contact,
+html.pdf-export .hero-actions,
+html.pdf-export .bub-tour,
+html.pdf-export .bub-tour-controls,
+html.pdf-export .nda-lock-card,
+html.pdf-export .nda-footer,
+html.pdf-export #dashboard-preview,
+html.pdf-export #chart-container,
+html.pdf-export #flow-container,
+html.pdf-export #flow-portal-container,
+html.pdf-export #gallery,
+html.pdf-export .site-footer .footer-badges,
+html.pdf-export .toc-action-btn,
+html.pdf-export .chart-section-title {
+    display: none !important;
+}
+
+html.pdf-export .container,
+html.pdf-export #main-content {
+    max-width: 720px !important;
+    width: 720px !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+}
+
+html.pdf-export #hero {
+    min-height: auto !important;
+    padding: 0.5rem 0 1rem !important;
+}
+
+html.pdf-export section {
+    padding: 0.85rem 0 !important;
+    margin: 0 !important;
+}
+
+html.pdf-export .reveal-section,
+html.pdf-export .fade-in-up {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+    animation: none !important;
+    --reveal-progress: 1 !important;
+}
+
+html.pdf-export .glass-panel,
+html.pdf-export .card,
+html.pdf-export .stat,
+html.pdf-export .about-quote,
+html.pdf-export .tag,
+html.pdf-export .site-footer {
+    background: #ffffff !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-radius: 0 !important;
+}
+
+html.pdf-export .glass-panel {
+    padding: 0 !important;
+}
+
+html.pdf-export .card {
+    padding: 0.75rem 0 !important;
+    margin-bottom: 0.85rem !important;
+    border-bottom: 1px solid #e5e5ea !important;
+    overflow: visible !important;
+}
+
+html.pdf-export .about-quote {
+    border-left: 3px solid #0071e3 !important;
+    padding: 0.35rem 0 0.35rem 0.85rem !important;
+    margin-bottom: 0.85rem !important;
+}
+
+html.pdf-export .section-title {
+    font-size: 1.35rem !important;
+    margin-bottom: 0.75rem !important;
+    color: #1d1d1f !important;
+}
+
+html.pdf-export #hero h1 {
+    font-size: 1.7rem !important;
+    line-height: 1.2 !important;
+    color: #1d1d1f !important;
+    margin-bottom: 0.65rem !important;
+}
+
+html.pdf-export p,
+html.pdf-export li,
+html.pdf-export .project-desc,
+html.pdf-export .timeline-item p,
+html.pdf-export .about-narrative p,
+html.pdf-export .stat-label,
+html.pdf-export .a11y-note,
+html.pdf-export .footer-meta {
+    color: #3a3a3c !important;
+    font-size: 0.92rem !important;
+    line-height: 1.55 !important;
+    overflow: visible !important;
+    white-space: normal !important;
+    word-break: keep-all !important;
+}
+
+html.pdf-export .project-label,
+html.pdf-export .timeline-date,
+html.pdf-export .stat-num,
+html.pdf-export h1,
+html.pdf-export h2,
+html.pdf-export h3 {
+    color: #1d1d1f !important;
+    overflow: visible !important;
+}
+
+html.pdf-export .project-label,
+html.pdf-export .timeline-date {
+    color: #0071e3 !important;
+    font-size: 0.8rem !important;
+}
+
+html.pdf-export .card h3 {
+    font-size: 1.15rem !important;
+}
+
+html.pdf-export .about-grid {
+    display: block !important;
+}
+
+html.pdf-export .about-stats {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 0.75rem !important;
+    margin: 0.75rem 0 !important;
+}
+
+html.pdf-export .stat {
+    border: 1px solid #e5e5ea !important;
+    border-radius: 8px !important;
+    padding: 0.65rem 0.85rem !important;
+    min-width: 7rem !important;
+}
+
+html.pdf-export .stat-num {
+    font-size: 1.4rem !important;
+    color: #0071e3 !important;
+}
+
+html.pdf-export .tag-row {
+    gap: 0.35rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+html.pdf-export .tag {
+    background: #f5f5f7 !important;
+    border: 1px solid #d2d2d7 !important;
+    color: #1d1d1f !important;
+    padding: 0.2rem 0.55rem !important;
+    font-size: 0.72rem !important;
+}
+
+html.pdf-export .timeline {
+    margin-left: 0.35rem !important;
+    padding-left: 1.25rem !important;
+}
+
+html.pdf-export .timeline-item {
+    margin-bottom: 1rem !important;
+}
+
+html.pdf-export .timeline-item h3 {
+    font-size: 1rem !important;
+}
+
+html.pdf-export .bullet-list {
+    margin-bottom: 0.65rem !important;
+}
+
+html.pdf-export .bullet-list li {
+    margin-bottom: 0.35rem !important;
+    font-size: 0.86rem !important;
+}
+
+html.pdf-export .external-links {
+    margin-top: 0.35rem !important;
+}
+
+html.pdf-export .external-link {
+    color: #0071e3 !important;
+    font-size: 0.85rem !important;
+}
+
+html.pdf-export .dummy-dashboard.sk-dashboard {
+    display: none !important;
+}
+
+html.pdf-export .site-footer {
+    border-top: 1px solid #e5e5ea !important;
+    padding: 0.85rem 0 !important;
+    margin-top: 0.5rem !important;
+}
+
+html.pdf-export .a11y-note {
+    display: none !important;
 }
