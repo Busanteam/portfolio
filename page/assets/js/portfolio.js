@@ -119,7 +119,7 @@
             'apple.title': 'Apple Korea',
             'apple.label': 'Korea Product Launch Member · NDA',
             'apple.desc': '2024년과 2026년 Apple Korea에서 Korea Product Launch Member로 참여했습니다. 비밀유지 계약에 따라 직군·작업 내용 등 세부 사항은 공개하지 않습니다.',
-            'apple.nda': 'NDA 때문에 자세한 내용은 공개할 수 없습니다.',
+            'apple.nda': 'NDA에 의해서 자세한 내용은 공개할 수 없습니다.',
             'solar.title': '태양광 에너지 서비스 통합 플랫폼',
             'solar.label': '기획 · UI/UX · Front-end',
             'solar.desc': '5개 서비스 요구를 받아 UI/UX 기획·설계와 프론트엔드까지 진행했습니다. 복잡한 전력 데이터를 관리자·고객 화면으로 나눠 쓸 수 있게 만들었습니다.',
