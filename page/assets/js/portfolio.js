@@ -1181,7 +1181,7 @@
                 const targetReveal = proximity * proximity * (3 - 2 * proximity);
                 const prevReveal = Number(slide.dataset.revealLag);
                 const reveal = Number.isFinite(prevReveal)
-                    ? prevReveal + (targetReveal - prevReveal) * 0.07
+                    ? prevReveal + (targetReveal - prevReveal) * 0.05
                     : targetReveal;
                 slide.dataset.revealLag = String(reveal);
                 if (Math.abs(targetReveal - reveal) > 0.012) needsSettle = true;
