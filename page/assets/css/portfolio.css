@@ -24,6 +24,7 @@
     --orb-a: rgba(41, 151, 255, 0.28);
     --orb-b: rgba(255, 41, 92, 0.18);
     --orb-c: rgba(48, 209, 88, 0.12);
+    --placeholder: #c5c5ca;
 }
 
 html.light {
@@ -43,6 +44,7 @@ html.light {
     --orb-a: rgba(41, 151, 255, 0.22);
     --orb-b: rgba(255, 41, 92, 0.14);
     --orb-c: rgba(48, 209, 88, 0.1);
+    --placeholder: #6e6e73;
 }
 
 html { scroll-behavior: smooth; }
@@ -1563,6 +1565,21 @@ html.light .bub-tour-btn-primary {
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     box-shadow: inset 0 1px 0 var(--glass-highlight);
+}
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+    color: var(--placeholder);
+    opacity: 1;
+}
+.contact-form input::-webkit-input-placeholder,
+.contact-form textarea::-webkit-input-placeholder {
+    color: var(--placeholder);
+    opacity: 1;
+}
+.contact-form input::-moz-placeholder,
+.contact-form textarea::-moz-placeholder {
+    color: var(--placeholder);
+    opacity: 1;
 }
 .contact-form input:focus,
 .contact-form textarea:focus {
