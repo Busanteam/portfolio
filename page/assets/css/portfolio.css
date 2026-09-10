@@ -932,9 +932,10 @@ html.light .bub-tour {
     will-change: transform;
 }
 .bub-parallax-phone,
-.bub-parallax-copy {
-    will-change: transform;
-    transition: transform 0.08s linear;
+.bub-parallax-copy,
+.bub-parallax-glow {
+    will-change: transform, opacity;
+    transition: none;
 }
 @media (prefers-reduced-motion: reduce) {
     .bub-tour-track { scroll-behavior: auto; }

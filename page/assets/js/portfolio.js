@@ -1099,14 +1099,33 @@
             const track = wrap.querySelector('.bub-tour-track');
             const slide = track?.children[index];
             if (track && slide) {
-                track.scrollTo({ left: slide.offsetLeft, behavior: reduceMotion ? 'auto' : behavior });
+                const target = slide.offsetLeft;
+                track.scrollTo({ left: target, behavior: reduceMotion ? 'auto' : behavior });
+                if (!reduceMotion && behavior !== 'auto') {
+                    const start = performance.now();
+                    const tick = () => {
+                        applyParallax();
+                        if (Math.abs(track.scrollLeft - target) > 1.5 && performance.now() - start < 900) {
+                            requestAnimationFrame(tick);
+                        } else {
+                            applyParallax();
+                            syncIndexFromScroll();
+                        }
+                    };
+                    requestAnimationFrame(tick);
+                } else {
+                    applyParallax();
+                }
             }
             updateChrome();
         };
 
         const updateChrome = () => {
-            const step = wrap.querySelector('.bub-tour-step');
-            if (step) step.textContent = `${index + 1} / ${slides.length}`;
+            wrap.querySelectorAll('.bub-tour-step').forEach((step, i) => {
+                // keep per-slide labels; chrome uses dots
+                void i;
+                void step;
+            });
             wrap.querySelectorAll('[data-bub-dot]').forEach(btn => {
                 const i = Number(btn.getAttribute('data-bub-dot'));
                 btn.classList.toggle('is-active', i === index);
@@ -1127,13 +1146,21 @@
             track.querySelectorAll('.bub-tour-slide').forEach(slide => {
                 const rect = slide.getBoundingClientRect();
                 const slideCenter = rect.left + rect.width / 2;
-                const progress = (slideCenter - center) / Math.max(trackRect.width, 1);
+                const progress = Math.max(-1.2, Math.min(1.2, (slideCenter - center) / Math.max(trackRect.width, 1)));
                 const phone = slide.querySelector('.bub-parallax-phone');
                 const copy = slide.querySelector('.bub-parallax-copy');
                 const glow = slide.querySelector('.bub-parallax-glow');
-                if (phone) phone.style.transform = `translate3d(${(-progress * 56).toFixed(2)}px, 0, 0) scale(${(1 - Math.abs(progress) * 0.04).toFixed(3)})`;
-                if (copy) copy.style.transform = `translate3d(${(progress * 32).toFixed(2)}px, 0, 0)`;
-                if (glow) glow.style.transform = `translate3d(${(-progress * 90).toFixed(2)}px, 0, 0)`;
+                if (phone) {
+                    phone.style.transform =
+                        `translate3d(${(-progress * 84).toFixed(2)}px, ${(Math.abs(progress) * 6).toFixed(2)}px, 0) ` +
+                        `scale(${(1 - Math.abs(progress) * 0.06).toFixed(3)})`;
+                }
+                if (copy) {
+                    copy.style.transform =
+                        `translate3d(${(progress * 48).toFixed(2)}px, ${(Math.abs(progress) * -4).toFixed(2)}px, 0)`;
+                    copy.style.opacity = String(Math.max(0.35, 1 - Math.abs(progress) * 0.55));
+                }
+                if (glow) glow.style.transform = `translate3d(${(-progress * 130).toFixed(2)}px, 0, 0)`;
             });
         };
 
