@@ -54,32 +54,37 @@
             'exp.7.desc': '2024년에 이어 다시 합류했습니다. 세부 직군과 업무 내용은 NDA로 공개할 수 없습니다.',
             'proj.title': '주요 프로젝트',
             'bub.title': 'Bub Diary',
-            'bub.label': '기획 · UI/UX · Full-Stack',
-            'bub.desc': '가족과 함께 쓰는 아기 케어 다이어리입니다. 요구 정의부터 기획·디자인·개발·배포까지 직접 맡았고, 13개 언어·국가별 접종 일정·다국가 시간대·돌봄 알림·가족 공유를 Next.js + Supabase + Vercel로 출시했습니다.',
-            'bub.b1': '건강·의료 스케줄: 수유·기저귀·체온·성장·수면과 함께 13개국 접종·검진 일정(한국·일본·중국·베트남·캄보디아·인도·호주·미국·영국·프랑스·독일·스페인·사우디)으로 ‘다음 접종’을 안내합니다.',
-            'bub.b2': '다국어·다문화 가정: 한·영(AU)·중·힌디·스페인·프랑스·독일어·아랍·페르시아·우르두·일본·베트남·크메르 13개 언어. 아랍·페르시아·우르두 RTL. 온보딩에서 언어를 고르고, 가족마다 다른 언어로 같은 아기 기록을 봅니다.',
-            'bub.b3': '돌봄 알림·다국가 시간대: 기저귀·수유 등 돌봄 시각 알림을 켤 수 있고, 화면 언어와 별개로 아기 생활권 시간대를 맞춰 해외 가족과 오늘 요약·일기를 동기화합니다.',
-            'bub.b4': '가족 공유: 초대 코드·링크로 보호자·돌보미를 연결하고, 소유자·돌보미·보기만 역할로 편집 권한을 나눕니다. 타임라인·통계를 함께 봅니다.',
-            'bub.b5': '풀스택 출시: Next.js·TypeScript·Tailwind + Supabase Auth/DB. 제품 투어, 가입 UX, 웹 푸시 알림 온보딩, 운영 keepalive(cron)까지 포함.',
+            'bub.label': '기획 · UI/UX · Full-Stack · PWA',
+            'bub.desc': '가족과 함께 쓰는 부드러운 다국어 아기 케어 다이어리입니다. 요구 정의부터 기획·디자인·개발·배포까지 직접 맡았고, 13개 언어·국가별 접종 일정·성장 곡선·투약·돌봄 알림·가족 공유를 Next.js + Supabase + Vercel PWA로 출시했습니다.',
+            'bub.b1': '건강·의료 스케줄: 수유·기저귀·체온·성장·수면·투약과 함께 13개국 접종·검진 일정으로 ‘다음 접종’을 안내하고, WHO 기준 성장 곡선으로 키·몸무게 추이를 봅니다.',
+            'bub.b2': '다국어·다문화 가정: 한·영(AU)·중·힌디·스페인·프랑스·독일어·아랍·페르시아·우르두·일본·베트남·크메르 13개 언어(RTL 포함). 온보딩에서 언어를 고르고 가족마다 다른 언어로 같은 아기 기록을 봅니다.',
+            'bub.b3': '돌봄 알림·다국가 시간대: 기저귀·수유 등 돌봄 시각 알림과, 화면 언어와 별개인 아기 생활권 시간대로 해외 가족과 오늘 요약·일기를 맞춥니다.',
+            'bub.b4': '가족 공유·실시간 동기화: 초대 코드·링크로 보호자·돌보미를 연결하고 소유자·돌보미·보기만 역할로 권한을 나눕니다. Supabase Realtime으로 기록을 바로 맞춥니다.',
+            'bub.b5': 'PWA 출시: Next.js·TypeScript·Tailwind + Supabase Auth/DB. 홈 화면 설치, 오프라인 기록, 왼쪽·오른쪽 수유·분유·유축 퀵 숏컷, COPPA·GDPR 대응 개인정보 설계까지 포함.',
             'bub.tour.title': '어떤 앱인지 둘러보기',
             'bub.tour.prev': '이전',
             'bub.tour.next': '다음',
+            'bub.tour.hint': '가로로 살짝 밀어 넘기세요',
             'bub.tour.welcome.title': '아기의 하루를 가볍게',
-            'bub.tour.welcome.body': '수유·기저귀·수면·접종을 기록하고, 돌봄 알림과 초대 코드로 가족과 하나의 아기 프로필을 나눠 씁니다. 다문화 가정에서도 각자 언어로 같은 기록을 볼 수 있습니다.',
+            'bub.tour.welcome.body': '부드러운 다국어 육아 일기예요. 수유·기저귀·수면·접종·투약을 기록하고, 돌봄 알림과 초대 코드로 가족과 하나의 아기 프로필을 나눠 씁니다.',
             'bub.tour.home.title': '오늘 한눈에',
             'bub.tour.home.body': '실제 아기 홈과 같아요. 위는 이름 카드, 아래는 오늘 요약이라 돌보는 모두가 같은 상태를 봅니다.',
             'bub.tour.quick.title': '빠른 기록',
-            'bub.tour.quick.body': '홈과 같은 타일 격자예요. 수유·기저귀·수면·체온 등을 눌러 남기면 홈에 바로 반영됩니다.',
+            'bub.tour.quick.body': '홈 타일로 수유·기저귀·수면·체온을 바로 남기고, 설치형 PWA에서는 왼쪽·오른쪽 수유·분유·유축 숏컷으로 잠금화면에서도 바로 기록합니다.',
             'bub.tour.health.title': '검진·접종',
             'bub.tour.health.body': '아기 설정의 국가 일정을 따라 ‘다음 접종’을 알려 줍니다. 필수·선택 접종과 병원 방문·의사 지침도 남길 수 있습니다.',
+            'bub.tour.growth.title': '성장 곡선',
+            'bub.tour.growth.body': '키·몸무게를 남기면 WHO 기준 곡선 위에서 추이를 봅니다. 성장·투약·의료 기록을 한곳에서 이어 봅니다.',
             'bub.tour.timeline.title': '타임라인',
             'bub.tour.timeline.body': '왼쪽에 색 막대가 있는 카드가 쌓입니다. 종류·날짜로 고른 뒤 눌러서 수정하거나 지울 수 있습니다.',
             'bub.tour.family.title': '가족과 함께',
             'bub.tour.family.body': '초대 코드·링크로 가족·돌보미를 초대하고 역할로 권한을 나눕니다. 언어·시간대·돌봄 알림을 각자 맞춰 다문화·해외 가족도 편하게 씁니다.',
+            'bub.tour.pwa.title': '집에 두고 쓰는 앱',
+            'bub.tour.pwa.body': '홈 화면에 설치하면 앱처럼 열리고, 오프라인에서도 기록을 남길 수 있어요. iOS·Android PWA로 출시했습니다.',
             'bub.tour.privacy.title': '개인정보, 안심하고',
-            'bub.tour.privacy.body': '전송·저장 시 암호화되고, 초대된 가족만 볼 수 있습니다.',
+            'bub.tour.privacy.body': '전송·저장 시 암호화되고, 초대된 가족만 볼 수 있습니다. COPPA·GDPR를 고려한 개인정보 안내를 제공합니다.',
             'bub.demo.appName': 'Bub Diary',
-            'bub.demo.tagline': '아기의 하루를 부드럽게 기록해요',
+            'bub.demo.tagline': '부드러운 다국어 육아 일기',
             'bub.demo.babyName': '미나',
             'bub.demo.babyAge': '4개월 12일',
             'bub.demo.today': '오늘 요약',
@@ -116,6 +121,20 @@
             'bub.demo.invite': '초대 코드 만들기',
             'bub.demo.privacyTitle': '닉네임만 그대로 보여요',
             'bub.demo.langs': 'KO · EN · ZH · HI · ES · FR · DE · AR · FA · UR · JA · VI · KM',
+            'bub.demo.growth': '성장 곡선',
+            'bub.demo.growthWeight': '체중',
+            'bub.demo.growthHeight': '신장',
+            'bub.demo.growthWeightVal': '6.4 kg',
+            'bub.demo.growthHeightVal': '63 cm',
+            'bub.demo.growthSource': 'WHO 기준',
+            'bub.demo.medicine': '투약',
+            'bub.demo.medicineVal': '해열제 · 오늘 1회',
+            'bub.demo.pwaTitle': '홈 화면에 추가',
+            'bub.demo.pwaBody': '오프라인에서도 기록',
+            'bub.demo.shortcutLeft': '왼쪽 수유',
+            'bub.demo.shortcutRight': '오른쪽 수유',
+            'bub.demo.shortcutFormula': '분유',
+            'bub.demo.shortcutExpressed': '유축',
             'apple.title': 'Apple Korea',
             'apple.label': 'Korea Product Launch Member · NDA',
             'apple.desc': '2024년과 2026년 Apple Korea에서 Korea Product Launch Member로 참여했습니다. 비밀유지 계약에 따라 직군·작업 내용 등 세부 사항은 공개하지 않습니다.',
@@ -257,32 +276,37 @@
             'exp.7.desc': 'Returned after the 2024 engagement. Specific role and work details cannot be disclosed under NDA.',
             'proj.title': 'Key Projects',
             'bub.title': 'Bub Diary',
-            'bub.label': 'Planning · UI/UX · Full-Stack',
-            'bub.desc': 'A family-shared baby care diary—owned from requirements through planning, design, build, and launch. 13 languages, country immunisation schedules, multi-country timezones, care reminders, and family sharing—shipped with Next.js, Supabase, and Vercel.',
-            'bub.b1': 'Health & medical schedules: feeds, nappies, temperature, growth, and sleep—plus “what’s due next” from 13 national schedules (Korea, Japan, China, Vietnam, Cambodia, India, Australia, US, UK, France, Germany, Spain, Saudi Arabia).',
+            'bub.label': 'Planning · UI/UX · Full-Stack · PWA',
+            'bub.desc': 'A gentle bilingual baby care diary for families—owned from requirements through planning, design, build, and launch. 13 languages, country immunisation schedules, growth charts, medication logs, care reminders, and family sharing—shipped as a Next.js + Supabase + Vercel PWA.',
+            'bub.b1': 'Health & medical schedules: feeds, nappies, temperature, growth, sleep, and medication—plus “what’s due next” from 13 national schedules and WHO-based growth curves for weight and length.',
             'bub.b2': 'Multilingual & multicultural families: 13 locales (KO, EN-AU, ZH, HI, ES, FR, DE, AR, FA, UR, JA, VI, KM) with RTL for Arabic, Persian, and Urdu—pick a language at onboarding; each caregiver can use their own language on the same baby profile.',
             'bub.b3': 'Care reminders & multi-country timezones: optional reminders for feeds, nappies, and more; set bub’s living-zone clock separately from UI language so overseas family stays synced on “today” and diary dates.',
-            'bub.b4': 'Family sharing: invite codes and links for parents and caregivers, with owner / caregiver / viewer roles for safe editing—shared timelines and stats.',
-            'bub.b5': 'Full-stack launch: Next.js, TypeScript, Tailwind + Supabase Auth/DB—product tour, signup UX, web-push notification onboarding, and operational keepalive via cron.',
+            'bub.b4': 'Family sharing & realtime sync: invite codes and links for parents and caregivers, with owner / caregiver / viewer roles—records stay aligned via Supabase Realtime.',
+            'bub.b5': 'PWA launch: Next.js, TypeScript, Tailwind + Supabase Auth/DB—installable home-screen app, offline logging, quick shortcuts for left/right breastfeed, formula, and expressed milk, plus COPPA/GDPR-aware privacy copy.',
             'bub.tour.title': 'See what this app is like',
             'bub.tour.prev': 'Back',
             'bub.tour.next': 'Next',
+            'bub.tour.hint': 'Swipe sideways to browse',
             'bub.tour.welcome.title': 'A gentle diary for bub',
-            'bub.tour.welcome.body': 'Log feeds, nappies, sleep, and immunisations—then share one baby profile with family via care reminders and invite codes. Multicultural households can each use their own language.',
+            'bub.tour.welcome.body': 'A soft multilingual baby care diary. Log feeds, nappies, sleep, immunisations, and medication—then share one baby profile with family via care reminders and invite codes.',
             'bub.tour.home.title': 'Today at a glance',
             'bub.tour.home.body': 'Baby home looks like this: name card on top, then today’s summary so everyone stays in sync.',
             'bub.tour.quick.title': 'Quick add',
-            'bub.tour.quick.body': 'Same tile grid as the real home—tap Feeding, Nappy, Sleep, Temperature, and more. Saves show on home right away.',
+            'bub.tour.quick.body': 'Home tiles for Feeding, Nappy, Sleep, and Temperature—and as an installed PWA, lock-screen shortcuts for left/right breastfeed, formula, and expressed milk.',
             'bub.tour.health.title': 'Immunisations & checks',
             'bub.tour.health.body': 'Health follows the national schedule you pick for the baby. See what’s due next, log shots, and keep hospital visits and doctor notes.',
+            'bub.tour.growth.title': 'Growth curves',
+            'bub.tour.growth.body': 'Log weight and length, then follow trends on WHO-based curves—alongside medication and medical records in one place.',
             'bub.tour.timeline.title': 'Timeline',
             'bub.tour.timeline.body': 'Recent cards stack with a colour bar on the left. Filter by type or date, then open a card to edit or delete.',
             'bub.tour.family.title': 'Share with family',
             'bub.tour.family.body': 'Invite parents or caregivers with a code or link, and split roles safely. Language, timezone, and care reminders per person make multicultural and overseas families easy.',
+            'bub.tour.pwa.title': 'An app that lives on home',
+            'bub.tour.pwa.body': 'Install to the home screen for an app-like shell and keep logging offline. Shipped as an iOS and Android PWA.',
             'bub.tour.privacy.title': 'Your data, protected',
-            'bub.tour.privacy.body': 'Encrypted in transit and at rest—only invited family can see it.',
+            'bub.tour.privacy.body': 'Encrypted in transit and at rest—only invited family can see it. Privacy guidance considers COPPA and GDPR.',
             'bub.demo.appName': 'Bub Diary',
-            'bub.demo.tagline': 'Gentle notes for your little one',
+            'bub.demo.tagline': 'A gentle bilingual baby care diary',
             'bub.demo.babyName': 'Mina',
             'bub.demo.babyAge': '4 months 12 days',
             'bub.demo.today': 'Today’s summary',
@@ -319,6 +343,20 @@
             'bub.demo.invite': 'Generate invite code',
             'bub.demo.privacyTitle': 'Nicknames stay readable',
             'bub.demo.langs': 'KO · EN · ZH · HI · ES · FR · DE · AR · FA · UR · JA · VI · KM',
+            'bub.demo.growth': 'Growth curve',
+            'bub.demo.growthWeight': 'Weight',
+            'bub.demo.growthHeight': 'Length',
+            'bub.demo.growthWeightVal': '6.4 kg',
+            'bub.demo.growthHeightVal': '63 cm',
+            'bub.demo.growthSource': 'WHO reference',
+            'bub.demo.medicine': 'Medication',
+            'bub.demo.medicineVal': 'Fever med · 1 today',
+            'bub.demo.pwaTitle': 'Add to Home Screen',
+            'bub.demo.pwaBody': 'Keep logging offline',
+            'bub.demo.shortcutLeft': 'Left breast',
+            'bub.demo.shortcutRight': 'Right breast',
+            'bub.demo.shortcutFormula': 'Formula',
+            'bub.demo.shortcutExpressed': 'Expressed',
             'apple.title': 'Apple Korea',
             'apple.label': 'Korea Product Launch Member · NDA',
             'apple.desc': 'Joined Apple Korea as a Korea Product Launch Member in 2024 and 2026. Role and work details are withheld under NDA.',
@@ -944,6 +982,28 @@
                     </div>
                 </div>`;
         }
+        if (slideId === 'growth') {
+            return `
+                <strong class="bub-phone-sub">${t('bub.demo.growth')}</strong>
+                <div class="bub-elev bub-summary-card">
+                    <div class="bub-stat-grid">
+                        <div><span class="bub-muted bub-small">${t('bub.demo.growthWeight')}</span><strong>${t('bub.demo.growthWeightVal')}</strong></div>
+                        <div><span class="bub-muted bub-small">${t('bub.demo.growthHeight')}</span><strong>${t('bub.demo.growthHeightVal')}</strong></div>
+                    </div>
+                    <span class="bub-muted bub-xsmall">${t('bub.demo.growthSource')}</span>
+                    <div class="bub-growth-chart" aria-hidden="true">
+                        <svg viewBox="0 0 120 48" preserveAspectRatio="none">
+                            <path d="M4 40 C 24 36, 36 28, 52 24 S 84 18, 116 10" fill="none" stroke="currentColor" stroke-width="2.5" opacity="0.35"/>
+                            <path d="M4 42 C 28 38, 40 32, 58 26 S 88 16, 116 12" fill="none" stroke="currentColor" stroke-width="2.5"/>
+                            <circle cx="58" cy="26" r="3.2" fill="currentColor"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="bub-elev bub-optional-card">
+                    <span class="bub-muted bub-small">${t('bub.demo.medicine')}</span>
+                    <strong>${t('bub.demo.medicineVal')}</strong>
+                </div>`;
+        }
         if (slideId === 'timeline') {
             const rows = [
                 { title: t('bub.demo.feedRow'), detail: t('bub.demo.feeding'), meta: t('bub.demo.feedMeta'), tone: 'accent' },
@@ -983,6 +1043,26 @@
                 </div>
                 <div class="bub-invite-btn">${t('bub.demo.invite')}</div>`;
         }
+        if (slideId === 'pwa') {
+            const shortcuts = [
+                t('bub.demo.shortcutLeft'),
+                t('bub.demo.shortcutRight'),
+                t('bub.demo.shortcutFormula'),
+                t('bub.demo.shortcutExpressed')
+            ];
+            return `
+                <div class="bub-elev bub-summary-card">
+                    <strong class="bub-phone-sub">${t('bub.demo.pwaTitle')}</strong>
+                    <span class="bub-muted bub-small">${t('bub.demo.pwaBody')}</span>
+                </div>
+                <div class="bub-tile-grid">
+                    ${shortcuts.map(label => `
+                        <div class="bub-elev bub-tile">
+                            <span class="bub-badge bub-tone-accent">${bubIcon('utensils')}</span>
+                            <strong>${label}</strong>
+                        </div>`).join('')}
+                </div>`;
+        }
         return `
             <div class="bub-elev bub-privacy-card">
                 <p class="bub-emoji" aria-hidden="true">🔒</p>
@@ -999,52 +1079,135 @@
             { id: 'home', titleKey: 'bub.tour.home.title', bodyKey: 'bub.tour.home.body' },
             { id: 'quick', titleKey: 'bub.tour.quick.title', bodyKey: 'bub.tour.quick.body' },
             { id: 'health', titleKey: 'bub.tour.health.title', bodyKey: 'bub.tour.health.body' },
+            { id: 'growth', titleKey: 'bub.tour.growth.title', bodyKey: 'bub.tour.growth.body' },
             { id: 'timeline', titleKey: 'bub.tour.timeline.title', bodyKey: 'bub.tour.timeline.body' },
             { id: 'family', titleKey: 'bub.tour.family.title', bodyKey: 'bub.tour.family.body' },
+            { id: 'pwa', titleKey: 'bub.tour.pwa.title', bodyKey: 'bub.tour.pwa.body' },
             { id: 'privacy', titleKey: 'bub.tour.privacy.title', bodyKey: 'bub.tour.privacy.body' }
         ];
 
         let index = Number(wrap.dataset.slideIndex || 0);
         if (Number.isNaN(index) || index < 0 || index >= slides.length) index = 0;
         wrap.setAttribute('aria-label', t('bub.tour.title'));
+        wrap.classList.add('bub-tour-parallax');
 
-        const render = () => {
-            const slide = slides[index];
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        const goTo = (next, behavior = 'smooth') => {
+            index = Math.max(0, Math.min(slides.length - 1, next));
             wrap.dataset.slideIndex = String(index);
-            wrap.innerHTML = `
-                <div class="bub-tour-stage">
-                    <div class="bub-phone" aria-hidden="true">${buildBubPhoneVisual(slide.id)}</div>
-                    <div class="bub-tour-copy">
-                        <p class="bub-tour-step">${index + 1} / ${slides.length}</p>
-                        <h4 class="bub-tour-heading" id="bub-tour-heading">${t(slide.titleKey)}</h4>
-                        <p class="bub-tour-body">${t(slide.bodyKey)}</p>
-                    </div>
-                </div>
-                <div class="bub-tour-controls">
-                    <button type="button" class="bub-tour-btn" data-bub-nav="prev" ${index === 0 ? 'disabled' : ''} aria-controls="bub-tour-heading">${t('bub.tour.prev')}</button>
-                    <div class="bub-tour-dots" role="tablist" aria-label="${t('bub.tour.title')}">
-                        ${slides.map((_, i) => `<button type="button" class="bub-tour-dot${i === index ? ' is-active' : ''}" data-bub-dot="${i}" aria-label="${i + 1}" aria-current="${i === index ? 'true' : 'false'}"></button>`).join('')}
-                    </div>
-                    <button type="button" class="bub-tour-btn bub-tour-btn-primary" data-bub-nav="next" aria-controls="bub-tour-heading">${t('bub.tour.next')}</button>
-                </div>`;
+            const track = wrap.querySelector('.bub-tour-track');
+            const slide = track?.children[index];
+            if (track && slide) {
+                track.scrollTo({ left: slide.offsetLeft, behavior: reduceMotion ? 'auto' : behavior });
+            }
+            updateChrome();
+        };
 
-            wrap.querySelector('[data-bub-nav="prev"]')?.addEventListener('click', () => {
-                if (index > 0) {
-                    index -= 1;
-                    render();
-                }
-            });
-            wrap.querySelector('[data-bub-nav="next"]')?.addEventListener('click', () => {
-                index = (index + 1) % slides.length;
-                render();
-            });
+        const updateChrome = () => {
+            const step = wrap.querySelector('.bub-tour-step');
+            if (step) step.textContent = `${index + 1} / ${slides.length}`;
             wrap.querySelectorAll('[data-bub-dot]').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    index = Number(btn.getAttribute('data-bub-dot'));
-                    render();
-                });
+                const i = Number(btn.getAttribute('data-bub-dot'));
+                btn.classList.toggle('is-active', i === index);
+                btn.setAttribute('aria-current', i === index ? 'true' : 'false');
+            });
+            const prev = wrap.querySelector('[data-bub-nav="prev"]');
+            const next = wrap.querySelector('[data-bub-nav="next"]');
+            if (prev) prev.disabled = index === 0;
+            if (next) next.disabled = index === slides.length - 1;
+        };
+
+        const applyParallax = () => {
+            if (reduceMotion) return;
+            const track = wrap.querySelector('.bub-tour-track');
+            if (!track) return;
+            const trackRect = track.getBoundingClientRect();
+            const center = trackRect.left + trackRect.width / 2;
+            track.querySelectorAll('.bub-tour-slide').forEach(slide => {
+                const rect = slide.getBoundingClientRect();
+                const slideCenter = rect.left + rect.width / 2;
+                const progress = (slideCenter - center) / Math.max(trackRect.width, 1);
+                const phone = slide.querySelector('.bub-parallax-phone');
+                const copy = slide.querySelector('.bub-parallax-copy');
+                const glow = slide.querySelector('.bub-parallax-glow');
+                if (phone) phone.style.transform = `translate3d(${(-progress * 56).toFixed(2)}px, 0, 0) scale(${(1 - Math.abs(progress) * 0.04).toFixed(3)})`;
+                if (copy) copy.style.transform = `translate3d(${(progress * 32).toFixed(2)}px, 0, 0)`;
+                if (glow) glow.style.transform = `translate3d(${(-progress * 90).toFixed(2)}px, 0, 0)`;
             });
         };
+
+        const syncIndexFromScroll = () => {
+            const track = wrap.querySelector('.bub-tour-track');
+            if (!track) return;
+            const trackRect = track.getBoundingClientRect();
+            const center = trackRect.left + trackRect.width / 2;
+            let best = 0;
+            let bestDist = Infinity;
+            [...track.children].forEach((slide, i) => {
+                const rect = slide.getBoundingClientRect();
+                const dist = Math.abs(rect.left + rect.width / 2 - center);
+                if (dist < bestDist) {
+                    bestDist = dist;
+                    best = i;
+                }
+            });
+            if (best !== index) {
+                index = best;
+                wrap.dataset.slideIndex = String(index);
+                updateChrome();
+            }
+            applyParallax();
+        };
+
+        wrap.innerHTML = `
+            <p class="bub-tour-hint">${t('bub.tour.hint')}</p>
+            <div class="bub-tour-track" tabindex="0" role="list">
+                ${slides.map((slide, i) => `
+                    <article class="bub-tour-slide" role="listitem" aria-roledescription="slide" aria-label="${i + 1} / ${slides.length}">
+                        <div class="bub-parallax-glow" aria-hidden="true"></div>
+                        <div class="bub-tour-stage">
+                            <div class="bub-phone bub-parallax-phone" aria-hidden="true">${buildBubPhoneVisual(slide.id)}</div>
+                            <div class="bub-tour-copy bub-parallax-copy">
+                                <p class="bub-tour-step">${i + 1} / ${slides.length}</p>
+                                <h4 class="bub-tour-heading">${t(slide.titleKey)}</h4>
+                                <p class="bub-tour-body">${t(slide.bodyKey)}</p>
+                            </div>
+                        </div>
+                    </article>`).join('')}
+            </div>
+            <div class="bub-tour-controls">
+                <button type="button" class="bub-tour-btn" data-bub-nav="prev" ${index === 0 ? 'disabled' : ''}>${t('bub.tour.prev')}</button>
+                <div class="bub-tour-dots" role="tablist" aria-label="${t('bub.tour.title')}">
+                    ${slides.map((_, i) => `<button type="button" class="bub-tour-dot${i === index ? ' is-active' : ''}" data-bub-dot="${i}" aria-label="${i + 1}" aria-current="${i === index ? 'true' : 'false'}"></button>`).join('')}
+                </div>
+                <button type="button" class="bub-tour-btn bub-tour-btn-primary" data-bub-nav="next">${t('bub.tour.next')}</button>
+            </div>`;
+
+        const track = wrap.querySelector('.bub-tour-track');
+        let ticking = false;
+        track.addEventListener('scroll', () => {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(() => {
+                syncIndexFromScroll();
+                ticking = false;
+            });
+        }, { passive: true });
+
+        // Convert vertical wheel into horizontal browse when hovering the tour
+        track.addEventListener('wheel', e => {
+            if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+            if (Math.abs(e.deltaY) < 8) return;
+            e.preventDefault();
+            track.scrollBy({ left: e.deltaY, behavior: 'auto' });
+        }, { passive: false });
+
+        wrap.querySelector('[data-bub-nav="prev"]')?.addEventListener('click', () => goTo(index - 1));
+        wrap.querySelector('[data-bub-nav="next"]')?.addEventListener('click', () => goTo(index + 1));
+        wrap.querySelectorAll('[data-bub-dot]').forEach(btn => {
+            btn.addEventListener('click', () => goTo(Number(btn.getAttribute('data-bub-dot'))));
+        });
 
         if (!wrap.dataset.bubKeysBound) {
             wrap.dataset.bubKeysBound = '1';
@@ -1052,15 +1215,16 @@
             wrap.addEventListener('keydown', e => {
                 if (e.key === 'ArrowLeft') {
                     e.preventDefault();
-                    wrap.querySelector('[data-bub-nav="prev"]')?.click();
+                    goTo(index - 1);
                 } else if (e.key === 'ArrowRight') {
                     e.preventDefault();
-                    wrap.querySelector('[data-bub-nav="next"]')?.click();
+                    goTo(index + 1);
                 }
             });
         }
 
-        render();
+        goTo(index, 'auto');
+        applyParallax();
     }
 
     function initDashboardPreview() {
