@@ -1138,7 +1138,15 @@
         };
 
         const applyParallax = () => {
-            if (reduceMotion) return;
+            if (reduceMotion) {
+                wrap.querySelectorAll('.bub-parallax-copy, .bub-copy-reveal').forEach(el => {
+                    el.style.setProperty('--reveal', '1');
+                    el.style.transform = 'none';
+                    el.style.filter = 'none';
+                    el.style.opacity = '1';
+                });
+                return;
+            }
             const track = wrap.querySelector('.bub-tour-track');
             if (!track) return;
             const trackRect = track.getBoundingClientRect();
@@ -1146,21 +1154,28 @@
             track.querySelectorAll('.bub-tour-slide').forEach(slide => {
                 const rect = slide.getBoundingClientRect();
                 const slideCenter = rect.left + rect.width / 2;
-                const progress = Math.max(-1.2, Math.min(1.2, (slideCenter - center) / Math.max(trackRect.width, 1)));
+                const progress = Math.max(-1.25, Math.min(1.25, (slideCenter - center) / Math.max(trackRect.width, 1)));
                 const phone = slide.querySelector('.bub-parallax-phone');
                 const copy = slide.querySelector('.bub-parallax-copy');
+                const revealEl = slide.querySelector('.bub-copy-reveal');
                 const glow = slide.querySelector('.bub-parallax-glow');
+
+                // Frame/phone tracks closer to the slide; text lags behind the frame.
                 if (phone) {
                     phone.style.transform =
-                        `translate3d(${(-progress * 84).toFixed(2)}px, ${(Math.abs(progress) * 6).toFixed(2)}px, 0) ` +
-                        `scale(${(1 - Math.abs(progress) * 0.06).toFixed(3)})`;
+                        `translate3d(${(-progress * 28).toFixed(2)}px, ${(Math.abs(progress) * 4).toFixed(2)}px, 0) ` +
+                        `scale(${(1 - Math.abs(progress) * 0.03).toFixed(3)})`;
                 }
                 if (copy) {
                     copy.style.transform =
-                        `translate3d(${(progress * 48).toFixed(2)}px, ${(Math.abs(progress) * -4).toFixed(2)}px, 0)`;
-                    copy.style.opacity = String(Math.max(0.35, 1 - Math.abs(progress) * 0.55));
+                        `translate3d(${(progress * 92).toFixed(2)}px, ${(Math.abs(progress) * -2).toFixed(2)}px, 0)`;
                 }
-                if (glow) glow.style.transform = `translate3d(${(-progress * 130).toFixed(2)}px, 0, 0)`;
+                if (revealEl) {
+                    const proximity = Math.max(0, Math.min(1, 1 - Math.abs(progress) * 1.05));
+                    const eased = proximity * proximity * (3 - 2 * proximity);
+                    revealEl.style.setProperty('--reveal', eased.toFixed(3));
+                }
+                if (glow) glow.style.transform = `translate3d(${(-progress * 110).toFixed(2)}px, 0, 0)`;
             });
         };
 
@@ -1196,9 +1211,11 @@
                         <div class="bub-tour-stage">
                             <div class="bub-phone bub-parallax-phone" aria-hidden="true">${buildBubPhoneVisual(slide.id)}</div>
                             <div class="bub-tour-copy bub-parallax-copy">
-                                <p class="bub-tour-step">${i + 1} / ${slides.length}</p>
-                                <h4 class="bub-tour-heading">${t(slide.titleKey)}</h4>
-                                <p class="bub-tour-body">${t(slide.bodyKey)}</p>
+                                <div class="bub-copy-reveal">
+                                    <p class="bub-tour-step">${i + 1} / ${slides.length}</p>
+                                    <h4 class="bub-tour-heading">${t(slide.titleKey)}</h4>
+                                    <p class="bub-tour-body">${t(slide.bodyKey)}</p>
+                                </div>
                             </div>
                         </div>
                     </article>`).join('')}
