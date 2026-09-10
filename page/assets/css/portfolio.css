@@ -973,6 +973,7 @@ html.light .bub-tour {
         --reveal: 1 !important;
         filter: none !important;
         opacity: 1 !important;
+        transform: none !important;
         -webkit-mask-image: none !important;
         mask-image: none !important;
     }
