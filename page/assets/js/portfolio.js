@@ -1110,11 +1110,13 @@
                         } else {
                             applyParallax();
                             syncIndexFromScroll();
+                            scheduleLagSettle();
                         }
                     };
                     requestAnimationFrame(tick);
                 } else {
                     applyParallax();
+                    scheduleLagSettle();
                 }
             }
             updateChrome();
@@ -1137,46 +1139,71 @@
             if (next) next.disabled = index === slides.length - 1;
         };
 
+        let lagSettleRaf = 0;
         const applyParallax = () => {
             if (reduceMotion) {
+                wrap.querySelectorAll('.bub-tour-slide').forEach(slide => {
+                    slide.dataset.copyLag = '0';
+                });
                 wrap.querySelectorAll('.bub-parallax-copy, .bub-copy-reveal').forEach(el => {
                     el.style.setProperty('--reveal', '1');
                     el.style.transform = 'none';
                     el.style.filter = 'none';
                     el.style.opacity = '1';
                 });
-                return;
+                return false;
             }
             const track = wrap.querySelector('.bub-tour-track');
-            if (!track) return;
+            if (!track) return false;
             const trackRect = track.getBoundingClientRect();
             const center = trackRect.left + trackRect.width / 2;
+            let needsSettle = false;
             track.querySelectorAll('.bub-tour-slide').forEach(slide => {
                 const rect = slide.getBoundingClientRect();
                 const slideCenter = rect.left + rect.width / 2;
-                const progress = Math.max(-1.25, Math.min(1.25, (slideCenter - center) / Math.max(trackRect.width, 1)));
+                const progress = Math.max(-1.35, Math.min(1.35, (slideCenter - center) / Math.max(trackRect.width, 1)));
                 const phone = slide.querySelector('.bub-parallax-phone');
                 const copy = slide.querySelector('.bub-parallax-copy');
                 const revealEl = slide.querySelector('.bub-copy-reveal');
                 const glow = slide.querySelector('.bub-parallax-glow');
 
-                // Frame/phone tracks closer to the slide; text lags behind the frame.
+                // Temporal lag: copy eases toward progress slower than the phone/frame.
+                const prevLag = Number(slide.dataset.copyLag);
+                const lagged = Number.isFinite(prevLag)
+                    ? prevLag + (progress - prevLag) * 0.14
+                    : progress;
+                slide.dataset.copyLag = String(lagged);
+                if (Math.abs(progress - lagged) > 0.012) needsSettle = true;
+
                 if (phone) {
                     phone.style.transform =
-                        `translate3d(${(-progress * 28).toFixed(2)}px, ${(Math.abs(progress) * 4).toFixed(2)}px, 0) ` +
-                        `scale(${(1 - Math.abs(progress) * 0.03).toFixed(3)})`;
+                        `translate3d(${(-progress * 22).toFixed(2)}px, ${(Math.abs(progress) * 3).toFixed(2)}px, 0) ` +
+                        `scale(${(1 - Math.abs(progress) * 0.025).toFixed(3)})`;
                 }
                 if (copy) {
                     copy.style.transform =
-                        `translate3d(${(progress * 92).toFixed(2)}px, ${(Math.abs(progress) * -2).toFixed(2)}px, 0)`;
+                        `translate3d(${(lagged * 118).toFixed(2)}px, ${(Math.abs(lagged) * -3).toFixed(2)}px, 0)`;
                 }
                 if (revealEl) {
-                    const proximity = Math.max(0, Math.min(1, 1 - Math.abs(progress) * 1.05));
+                    // Clarity follows lagged motion: left→right wipe as the slide settles.
+                    const proximity = Math.max(0, Math.min(1, 1 - Math.abs(lagged) * 0.72));
                     const eased = proximity * proximity * (3 - 2 * proximity);
                     revealEl.style.setProperty('--reveal', eased.toFixed(3));
                 }
-                if (glow) glow.style.transform = `translate3d(${(-progress * 110).toFixed(2)}px, 0, 0)`;
+                if (glow) glow.style.transform = `translate3d(${(-progress * 96).toFixed(2)}px, 0, 0)`;
             });
+            return needsSettle;
+        };
+
+        const scheduleLagSettle = () => {
+            if (reduceMotion || lagSettleRaf) return;
+            const tick = () => {
+                lagSettleRaf = 0;
+                if (applyParallax()) {
+                    lagSettleRaf = requestAnimationFrame(tick);
+                }
+            };
+            lagSettleRaf = requestAnimationFrame(tick);
         };
 
         const syncIndexFromScroll = () => {
@@ -1200,6 +1227,7 @@
                 updateChrome();
             }
             applyParallax();
+            scheduleLagSettle();
         };
 
         wrap.innerHTML = `
@@ -1269,6 +1297,7 @@
 
         goTo(index, 'auto');
         applyParallax();
+        scheduleLagSettle();
     }
 
     function initDashboardPreview() {
