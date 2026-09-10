@@ -941,24 +941,25 @@ html.light .bub-tour {
 }
 .bub-copy-reveal {
     --reveal: 1;
-    /* Left → right clarity: soft wipe edge travels across the copy */
+    /* Left → right clarity wipe with a wide soft edge */
     -webkit-mask-image: linear-gradient(
         90deg,
         #000 0%,
-        #000 max(0%, calc(var(--reveal) * 100% - 28%)),
-        rgba(0, 0, 0, 0.45) calc(var(--reveal) * 100%),
-        transparent min(100%, calc(var(--reveal) * 100% + 22%))
+        #000 max(0%, calc(var(--reveal) * 100% - 42%)),
+        rgba(0, 0, 0, 0.35) calc(var(--reveal) * 100% - 8%),
+        transparent min(100%, calc(var(--reveal) * 100% + 18%))
     );
     mask-image: linear-gradient(
         90deg,
         #000 0%,
-        #000 max(0%, calc(var(--reveal) * 100% - 28%)),
-        rgba(0, 0, 0, 0.45) calc(var(--reveal) * 100%),
-        transparent min(100%, calc(var(--reveal) * 100% + 22%))
+        #000 max(0%, calc(var(--reveal) * 100% - 42%)),
+        rgba(0, 0, 0, 0.35) calc(var(--reveal) * 100% - 8%),
+        transparent min(100%, calc(var(--reveal) * 100% + 18%))
     );
-    filter: blur(calc((1 - var(--reveal)) * 10px));
-    opacity: calc(0.18 + (var(--reveal) * 0.82));
-    will-change: mask-image, filter, opacity;
+    filter: blur(calc((1 - var(--reveal)) * 12px));
+    opacity: calc(0.12 + (var(--reveal) * 0.88));
+    transform: translate3d(calc((1 - var(--reveal)) * 18px), 0, 0);
+    will-change: mask-image, filter, opacity, transform;
 }
 @media (prefers-reduced-motion: reduce) {
     .bub-tour-track { scroll-behavior: auto; }

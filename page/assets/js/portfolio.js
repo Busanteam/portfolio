@@ -1144,6 +1144,7 @@
             if (reduceMotion) {
                 wrap.querySelectorAll('.bub-tour-slide').forEach(slide => {
                     slide.dataset.copyLag = '0';
+                    slide.dataset.revealLag = '1';
                 });
                 wrap.querySelectorAll('.bub-parallax-copy, .bub-copy-reveal').forEach(el => {
                     el.style.setProperty('--reveal', '1');
@@ -1170,27 +1171,34 @@
                 // Temporal lag: copy eases toward progress slower than the phone/frame.
                 const prevLag = Number(slide.dataset.copyLag);
                 const lagged = Number.isFinite(prevLag)
-                    ? prevLag + (progress - prevLag) * 0.14
+                    ? prevLag + (progress - prevLag) * 0.09
                     : progress;
                 slide.dataset.copyLag = String(lagged);
-                if (Math.abs(progress - lagged) > 0.012) needsSettle = true;
+                if (Math.abs(progress - lagged) > 0.01) needsSettle = true;
+
+                // Clarity target from position, then lag further so wipe finishes after the frame settles.
+                const proximity = Math.max(0, Math.min(1, 1 - Math.abs(progress) * 0.85));
+                const targetReveal = proximity * proximity * (3 - 2 * proximity);
+                const prevReveal = Number(slide.dataset.revealLag);
+                const reveal = Number.isFinite(prevReveal)
+                    ? prevReveal + (targetReveal - prevReveal) * 0.07
+                    : targetReveal;
+                slide.dataset.revealLag = String(reveal);
+                if (Math.abs(targetReveal - reveal) > 0.012) needsSettle = true;
 
                 if (phone) {
                     phone.style.transform =
-                        `translate3d(${(-progress * 22).toFixed(2)}px, ${(Math.abs(progress) * 3).toFixed(2)}px, 0) ` +
-                        `scale(${(1 - Math.abs(progress) * 0.025).toFixed(3)})`;
+                        `translate3d(${(-progress * 18).toFixed(2)}px, ${(Math.abs(progress) * 2).toFixed(2)}px, 0) ` +
+                        `scale(${(1 - Math.abs(progress) * 0.02).toFixed(3)})`;
                 }
                 if (copy) {
                     copy.style.transform =
-                        `translate3d(${(lagged * 118).toFixed(2)}px, ${(Math.abs(lagged) * -3).toFixed(2)}px, 0)`;
+                        `translate3d(${(lagged * 140).toFixed(2)}px, ${(Math.abs(lagged) * -4).toFixed(2)}px, 0)`;
                 }
                 if (revealEl) {
-                    // Clarity follows lagged motion: left→right wipe as the slide settles.
-                    const proximity = Math.max(0, Math.min(1, 1 - Math.abs(lagged) * 0.72));
-                    const eased = proximity * proximity * (3 - 2 * proximity);
-                    revealEl.style.setProperty('--reveal', eased.toFixed(3));
+                    revealEl.style.setProperty('--reveal', reveal.toFixed(3));
                 }
-                if (glow) glow.style.transform = `translate3d(${(-progress * 96).toFixed(2)}px, 0, 0)`;
+                if (glow) glow.style.transform = `translate3d(${(-progress * 88).toFixed(2)}px, 0, 0)`;
             });
             return needsSettle;
         };
