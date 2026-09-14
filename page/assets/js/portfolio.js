@@ -205,6 +205,7 @@
             'gallery.11': 'Brief Results 2',
             'gallery.12': 'Brief Results 3',
             'gallery.13': 'Brief Results 4',
+            'gallery.14': 'Apple 한국 제품 론칭',
             'link.mohaet': 'Mohaet →',
             'link.solarkim': 'Solar Kim →',
             'link.henergy': 'H-ENERGY →',
@@ -427,6 +428,7 @@
             'gallery.11': 'Brief Results 2',
             'gallery.12': 'Brief Results 3',
             'gallery.13': 'Brief Results 4',
+            'gallery.14': 'Apple Korea Launch',
             'link.mohaet': 'Mohaet →',
             'link.solarkim': 'Solar Kim →',
             'link.henergy': 'H-ENERGY →',
@@ -1347,7 +1349,8 @@
             { src: 'images/Brief_Results_1.avif', fallback: 'images/Brief_Results_1.png', key: 'gallery.10' },
             { src: 'images/Brief_Results_2.avif', fallback: 'images/Brief_Results_2.png', key: 'gallery.11' },
             { src: 'images/Brief_Results_3.avif', fallback: 'images/Brief_Results_3.png', key: 'gallery.12' },
-            { src: 'images/Brief_Results_4.avif', fallback: 'images/Brief_Results_4.png', key: 'gallery.13' }
+            { src: 'images/Brief_Results_4.avif', fallback: 'images/Brief_Results_4.png', key: 'gallery.13' },
+            { src: 'images/Apple_Korea_Launch_1.avif', fallback: 'images/Apple_Korea_Launch_1.png', key: 'gallery.14' }
         ];
 
         const grid = document.getElementById('gallery-grid');

@@ -88,7 +88,10 @@ body {
 	max-height: 100vh;
 	width: 100%;
 	/* background color gradient */
-	background: linear-gradient(135deg, #ccd6ca 0%, #ffffff 100%), url("../../images/hero_background_image_wave.png");;
+	background: linear-gradient(135deg, #ccd6ca 0%, #ffffff 100%), image-set(
+		url("../../images/hero_background_image_wave.avif") type("image/avif"),
+		url("../../images/hero_background_image_wave.png") type("image/png")
+	);
 	/* backgraund img */
 	background-position: center;
 	background-repeat: no-repeat;
@@ -3521,7 +3524,10 @@ body {
 		.wrapper.style3 {
 			background-color: #000;
 			color: #bfbfbf;
-			background-image: url(../../images/bg.jpg);
+			background-image: image-set(
+				url("../../images/bg.avif") type("image/avif"),
+				url("../../images/bg.jpg") type("image/jpeg")
+			);
 			background-size: cover;
 			background-attachment: fixed;
 			background-position: center;
